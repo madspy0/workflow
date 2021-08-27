@@ -28,7 +28,7 @@ class DevelopmentSolution
     private $developmentApplication;
 
      /**
-     * @var DateTime $created
+     * @var DateTime $createdAt
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
      */

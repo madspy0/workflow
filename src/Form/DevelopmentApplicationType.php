@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use App\Form\DevelopmentSolutionFormType;
 
 class DevelopmentApplicationType extends AbstractType
 {
@@ -35,8 +36,8 @@ class DevelopmentApplicationType extends AbstractType
             ->add('typeDocumentation')
             ->add('consent')
             ->add('status')
-            ->add('createdAt')
-            ->add('solution')
+//            ->add('createdAt')
+            ->add('solution', DevelopmentSolutionFormType::class)
             ->add('save', SubmitType::class)
         ;
     }

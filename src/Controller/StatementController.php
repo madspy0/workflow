@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\DevelopmentApplication;
 use App\Form\DevelopmentApplicationType;
@@ -26,13 +27,17 @@ class StatementController extends AbstractController
     /**
      * @Route("/statement/new", name="statement.new")
      */
-    public function new(): Response
+    public function new(Request $request): Response
     {
-        // creates a task object and initializes some data for this example
         $developmentApplication = new DevelopmentApplication();
-
         $form = $this->createForm(DevelopmentApplicationType::class, $developmentApplication);
-
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($developmentApplication);
+            $em->flush();
+            return $this->redirectToRoute('statement.list');
+        }
         return $this->render('statement/new.html.twig', [
             'form' => $form->createView(),
         ]);
