@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello StatementController!{% endblock %}
+
+{% block body %}
+    {% for developmentApplication in developmentApplications %}
+        {{ developmentApplication }}
+    {% endfor %}
+{% endblock %}
