@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\DevelopmentSolution;
+use App\Form\DevelopmentSolutionFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,7 +33,7 @@ class StatementController extends AbstractController
     public function new(Request $request): Response
     {
         $developmentApplication = new DevelopmentApplication();
-        $form = $this->createForm(DevelopmentApplicationType::class, $developmentApplication);
+        $form = $this->createForm(DevelopmentApplicationType::class, $developmentApplication)->add('save', SubmitType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -39,6 +42,27 @@ class StatementController extends AbstractController
             return $this->redirectToRoute('statement.list');
         }
         return $this->render('statement/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/statement/add_number/{id}", name="statement.add_number")
+     */
+    public function addNumber(DevelopmentApplication $developmentApplication, Request $request): Response {
+        $developmentSolution = null === $developmentApplication->getSolution() ? new DevelopmentSolution() : $developmentApplication->getSolution();
+        $form = $this->createForm(DevelopmentSolutionFormType::class, $developmentSolution)->add('save', SubmitType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $developmentSolution->setDevelopmentApplication($developmentApplication);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($developmentApplication);
+            $em->persist($developmentSolution);
+            $em->flush();
+            return $this->redirectToRoute('statement.list');
+        }
+        return $this->render('statement/add_number.html.twig', [
+            'developmentApplication' => $developmentApplication,
             'form' => $form->createView(),
         ]);
     }

@@ -35,10 +35,10 @@ class DevelopmentApplicationType extends AbstractType
             ->add('planingDocumentation')
             ->add('typeDocumentation')
             ->add('consent')
-            ->add('status')
+//            ->add('status')
 //            ->add('createdAt')
-            ->add('solution', DevelopmentSolutionFormType::class)
-            ->add('save', SubmitType::class)
+//            ->add('solution', DevelopmentSolutionFormType::class)
+//            ->add('save', SubmitType::class)
         ;
     }
 

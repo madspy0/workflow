@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 /**
  * @ORM\Entity(repositoryClass=DevelopmentSolutionRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class DevelopmentSolution
 {

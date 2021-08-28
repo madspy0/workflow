@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=DevelopmentApplicationRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class DevelopmentApplication
 {
@@ -139,7 +140,7 @@ class DevelopmentApplication
      */
     private $createdAt;
     /**
-     * @ORM\OneToOne(targetEntity=DevelopmentSolution::class, inversedBy="applicationDevelopment", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=DevelopmentSolution::class, inversedBy="developmentApplication", cascade={"persist", "remove"})
      */
     private $solution;
 
@@ -422,14 +423,14 @@ class DevelopmentApplication
 
         return $this;
     }
-        /**
+
+    /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function updatedTimestamps(): void
     {
         $dateTimeNow = new DateTime('now');
-
 
         if ($this->getCreatedAt() === null) {
             $this->setCreatedAt($dateTimeNow);

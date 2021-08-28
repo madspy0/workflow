@@ -20,7 +20,7 @@ class DevelopmentApplicationRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return ApplicationDevelopment[] Returns an array of ApplicationDevelopment objects
+    //  * @return DevelopmentApplication[] Returns an array of DevelopmentApplication objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class DevelopmentApplicationRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?ApplicationDevelopment
+    public function findOneBySomeField($value): ?DevelopmentApplication
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.exampleField = :val')
