@@ -2,6 +2,25 @@
 
 {% block title %}Hello StatementController!{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('map') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('map') }}
+{% endblock %}
+
 {% block body %}
-    {{ form(form) }}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                {{ form(form) }}
+            </div>
+            <div class="col">
+                <div id="map" class="map"></div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
