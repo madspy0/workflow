@@ -49,9 +49,6 @@ class DevelopmentApplication
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Email(
-     *     message = "The email '{{ value }}' is not a valid email."
-     * )
      */
     private $applicantStreetAddress;
 

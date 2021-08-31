@@ -30,7 +30,7 @@ class DevelopmentApplicationRepository extends ServiceEntityRepository
     {
         $stmt = $this->getEntityManager()
             ->getConnection()
-            ->prepare('select ST_IsValid(\'' . $geom . '\') = true as is_valid');
+            ->prepare('select ST_IsValid(ST_GeomFromText(\'' . $geom . '\')) = true as is_valid');
         $stmt->execute();
         $result = $stmt->fetchAll();
         return $result[0]['is_valid'];
