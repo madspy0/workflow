@@ -7,6 +7,7 @@ use App\Repository\DevelopmentApplicationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as AcmeAssert;
 
 /**
  * @ORM\Entity(repositoryClass=DevelopmentApplicationRepository::class)
@@ -143,6 +144,28 @@ class DevelopmentApplication
      * @ORM\OneToOne(targetEntity=DevelopmentSolution::class, inversedBy="developmentApplication", cascade={"persist", "remove"})
      */
     private $solution;
+    /**
+     * @ORM\Column(type="geometry", options={"geometry_type"="LineString", "srid"=900913})
+     * @Assert\NotBlank()
+     * @AcmeAssert\ContainsGeom()
+     */
+    private $geom;
+
+    /**
+     * @return mixed
+     */
+    public function getGeom()
+    {
+        return $this->geom;
+    }
+
+    /**
+     * @param mixed $geom
+     */
+    public function setGeom($geom): void
+    {
+        $this->geom = $geom;
+    }
 
     public function getStatus(): ?string
     {

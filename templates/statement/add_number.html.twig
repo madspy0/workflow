@@ -2,7 +2,18 @@
 
 {% block title %}Hello StatementController!{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('show_map') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('show_map') }}
+{% endblock %}
+
 {% block body %}
     {{ form(form) }}
     {{ developmentApplication.id }}
+    <div id="map" class="map" data-geom="{{ developmentApplication.geom }}"></div>
 {% endblock %}

@@ -19,6 +19,36 @@ class DevelopmentApplicationRepository extends ServiceEntityRepository
         parent::__construct($registry, DevelopmentApplication::class);
     }
 
+    /**
+     * Перевіряє валідність полігону
+     *
+     * @param $geom
+     *
+     * @return boolean
+     */
+    public function isValid($geom)
+    {
+        $stmt = $this->getEntityManager()
+            ->getConnection()
+            ->prepare('select ST_IsValid(\'' . $geom . '\') = true as is_valid');
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        return $result[0]['is_valid'];
+    }
+
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Doctrine\DBAL\Driver\Exception
+     */
+    public function isPolygonValid($geom): array
+    {
+        $stmt = $this->getEntityManager()
+            ->getConnection()
+            ->prepare('select ST_MakePolygon( ST_GeomFromText(\'' . $geom . '\') ');
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        return $result;
+    }
     // /**
     //  * @return DevelopmentApplication[] Returns an array of DevelopmentApplication objects
     //  */

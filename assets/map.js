@@ -5,6 +5,8 @@ import {Fill, Stroke, Style} from 'ol/style';
 import {Draw, Modify, Snap} from 'ol/interaction';
 import {OSM, Vector as VectorSource} from 'ol/source';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
+import {fromLonLat} from "ol/proj";
+import {WKT} from "ol/format";
 
 const source = new VectorSource();
 const vector = new VectorLayer({
@@ -29,8 +31,8 @@ const map = new Map({
     ],
     target: 'map',
     view: new View({
-        center: [0, 0],
-        zoom: 2,
+        center: fromLonLat([31.182233, 48.382778]),
+        zoom: 5,
     }),
 });
 
@@ -43,4 +45,14 @@ const draw = new Draw({
 map.addInteraction(draw);
 const snap = new Snap({source: source});
 map.addInteraction(snap);
+draw.on('drawend', function (event) {
+    let feature = event.feature;
+    let geom = new WKT().writeGeometry(feature.getGeometry(feature.getGeometry()));
+    document.getElementById('development_application_geom').value = geom;
+})
+modify.on('modifyend', function (event) {
+    let feature = event.feature;
+    let geom = new WKT().writeGeometry(feature.getGeometry(feature.getGeometry()));
+    document.getElementById('development_application_geom').value = geom;
+})
 

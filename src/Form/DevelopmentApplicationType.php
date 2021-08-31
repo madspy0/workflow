@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Form\DevelopmentSolutionFormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 class DevelopmentApplicationType extends AbstractType
 {
@@ -35,6 +36,7 @@ class DevelopmentApplicationType extends AbstractType
             ->add('planingDocumentation')
             ->add('typeDocumentation')
             ->add('consent')
+            ->add('geom', HiddenType::class)
 //            ->add('status')
 //            ->add('createdAt')
 //            ->add('solution', DevelopmentSolutionFormType::class)
