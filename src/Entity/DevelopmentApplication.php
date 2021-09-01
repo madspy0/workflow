@@ -88,6 +88,27 @@ class DevelopmentApplication
     private $landPostal;
 
     /**
+     * @return mixed
+     */
+    public function getPostal()
+    {
+        return $this->postal;
+    }
+
+    /**
+     * @param mixed $postal
+     */
+    public function setPostal($postal): void
+    {
+        $this->postal = $postal;
+    }
+
+    /**
+     * @ORM\Column(type="string", length=5)
+     */
+    private $postal;
+
+    /**
      * @ORM\Column(type="string", length=25)
      */
     private $landCountry;
@@ -122,10 +143,6 @@ class DevelopmentApplication
      */
     private $typeDocumentation;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $consent;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -416,18 +433,6 @@ class DevelopmentApplication
     public function setTypeDocumentation(?string $typeDocumentation): self
     {
         $this->typeDocumentation = $typeDocumentation;
-
-        return $this;
-    }
-
-    public function getConsent(): ?bool
-    {
-        return $this->consent;
-    }
-
-    public function setConsent(bool $consent): self
-    {
-        $this->consent = $consent;
 
         return $this;
     }

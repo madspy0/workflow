@@ -14,3 +14,4 @@ doctrine:
                 ST_AsGeoJSON: 'Jsor\Doctrine\PostGIS\Functions\ST_AsGeoJSON'
                 ST_GeomFromGeoJSON: 'Jsor\Doctrine\PostGIS\Functions\ST_GeomFromGeoJSON'
                 ST_IsValid: 'Jsor\Doctrine\PostGIS\Functions\ST_IsValid'
+                ST_GeomFromText: 'Jsor\Doctrine\PostGIS\Functions\ST_GeomFromText'

@@ -14,13 +14,68 @@
 
 {% block body %}
     <div class="container">
+        <h2>Заява на розробку</h2>
+        <p class="frmDesc">Заява на розробку документації із землеустрою</p>
+        <hr>
+        {{ form_start(form) }}
         <div class="row">
             <div class="col">
-                {{ form(form) }}
+                {{ form_label(form.applicantLastname) }}
+                {{ form_widget(form.applicantLastname) }}
             </div>
             <div class="col">
-                <div id="map" class="map"></div>
+                <label class="form-label">&nbsp;</label>
+                {{ form_widget(form.applicantFirstname) }}
+
+            </div>
+            <div class="col">
+                <label class="form-label">&nbsp;</label>
+                {{ form_widget(form.applicantMiddlename) }}
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                {{ form_label(form.phoneNumber) }}
+                {{ form_widget(form.phoneNumber) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{ form_label(form.applicantStreetAddress) }}
+                {{ form_widget(form.applicantStreetAddress) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{ form_label(form.city) }}
+                {{ form_widget(form.city) }}
+            </div>
+            <div class="col">
+                {{ form_label(form.region) }}
+                {{ form_widget(form.region) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{ form_label(form.postal) }}
+                {{ form_widget(form.postal) }}
+            </div>
+            <div class="col">
+                {{ form_label(form.country) }}
+                {{ form_widget(form.country) }}
+            </div>
+        </div>
+
+        <div id="map" class="map"></div>
+
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+    </div>
     </div>
 {% endblock %}
