@@ -130,7 +130,7 @@ class DevelopmentApplication
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $status;
+    private $status = 'draft';
     /**
      * @var DateTime $created
      *
@@ -142,7 +142,7 @@ class DevelopmentApplication
      */
     private $solution;
     /**
-     * @ORM\Column(type="geometry", options={"geometry_type"="LineString", "srid"=900913})
+     * @ORM\Column(type="geometry")
      * @Assert\NotBlank()
      * @AcmeAssert\ContainsGeom()
      */

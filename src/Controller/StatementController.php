@@ -12,6 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\DevelopmentApplication;
 use App\Form\DevelopmentApplicationType;
 use App\Repository\DevelopmentApplicationRepository;
+use Symfony\Component\Workflow\WorkflowInterface;
+use Symfony\Component\Workflow\Exception\LogicException;
 
 class StatementController extends AbstractController
 {
@@ -49,16 +51,25 @@ class StatementController extends AbstractController
     /**
      * @Route("/statement/add_number/{id}", name="statement.add_number")
      */
-    public function addNumber(DevelopmentApplication $developmentApplication, Request $request): Response {
+    public function addNumber(WorkflowInterface $applicationFlowStateMachine, DevelopmentApplication $developmentApplication, Request $request): Response {
         $developmentSolution = null === $developmentApplication->getSolution() ? new DevelopmentSolution() : $developmentApplication->getSolution();
         $form = $this->createForm(DevelopmentSolutionFormType::class, $developmentSolution)->add('save', SubmitType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $developmentSolution->setDevelopmentApplication($developmentApplication);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($developmentApplication);
-            $em->persist($developmentSolution);
-            $em->flush();
+            try {
+                $applicationFlowStateMachine->apply($developmentApplication,"to_number");
+                $developmentSolution->setDevelopmentApplication($developmentApplication);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($developmentApplication);
+                $em->persist($developmentSolution);
+                $em->flush();
+            } catch (LogicException $exception) {
+                return $this->render('statement/add_number.html.twig', [
+                    'developmentApplication' => $developmentApplication,
+                    'exception' => $exception,
+                    'form' => $form->createView(),
+                ]);
+            }
             return $this->redirectToRoute('statement.list');
         }
         return $this->render('statement/add_number.html.twig', [

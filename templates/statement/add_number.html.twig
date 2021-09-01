@@ -13,6 +13,9 @@
 {% endblock %}
 
 {% block body %}
+    {% if exception is defined %}
+    {{  exception.message }}
+    {% endif %}
     {{ form(form) }}
     {{ developmentApplication.id }}
     <div id="map" class="map" data-geom="{{ developmentApplication.geom }}"></div>

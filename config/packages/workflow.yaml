@@ -1,2 +1,28 @@
 framework:
-    workflows: null
+    workflows:
+        application_flow:
+            type: 'state_machine' # or 'workflow'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'status'
+            supports:
+                - App\Entity\DevelopmentApplication
+            initial_marking: draft
+            places:
+                - draft
+                - numbered
+                - rejected
+                - published
+            transitions:
+                to_number:
+                    guard: "is_granted('ROLE_USER')"
+                    from: draft
+                    to:   numbered
+                publish:
+                    from: numbered
+                    to:   published
+                reject:
+                    from: numbered
+                    to:   rejected

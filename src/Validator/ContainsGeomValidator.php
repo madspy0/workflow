@@ -43,7 +43,7 @@ class ContainsGeomValidator extends ConstraintValidator
 //        }
 
         $repository = $this->em->getRepository(DevelopmentApplication::class);
-        if($repository->isValid($value)) {
+        if(!$repository->isValid($value)) {
             $this->context->buildViolation($constraint->message)
                 ->setParameter('{{ string }}', $value)
                 ->addViolation();
