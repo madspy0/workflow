@@ -34,8 +34,11 @@ class StatementController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $entityManager = $this->getDoctrine()->getManager();
         $developmentApplication = new DevelopmentApplication();
-        $form = $this->createForm(DevelopmentApplicationType::class, $developmentApplication)->add('save', SubmitType::class);
+        $form = $this->createForm(DevelopmentApplicationType::class, $developmentApplication, [
+            'entity_manager' => $entityManager,
+        ])->add('save', SubmitType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();

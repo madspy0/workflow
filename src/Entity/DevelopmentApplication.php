@@ -63,7 +63,8 @@ class DevelopmentApplication
     private $region;
 
     /**
-     * @ORM\Column(type="string", length=25)
+     * @ORM\ManyToOne(targetEntity="Country")
+     * @ORM\JoinColumn(name="country_id", referencedColumnName="country_id")
      */
     private $country;
 

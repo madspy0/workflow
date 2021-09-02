@@ -12,10 +12,10 @@ const vector = new VectorLayer({
     source: source,
     style: new Style({
         fill: new Fill({
-            color: 'rgba(255, 255, 255, 0.2)',
+            color: 'rgb(216,0,254,0.2)',
         }),
         stroke: new Stroke({
-            color: '#ffcc33',
+            color: 'rgb(216,0,254,0.2)',
             width: 2,
         }),
     }),
@@ -40,3 +40,4 @@ let feature = new Feature({
 
 vector.getSource().addFeature(feature);
 map.getView().fit(feature.getGeometry().getExtent());
+

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\DevelopmentSolutionRepository;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+
 /**
  * @ORM\Entity(repositoryClass=DevelopmentSolutionRepository::class)
  * @ORM\HasLifecycleCallbacks()
@@ -19,7 +20,7 @@ class DevelopmentSolution
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $number;
 

@@ -13,10 +13,10 @@ const vector = new VectorLayer({
     source: source,
     style: new Style({
         fill: new Fill({
-            color: 'rgba(255, 255, 255, 0.2)',
+            color: 'rgb(216,0,254,0.2)',
         }),
         stroke: new Stroke({
-            color: '#ffcc33',
+            color: 'rgb(216,0,254,0.2)',
             width: 2,
         }),
     }),
@@ -40,7 +40,7 @@ const modify = new Modify({source: source});
 map.addInteraction(modify);
 const draw = new Draw({
     source: source,
-    type: "LineString",
+    type: "Polygon",
 });
 map.addInteraction(draw);
 const snap = new Snap({source: source});
@@ -56,3 +56,25 @@ modify.on('modifyend', function (event) {
     document.getElementById('development_application_geom').value = geom;
 })
 
+let country = document.getElementById('development_application_country');
+country.onchange = function () {
+    let Request = new XMLHttpRequest();
+    Request.open('get', '/regions?country=' + country.value);
+    Request.send();
+    Request.onreadystatechange = function () {
+        if (Request.readyState == 3) {
+            // загрузка
+        }
+        if (Request.readyState == 4) {
+            // запрос завершён
+            let arr = Request.response;
+            console.log(arr);
+            arr.forEach(function(item, i) {
+                console.log(item)
+            })
+            // console.log(Request.response)
+            let regions = document.getElementById('development_application_region');
+
+        }
+    };
+}

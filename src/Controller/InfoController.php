@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\Region;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class InfoController extends AbstractController
+{
+    /**
+     * @Route("/regions", name="regions", methods={"GET"}, options={"expose"=true})
+     */
+    public function regions(Request $request): Response
+    {
+        dump($request);
+        try {
+            $regions = $this->getDoctrine()
+                ->getRepository(Region::class)
+                ->findBy(['country' => $request->get('country')],
+                    ['title_ua' => 'ASC']);
+
+            $data = array();
+            foreach ($regions as $region) {
+                $data[] = ['id' => $region->getId(), 'name' => $region->getTitleUa()];
+            }
+
+            return new JsonResponse($data, Response::HTTP_OK);
+
+        } catch (\Exception $exception) {
+
+            return new JsonResponse(array('message' => $exception->getMessage()), Response::HTTP_BAD_REQUEST);
+        }
+    }
+}
