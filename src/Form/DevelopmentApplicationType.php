@@ -10,16 +10,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Form\DevelopmentSolutionFormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class DevelopmentApplicationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('applicantLastname', null,['label'=>'Заявник', 'attr' => ['placeholder' => 'Призвище']] )
-            ->add('applicantFirstname', null,['attr' => ['placeholder' => 'І\'мя']])
-            ->add('applicantMiddlename', null,['attr' => ['placeholder' => 'По-батькові']])
-            ->add('phoneNumber', null,['label'=>'Номер телефона'])
+            ->add('applicantLastname', null, ['label' => 'Заявник', 'attr' => ['placeholder' => 'Призвище']])
+            ->add('applicantFirstname', null, ['attr' => ['placeholder' => 'І\'мя']])
+            ->add('applicantMiddlename', null, ['attr' => ['placeholder' => 'По-батькові']])
+            ->add('phoneNumber', null, ['label' => 'Номер телефона'])
             ->add('email')
             ->add('applicantStreetAddress')
             ->add('city')
@@ -36,7 +37,11 @@ class DevelopmentApplicationType extends AbstractType
             ->add('purpose')
             ->add('use')
             ->add('planingDocumentation')
-            ->add('typeDocumentation')
+            ->add('typeDocumentation', ChoiceType::class, [
+                'choices' => [
+                    'First choice' => 'first choice',
+                    'second choice' => 'second choice'
+                ]])
             ->add('consent', CheckboxType::class, ['mapped' => false])
             ->add('geom', HiddenType::class)
 //            ->add('status')
