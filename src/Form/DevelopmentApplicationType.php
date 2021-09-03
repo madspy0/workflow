@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Country;
 use App\Entity\Region;
+use App\Entity\City;
 use App\Entity\DevelopmentApplication;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -33,7 +34,14 @@ class DevelopmentApplicationType extends AbstractType
             ->add('phoneNumber', null, ['label' => 'Номер телефона'])
             ->add('email')
             ->add('applicantStreetAddress')
-            ->add('city')
+//            ->add('city', EntityType::class, [
+//                'class' => City::class,
+//                'choice_label' => 'title_ua',
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('c')
+//                        ->orderBy('c.id', 'ASC');
+//                },
+//            ])
 //            ->add('region', EntityType::class, [
 //                'class' => Region::class,
 //                'choice_label' => 'title_ua',
@@ -45,6 +53,7 @@ class DevelopmentApplicationType extends AbstractType
             ->add('country', EntityType::class, [
                 'class' => Country::class,
                 'choice_label' => 'title_ua',
+                'placeholder' => 'Виберіть країну',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.id', 'ASC');
@@ -53,23 +62,25 @@ class DevelopmentApplicationType extends AbstractType
             ->add('postal')
             ->add('landAddress')
             ->add('landCity')
-            ->add('landRegion', EntityType::class, [
-                'class' => Region::class,
-                'choice_label' => 'title_ua',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('r')
-                        ->orderBy('r.id', 'ASC');
-                },
-            ])
+            ->add('landRegion')
+//                , EntityType::class, [
+//                'class' => Region::class,
+//                'choice_label' => 'title_ua',
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('r')
+//                        ->orderBy('r.id', 'ASC');
+//                },
+//            ])
             ->add('landPostal')
-            ->add('landCountry', EntityType::class, [
-                'class' => Country::class,
-                'choice_label' => 'title_ua',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')
-                        ->orderBy('c.id', 'ASC');
-                },
-            ])
+            ->add('landCountry')
+//                , EntityType::class, [
+//                'class' => Country::class,
+//                'choice_label' => 'title_ua',
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('c')
+//                        ->orderBy('c.id', 'ASC');
+//                },
+//            ])
             ->add('cadastreNumber')
             ->add('area')
             ->add('purpose')
@@ -100,7 +111,7 @@ class DevelopmentApplicationType extends AbstractType
         $resolver->setRequired('entity_manager');
     }
 
-    protected function addElements(FormInterface $form, Country $country = null)
+    protected function addElements(FormInterface $form, Country $country = null, Region $region = null)
     {
 //        $form->add('country', EntityType::class, array(
 //            'required' => true,
@@ -111,19 +122,33 @@ class DevelopmentApplicationType extends AbstractType
 // Neighborhoods empty, unless there is a selected City (Edit View)
         $regions = array();
         if ($country) {
-// Fetch Neighborhoods of the City if there's a selected city
             $repoRegions = $this->entityManager->getRepository(Region::class);
             $regions = $repoRegions->createQueryBuilder("r")
                 ->where("r.country = :countryid")
-                ->setParameter("contryid", $country->getId())
+                ->setParameter("countryid", $country->getId())
                 ->getQuery()
                 ->getResult();
         }
         $form->add('region', EntityType::class, array(
             'required' => true,
-            'placeholder' => 'Select a Country first ...',
+            'placeholder' => 'Спочатку виберіть країну ...',
             'class' => Region::class,
             'choices' => $regions
+        ));
+        $cities = array();
+        if($region) {
+            $repoCities = $this->entityManager->getRepository(City::class);
+            $cities = $repoCities->createQueryBuilder("c")
+                ->where("c.region = :regionid")
+                ->setParameter("regionid", $region->getId())
+                ->getQuery()
+                ->getResult();
+        }
+        $form->add('city', EntityType::class, array(
+            'required' => true,
+            'placeholder' => 'Спочатку виберіть регіон ...',
+            'class' => City::class,
+            'choices' => $cities
         ));
     }
 
@@ -132,7 +157,9 @@ class DevelopmentApplicationType extends AbstractType
         $form = $event->getForm();
         $data = $event->getData();
         $country = empty($data['country']) ? null : $this->entityManager->getRepository(Country::class)->find($data['country']);
-        $this->addElements($form, $country);
+ //       $this->addElements($form, $country);
+        $region = empty($data['region']) ? null : $this->entityManager->getRepository(Region::class)->find($data['region']);
+        $this->addElements($form, $country, $region);
     }
 
     function onPreSetData(FormEvent $event)

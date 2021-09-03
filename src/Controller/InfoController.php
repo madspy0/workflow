@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\City;
 use App\Entity\Region;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +17,6 @@ class InfoController extends AbstractController
      */
     public function regions(Request $request): Response
     {
-        dump($request);
         try {
             $regions = $this->getDoctrine()
                 ->getRepository(Region::class)
@@ -26,6 +26,30 @@ class InfoController extends AbstractController
             $data = array();
             foreach ($regions as $region) {
                 $data[] = ['id' => $region->getId(), 'name' => $region->getTitleUa()];
+            }
+
+            return new JsonResponse($data, Response::HTTP_OK);
+
+        } catch (\Exception $exception) {
+
+            return new JsonResponse(array('message' => $exception->getMessage()), Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * @Route("/cities", name="cities", methods={"GET"}, options={"expose"=true})
+     */
+    public function cities(Request $request): Response
+    {
+        try {
+            $cities = $this->getDoctrine()
+                ->getRepository(City::class)
+                ->findBy(['region' => $request->get('region')],
+                    ['title_ua' => 'ASC']);
+
+            $data = array();
+            foreach ($cities as $city) {
+                $data[] = ['id' => $city->getId(), 'name' => $city->getTitleUa()];
             }
 
             return new JsonResponse($data, Response::HTTP_OK);

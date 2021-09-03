@@ -89,6 +89,11 @@ class Region
      */
     private $country;
 
+    public function __toString()
+    {
+        return $this->getTitleUa();
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
