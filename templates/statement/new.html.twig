@@ -34,13 +34,13 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col col-8">
                 {{ form_label(form.phoneNumber) }}
                 {{ form_widget(form.phoneNumber) }}
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col col-8">
                 {{ form_label(form.email) }}
                 {{ form_widget(form.email) }}
             </div>
@@ -53,8 +53,8 @@
         </div>
         <div class="row">
             <div class="col">
-                {{ form_label(form.city) }}
-                {{ form_widget(form.city) }}
+                {{ form_label(form.country) }}
+                {{ form_widget(form.country) }}
             </div>
             <div class="col">
                 {{ form_label(form.region) }}
@@ -63,16 +63,47 @@
         </div>
         <div class="row">
             <div class="col">
+                {{ form_label(form.city) }}
+                {{ form_widget(form.city) }}
+            </div>
+            <div class="col">
                 {{ form_label(form.postal) }}
                 {{ form_widget(form.postal) }}
             </div>
+        </div>
+        <div class="between-address"></div>
+        <div class="row">
             <div class="col">
-                {{ form_label(form.country) }}
-                {{ form_widget(form.country) }}
+                {{ form_label(form.landAddress) }}
+                {{ form_widget(form.landAddress) }}
             </div>
         </div>
-
-        <div id="map" class="map"></div>
+        <div class="row">
+            <div class="col">
+                {{ form_label(form.landCountry) }}
+                {{ form_widget(form.landCountry) }}
+            </div>
+            <div class="col">
+                {{ form_label(form.landRegion) }}
+                {{ form_widget(form.landRegion) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{ form_label(form.landCity) }}
+                {{ form_widget(form.landCity) }}
+            </div>
+            <div class="col">
+                {{ form_label(form.landPostal) }}
+                {{ form_widget(form.landPostal) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-8">
+                {{ form_widget(form.geom) }}
+                <div id="map" class="map"></div>
+            </div>
+        </div>
 
         {{ form_rest(form) }}
         {{ form_end(form) }}

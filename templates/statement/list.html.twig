@@ -4,7 +4,7 @@
 
 {% block body %}
     {% for developmentApplication in developmentApplications %}
-        <a href="{{ path('statement.add_number', {id: developmentApplication.id}) }}">{{ developmentApplication.id }}</a>
+        <a href="{{ path('statement.update', {id: developmentApplication.id}) }}">{{ developmentApplication.id }}</a>
         {% if developmentApplication.solution.number is defined %}
             {{ developmentApplication.solution.number }}
         {% endif %}

@@ -21,7 +21,26 @@ class DevelopmentApplication
      * @ORM\Column(type="integer")
      */
     private $id;
+    /**
+     * @ORM\Column(type="string", length=20, nullable="true")
+     */
+    private $appealNumber;
 
+    /**
+     * @return mixed
+     */
+    public function getAppealNumber()
+    {
+        return $this->appealNumber;
+    }
+
+    /**
+     * @param mixed $appealNumber
+     */
+    public function setAppealNumber($appealNumber): void
+    {
+        $this->appealNumber = $appealNumber;
+    }
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -182,7 +201,7 @@ class DevelopmentApplication
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $status = 'draft';
+    private $status;
     /**
      * @var DateTime $created
      *

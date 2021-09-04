@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\DevelopmentSolution;
 use App\Form\DevelopmentSolutionFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,13 +15,14 @@ use App\Form\DevelopmentApplicationType;
 use App\Repository\DevelopmentApplicationRepository;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Component\Workflow\Exception\LogicException;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class StatementController extends AbstractController
 {
     /**
-     * @Route("/statement", name="statement.list")
+     * @Route("/list", name="statement.list")
      */
-    public function index(DevelopmentApplicationRepository $developmentApplicationRepository): Response
+    public function list(DevelopmentApplicationRepository $developmentApplicationRepository): Response
     {
         $developmentApplications = $developmentApplicationRepository->findAll();
 
@@ -30,9 +32,9 @@ class StatementController extends AbstractController
     }
 
     /**
-     * @Route("/statement/new", name="statement.new")
+     * @Route("/", name="statement.new")
      */
-    public function new(Request $request): Response
+    public function new(Request $request, WorkflowInterface $applicationFlowStateMachine): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
         $developmentApplication = new DevelopmentApplication();
@@ -41,10 +43,12 @@ class StatementController extends AbstractController
         ])->add('save', SubmitType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $applicationFlowStateMachine->getMarking($developmentApplication);
             $em = $this->getDoctrine()->getManager();
             $em->persist($developmentApplication);
             $em->flush();
-            return $this->redirectToRoute('statement.list');
+            //           return $this->redirectToRoute('statement.list');
+            return $this->render('statement/added.html.twig');
         }
         return $this->render('statement/new.html.twig', [
             'form' => $form->createView(),
@@ -52,22 +56,23 @@ class StatementController extends AbstractController
     }
 
     /**
-     * @Route("/statement/add_number/{id}", name="statement.add_number")
+     * @Route("/statement/add_solution/{id}", name="statement.add_solution")
      */
-    public function addNumber(WorkflowInterface $applicationFlowStateMachine, DevelopmentApplication $developmentApplication, Request $request): Response {
+    public function addSolution(WorkflowInterface $applicationFlowStateMachine, DevelopmentApplication $developmentApplication, Request $request): Response
+    {
         $developmentSolution = null === $developmentApplication->getSolution() ? new DevelopmentSolution() : $developmentApplication->getSolution();
         $form = $this->createForm(DevelopmentSolutionFormType::class, $developmentSolution)->add('save', SubmitType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $applicationFlowStateMachine->apply($developmentApplication,"to_number");
+                $applicationFlowStateMachine->apply($developmentApplication, "to_number");
                 $developmentSolution->setDevelopmentApplication($developmentApplication);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($developmentApplication);
                 $em->persist($developmentSolution);
                 $em->flush();
             } catch (LogicException $exception) {
-                return $this->render('statement/add_number.html.twig', [
+                return $this->render('add_solution.html.twig', [
                     'developmentApplication' => $developmentApplication,
                     'exception' => $exception,
                     'form' => $form->createView(),
@@ -75,9 +80,70 @@ class StatementController extends AbstractController
             }
             return $this->redirectToRoute('statement.list');
         }
-        return $this->render('statement/add_number.html.twig', [
+        return $this->render('add_solution.html.twig', [
             'developmentApplication' => $developmentApplication,
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/update/{id}", name="statement.update")
+     */
+    public function update(WorkflowInterface $applicationFlowStateMachine, DevelopmentApplication $developmentApplication, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        if ($applicationFlowStateMachine->can($developmentApplication, 'to_number')) {
+            {
+                $form = $this->createFormBuilder($developmentApplication)
+                    ->add('appealNumber', TextType::class)
+                    ->add('save', SubmitType::class)
+                    ->getForm();
+                $form->handleRequest($request);
+                if ($form->isSubmitted() && $form->isValid()) {
+                    try {
+                        $applicationFlowStateMachine->apply($developmentApplication, "to_number");
+                        $entityManager->persist($developmentApplication);
+                        $entityManager->flush();
+                        return $this->redirectToRoute('statement.list');
+                    } catch (LogicException $exception) {
+                        dump($exception);
+                    }
+                }
+                return $this->render('statement/add_solution.html.twig', [
+                    'developmentApplication' => $developmentApplication,
+                    'form' => $form->createView(),
+                ]);
+            }
+        }
+
+        if ($applicationFlowStateMachine->can($developmentApplication, 'publish')) {
+            $developmentSolution = null === $developmentApplication->getSolution() ? new DevelopmentSolution() : $developmentApplication->getSolution();
+            $form = $this->createForm(DevelopmentSolutionFormType::class, $developmentSolution)->add('save', SubmitType::class);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                try {
+                    if($developmentSolution->getAction()) {
+                        $applicationFlowStateMachine->apply($developmentApplication, "reject");
+                    } else {
+                        $applicationFlowStateMachine->apply($developmentApplication, "publish");
+                    }
+                    $developmentSolution->setDevelopmentApplication($developmentApplication);
+                    $entityManager->persist($developmentApplication);
+                    $entityManager->persist($developmentSolution);
+                    $entityManager->flush();
+                } catch (LogicException $exception) {
+                    return $this->render('statement/added.html.twig', [
+                        'developmentApplication' => $developmentApplication,
+                        'exception' => $exception,
+                        'form' => $form->createView(),
+                    ]);
+                }
+                return $this->redirectToRoute('statement.list');
+            }
+            return $this->render('statement/add_solution.html.twig', [
+                'developmentApplication' => $developmentApplication,
+                'form' => $form->createView(),
+            ]);
+        }
+    }
+
 }

@@ -13,8 +13,8 @@ class DevelopmentSolutionFormType extends AbstractType
     {
         $builder
             ->add('number')
-    //        ->add('createdAt')
-    //        ->add('developmentApplication')
+            ->add('solution')
+            ->add('action')
         ;
     }
 

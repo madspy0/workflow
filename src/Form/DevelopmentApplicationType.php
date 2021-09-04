@@ -32,8 +32,8 @@ class DevelopmentApplicationType extends AbstractType
             ->add('applicantFirstname', null, ['attr' => ['placeholder' => 'І\'мя']])
             ->add('applicantMiddlename', null, ['attr' => ['placeholder' => 'По-батькові']])
             ->add('phoneNumber', null, ['label' => 'Номер телефона'])
-            ->add('email')
-            ->add('applicantStreetAddress')
+            ->add('email',null,['label'=>'Поштова скринька'])
+            ->add('applicantStreetAddress',null,['label'=>'Адреса заявника'])
 //            ->add('city', EntityType::class, [
 //                'class' => City::class,
 //                'choice_label' => 'title_ua',
@@ -60,7 +60,7 @@ class DevelopmentApplicationType extends AbstractType
                 },
             ])
             ->add('postal')
-            ->add('landAddress')
+            ->add('landAddress',null,['label'=>'Адреса земельної ділянки'])
             ->add('landCity')
             ->add('landRegion')
 //                , EntityType::class, [
@@ -91,7 +91,7 @@ class DevelopmentApplicationType extends AbstractType
                     'First choice' => 'first choice',
                     'second choice' => 'second choice'
                 ]])
-            ->add('consent', CheckboxType::class, ['mapped' => false])
+            ->add('consent', CheckboxType::class, ['mapped' => false, 'label'=>'Згоден надати персональні данні'])
             ->add('geom', HiddenType::class)
 //            ->add('status')
 //            ->add('createdAt')

@@ -36,6 +36,16 @@ class DevelopmentSolution
      */
     protected $createdAt;
 
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $solution;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $action;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -96,6 +106,30 @@ class DevelopmentSolution
     public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getSolution(): ?string
+    {
+        return $this->solution;
+    }
+
+    public function setSolution(string $solution): self
+    {
+        $this->solution = $solution;
+
+        return $this;
+    }
+
+    public function getAction(): ?bool
+    {
+        return $this->action;
+    }
+
+    public function setAction(?bool $action): self
+    {
+        $this->action = $action;
 
         return $this;
     }

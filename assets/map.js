@@ -7,10 +7,12 @@ import {OSM, Vector as VectorSource} from 'ol/source';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {fromLonLat} from "ol/proj";
 import {WKT} from "ol/format";
+import {Feature} from "ol";
 
 const source = new VectorSource();
 const vector = new VectorLayer({
     source: source,
+    name: 'vector',
     style: new Style({
         fill: new Fill({
             color: 'rgb(216,0,254,0.2)',
@@ -74,15 +76,15 @@ country.onchange = function () {
             let city_options = document.querySelectorAll('#development_application_city option');
             city_options.forEach(o => o.remove());
             let city_opt = document.createElement('option');
-            city_opt.value=null;
+            city_opt.value = null;
             city_opt.innerHTML = "Спочатку виберіть регіон ...";
             city.appendChild(city_opt);
             let opt = document.createElement('option');
-            opt.value=null;
+            opt.value = null;
             opt.innerHTML = "Виберіть регіон";
             region.appendChild(opt);
             let arr = JSON.parse(Request.responseText);
-            arr.forEach(function(item, i) {
+            arr.forEach(function (item, i) {
                 let opt = document.createElement('option');
                 opt.value = item.id;
                 opt.innerHTML = item.name;
@@ -109,11 +111,11 @@ region.onchange = function () {
             let options = document.querySelectorAll('#development_application_city option');
             options.forEach(o => o.remove());
             let opt = document.createElement('option');
-            opt.value=null;
+            opt.value = null;
             opt.innerHTML = "Виберіть місто";
             city.appendChild(opt);
             let arr = JSON.parse(Request.responseText);
-            arr.forEach(function(item, i) {
+            arr.forEach(function (item, i) {
                 let opt = document.createElement('option');
                 opt.value = item.id;
                 opt.innerHTML = item.name;
@@ -121,4 +123,14 @@ region.onchange = function () {
             })
         }
     };
+}
+
+window.onload = function () {
+    let geom = document.getElementById('development_application_geom').value;
+    if (geom !== null) {
+        let feature = new Feature({
+            geometry: new WKT().readGeometry(geom)
+        });
+        vector.getSource().addFeature(feature);
+    }
 }
