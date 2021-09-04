@@ -25,7 +25,8 @@ class DevelopmentSolution
     private $number;
 
     /**
-     * @ORM\OneToOne(targetEntity=DevelopmentApplication::class, mappedBy="solution", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=DevelopmentApplication::class, inversedBy="solution")
+     * @ORM\JoinColumn(name="development_application_id", referencedColumnName="id")
      */
     private $developmentApplication;
 
@@ -77,7 +78,7 @@ class DevelopmentSolution
 
         // set the owning side of the relation if necessary
         if ($developmentApplication !== null && $developmentApplication->getSolution() !== $this) {
-            $developmentApplication->setSolution($this);
+            $developmentApplication->addSolution($this);
         }
 
         $this->developmentApplication = $developmentApplication;

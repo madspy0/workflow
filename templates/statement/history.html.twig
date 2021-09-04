@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello StatementController!{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('show_map') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('show_map') }}
+{% endblock %}
+
+{% block body %}
+    {% if exception is defined %}
+        {{ exception.message }}
+    {% endif %}
+
+    <div class="container">
+        <h2>Рішення комісії
+            {% if solution.action %}
+                <span class="reject">Відхилено</span>
+            {% else %}
+                <span class="accept">Cхвалено</span>
+            {% endif %}
+        </h2>
+        <div class="row">
+            <div class="col-2">
+                {% for sol in solution.developmentApplication.solution %}
+                    <b>
+                        {% if sol.id == solution.id %}
+                            {{ sol.createdAt| date("d/m/Y") }}
+                        {% else %}
+                            <a href="{{ path('statement.history', {id: sol.id}) }}">{{ sol.createdAt| date("d/m/Y") }}</a>
+                        {% endif %}
+                    </b>
+                    {% if sol.action %}
+                        <span class="reject">Відхилено</span>
+                    {% else %}
+                        <span class="accept">Cхвалено</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-6">
+                {{ solution.solution }}
+            </div>
+            <div class="col-4">
+                <h4>Заява на розробку</h4>
+                <p class="frmDesc">Заява на розробку документації із землеустрою</p>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        Заявник
+                    </div>
+                    <div class="col">
+                        {{ solution.developmentApplication.applicantLastname }}
+                        {{ solution.developmentApplication.applicantFirstname }}
+                        {{ solution.developmentApplication.applicantMiddlename }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Номер телефона
+                        {{ solution.developmentApplication.phoneNumber }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        email
+                        {{ solution.developmentApplication.email }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        applicantStreetAddress
+                        {{ solution.developmentApplication.applicantStreetAddress }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        city
+                        {{ solution.developmentApplication.city }}
+                    </div>
+                    <div class="col">
+                        region
+                        {{ solution.developmentApplication.region }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        postal
+                        {{ solution.developmentApplication.postal }}
+                    </div>
+                    <div class="col">
+                        country
+                        {{ solution.developmentApplication.country.TitleUa }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-8">
+                        <div id="map" class="map" data-geom="{{ solution.developmentApplication.geom }}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

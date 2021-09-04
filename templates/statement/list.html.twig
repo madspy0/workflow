@@ -3,11 +3,20 @@
 {% block title %}Hello StatementController!{% endblock %}
 
 {% block body %}
-    {% for developmentApplication in developmentApplications %}
-        <a href="{{ path('statement.update', {id: developmentApplication.id}) }}">{{ developmentApplication.id }}</a>
-        {% if developmentApplication.solution.number is defined %}
-            {{ developmentApplication.solution.number }}
-        {% endif %}
-        {{ developmentApplication.createdAt | date("m/d/Y") }}
-    {% endfor %}
+    <div class="container">
+        <h2>Заявки на розробку документації із землеустрою</h2>
+        {% for developmentApplication in developmentApplications %}
+            <div class="row">
+                <div class="col-2">
+                    <a href="{{ path('statement.update', {id: developmentApplication.id}) }}">{{ developmentApplication.id }}</a>
+                    {% if developmentApplication.solution.last.number is defined %}
+                        {{ developmentApplication.solution.last.number }}
+                    {% endif %}
+                </div>
+                <div class="col-10">
+                    {{ developmentApplication.createdAt | date("d/m/Y") }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -91,6 +91,7 @@ class StatementController extends AbstractController
      */
     public function update(WorkflowInterface $applicationFlowStateMachine, DevelopmentApplication $developmentApplication, EntityManagerInterface $entityManager, Request $request): Response
     {
+        // $applicationFlowStateMachine->apply($developmentApplication, "reopen");
         if ($applicationFlowStateMachine->can($developmentApplication, 'to_number')) {
             {
                 $form = $this->createFormBuilder($developmentApplication)
@@ -116,7 +117,7 @@ class StatementController extends AbstractController
         }
 
         if ($applicationFlowStateMachine->can($developmentApplication, 'publish')) {
-            $developmentSolution = null === $developmentApplication->getSolution() ? new DevelopmentSolution() : $developmentApplication->getSolution();
+            $developmentSolution  = new DevelopmentSolution();
             $form = $this->createForm(DevelopmentSolutionFormType::class, $developmentSolution)->add('save', SubmitType::class);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -144,6 +145,17 @@ class StatementController extends AbstractController
                 'form' => $form->createView(),
             ]);
         }
+        return $this->render('statement/history.html.twig', [
+            'solution' => $developmentApplication->getSolution()->last()
+        ]);
     }
-
+    /**
+     * @Route("/history/{id}", name="statement.history")
+     */
+    public function history(DevelopmentSolution $developmentSolution): Response
+    {
+        return $this->render('statement/history.html.twig', [
+            'solution' => $developmentSolution
+        ]);
+    }
 }

@@ -26,3 +26,6 @@ framework:
                 reject:
                     from: numbered
                     to:   rejected
+                reopen:
+                    from: rejected
+                    to: draft

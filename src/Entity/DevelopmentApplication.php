@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\DevelopmentApplicationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -209,7 +210,7 @@ class DevelopmentApplication
      */
     private $createdAt;
     /**
-     * @ORM\OneToOne(targetEntity=DevelopmentSolution::class, inversedBy="developmentApplication", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=DevelopmentSolution::class, mappedBy="developmentApplication", orphanRemoval=true)
      */
     private $solution;
     /**
@@ -219,6 +220,10 @@ class DevelopmentApplication
      */
     private $geom;
 
+    public function __construct()
+    {
+        $this->solution = new ArrayCollection();
+    }
     /**
      * @return mixed
      */
@@ -471,17 +476,25 @@ class DevelopmentApplication
         return $this;
     }
 
-    public function getSolution(): ?DevelopmentSolution
+    /**
+     * @return Collection
+     */
+    public function getSolution(): Collection
     {
         return $this->solution;
     }
 
-    public function setSolution(?DevelopmentSolution $solution): self
+    public function addSolution(DevelopmentSolution $solution): self
     {
-        $this->solution = $solution;
+        if (!$this->solution->contains($solution)) {
+            $this->solution[] = $solution;
+            $solution->setDevelopmentApplication($this);
+        }
 
         return $this;
     }
+
+
 
     /**
      * @ORM\PrePersist
