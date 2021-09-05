@@ -34,22 +34,6 @@ class DevelopmentApplicationType extends AbstractType
             ->add('phoneNumber', null, ['label' => 'Номер телефона'])
             ->add('email',null,['label'=>'Поштова скринька'])
             ->add('applicantStreetAddress',null,['label'=>'Адреса заявника'])
-//            ->add('city', EntityType::class, [
-//                'class' => City::class,
-//                'choice_label' => 'title_ua',
-//                'query_builder' => function (EntityRepository $er) {
-//                    return $er->createQueryBuilder('c')
-//                        ->orderBy('c.id', 'ASC');
-//                },
-//            ])
-//            ->add('region', EntityType::class, [
-//                'class' => Region::class,
-//                'choice_label' => 'title_ua',
-//                'query_builder' => function (EntityRepository $er) {
-//                    return $er->createQueryBuilder('r')
-//                        ->orderBy('r.id', 'ASC');
-//                },
-//            ])
             ->add('country', EntityType::class, [
                 'class' => Country::class,
                 'choice_label' => 'title_ua',
@@ -60,32 +44,18 @@ class DevelopmentApplicationType extends AbstractType
                 },
             ])
             ->add('postal')
-            ->add('landAddress',null,['label'=>'Адреса земельної ділянки'])
+            ->add('landAddress',null,['label'=>'Адреса земельної ділянки', 'attr' => ['placeholder' => 'Вулиця']])
             ->add('landCity')
             ->add('landRegion')
-//                , EntityType::class, [
-//                'class' => Region::class,
-//                'choice_label' => 'title_ua',
-//                'query_builder' => function (EntityRepository $er) {
-//                    return $er->createQueryBuilder('r')
-//                        ->orderBy('r.id', 'ASC');
-//                },
-//            ])
             ->add('landPostal')
             ->add('landCountry')
-//                , EntityType::class, [
-//                'class' => Country::class,
-//                'choice_label' => 'title_ua',
-//                'query_builder' => function (EntityRepository $er) {
-//                    return $er->createQueryBuilder('c')
-//                        ->orderBy('c.id', 'ASC');
-//                },
-//            ])
             ->add('cadastreNumber')
             ->add('area')
             ->add('purpose')
             ->add('use')
-            ->add('planingDocumentation')
+            ->add('planingDocumentation',null,['data'=>true,
+                'label'=>'Необхідність розроблення містобудівної документації',
+                'attr'=>['class'=>'form-switch']])
             ->add('typeDocumentation', ChoiceType::class, [
                 'choices' => [
                     'First choice' => 'first choice',

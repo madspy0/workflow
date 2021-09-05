@@ -127,7 +127,7 @@ region.onchange = function () {
 
 window.onload = function () {
     let geom = document.getElementById('development_application_geom').value;
-    if (geom !== null) {
+    if (geom) {
         let feature = new Feature({
             geometry: new WKT().readGeometry(geom)
         });
