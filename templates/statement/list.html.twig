@@ -7,13 +7,21 @@
         <h2>Заявки на розробку документації із землеустрою</h2>
         {% for developmentApplication in developmentApplications %}
             <div class="row">
-                <div class="col-2">
-                    <a href="{{ path('statement.update', {id: developmentApplication.id}) }}">{{ developmentApplication.id }}</a>
+                <div class="col-1">
+                    <a href="{{ path('statement.update', {id: developmentApplication.id}) }}">{{ developmentApplication.appealNumber }}</a>
+                </div>
+                <div class="col-1">
                     {% if developmentApplication.solution.last.number is defined %}
                         {{ developmentApplication.solution.last.number }}
                     {% endif %}
                 </div>
-                <div class="col-10">
+                <div class="col-2">
+                    {{ developmentApplication.area }}
+                </div>
+                <div class="col-4">
+                    {{ developmentApplication.landRegion }}
+                </div>
+                <div class="col-4">
                     {{ developmentApplication.createdAt | date("d/m/Y") }}
                 </div>
             </div>

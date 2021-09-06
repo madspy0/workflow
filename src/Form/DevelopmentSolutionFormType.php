@@ -12,9 +12,9 @@ class DevelopmentSolutionFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('number')
-            ->add('solution')
-            ->add('action')
+            ->add('number',null,['label'=>'Номер'])
+            ->add('solution',null,['label'=>'Рішення'])
+            ->add('action',null,['label'=>'Результат'])
         ;
     }
 

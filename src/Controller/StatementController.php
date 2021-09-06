@@ -95,7 +95,7 @@ class StatementController extends AbstractController
         if ($applicationFlowStateMachine->can($developmentApplication, 'to_number')) {
             {
                 $form = $this->createFormBuilder($developmentApplication)
-                    ->add('appealNumber', TextType::class)
+                    ->add('appealNumber', TextType::class,['label'=>'Присвоїти номер'])
                     ->add('save', SubmitType::class)
                     ->getForm();
                 $form->handleRequest($request);
@@ -109,7 +109,7 @@ class StatementController extends AbstractController
                         dump($exception);
                     }
                 }
-                return $this->render('statement/add_solution.html.twig', [
+                return $this->render('statement/add_number.html.twig', [
                     'developmentApplication' => $developmentApplication,
                     'form' => $form->createView(),
                 ]);
@@ -140,7 +140,7 @@ class StatementController extends AbstractController
                 }
                 return $this->redirectToRoute('statement.list');
             }
-            return $this->render('statement/add_solution.html.twig', [
+            return $this->render('statement/add_number.html.twig', [
                 'developmentApplication' => $developmentApplication,
                 'form' => $form->createView(),
             ]);
