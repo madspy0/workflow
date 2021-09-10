@@ -20,6 +20,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class StatementController extends AbstractController
 {
     /**
+     * @Route("/", name="homepage")
+     */
+    public function index(): Response
+    {
+        return $this->render('statement/index.html.twig');
+    }
+
+
+
+    /**
      * @Route("/list", name="statement.list")
      */
     public function list(DevelopmentApplicationRepository $developmentApplicationRepository): Response
@@ -32,7 +42,7 @@ class StatementController extends AbstractController
     }
 
     /**
-     * @Route("/", name="statement.new")
+     * @Route("/new", name="statement.new")
      */
     public function new(Request $request, WorkflowInterface $applicationFlowStateMachine): Response
     {

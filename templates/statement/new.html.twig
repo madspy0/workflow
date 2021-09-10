@@ -105,8 +105,13 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col col-8 form-switch">
+                {{ form_label(form.planingDocumentation) }}
+                {{ form_widget(form.planingDocumentation) }}
+            </div>
+        </div>
         {{ form_rest(form) }}
         {{ form_end(form) }}
-    </div>
     </div>
 {% endblock %}

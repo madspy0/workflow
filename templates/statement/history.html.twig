@@ -21,18 +21,18 @@
 
         <div class="row">
             <div class="col-2">
-                {% for sol in solution.developmentApplication.solution %}
+                    {% for sol in solution.developmentApplication.solution %}
                         {% if sol.id == solution.id %}
                             <b>{{ sol.createdAt| date("d/m/Y") }}</b>
                         {% else %}
                             <a href="{{ path('statement.history', {id: sol.id}) }}">{{ sol.createdAt| date("d/m/Y") }}</a>
                         {% endif %}
-                    {% if sol.action %}
-                        <span class="reject">Відхилено</span>
-                    {% else %}
-                        <span class="accept">Cхвалено</span>
-                    {% endif %}
-                {% endfor %}
+                        {% if sol.action %}
+                            <span class="reject">Відхилено</span>
+                        {% else %}
+                            <span class="accept">Cхвалено</span>
+                        {% endif %}
+                    {% endfor %}
             </div>
             <div class="col-6">
                 <h2>Рішення комісії

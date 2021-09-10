@@ -45,6 +45,9 @@ h2 {
 .form-select {
     font-size: 13px;
 }
+.form-select, .form-control {
+    font-size: 14px;
+}
 hr {
     margin-bottom: 0;
 }

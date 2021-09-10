@@ -4,9 +4,18 @@
  * We recommend including the built version of this JavaScript file
  * (and its CSS file) in your base layout (base.html.twig).
  */
-
 // any CSS you import will output into a single css file (app.css in this case)
-import './styles/app.css';
+import '@fortawesome/fontawesome-free/js/fontawesome'
+import '@fortawesome/fontawesome-free/js/solid'
+import '@fortawesome/fontawesome-free/js/regular'
+import '@fortawesome/fontawesome-free/js/brands'
 
+// import './styles/app.css';
+import './scss/portal.scss';
 // start the Stimulus application
 import './bootstrap';
+//
+import './portal/app';
+
+import './plugins/chart.js/chart.min'
+import './portal/index-charts'

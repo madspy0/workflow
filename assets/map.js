@@ -133,4 +133,5 @@ window.onload = function () {
         });
         vector.getSource().addFeature(feature);
     }
+    console.log('select', document.getElementsByClassName('form-select'));
 }
