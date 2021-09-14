@@ -11,11 +11,10 @@ import '@fortawesome/fontawesome-free/js/regular'
 import '@fortawesome/fontawesome-free/js/brands'
 
 // import './styles/app.css';
+
 import './scss/portal.scss';
 // start the Stimulus application
-import './bootstrap';
-//
-import './portal/app';
-
+// import './bootstrap';
 import './plugins/chart.js/chart.min'
 import './portal/index-charts'
+import './portal/app';

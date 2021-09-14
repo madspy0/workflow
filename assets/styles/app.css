@@ -1,24 +1,24 @@
-body {
-    background-color: #dcdcdc;;
-    font-family: "Arimo", sans-serif !important;
-    padding: 30px 70px 30px 30px;
-}
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-    color: #7c7c7c;
-    font-size: 13px !important;
-}
-::-moz-placeholder { /* Firefox 19+ */
-    color: #7c7c7c;
-    font-size: 13px !important;
-}
-:-ms-input-placeholder { /* IE 10+ */
-    color: #7c7c7c;
-    font-size: 13px !important;
-}
-:-moz-placeholder { /* Firefox 18- */
-    color: #7c7c7c;
-    font-size: 13px !important;
-}
+/*body {*/
+/*    background-color: #dcdcdc;;*/
+/*    font-family: "Arimo", sans-serif !important;*/
+/*    padding: 30px 70px 30px 30px;*/
+/*}*/
+/*::-webkit-input-placeholder { !* Chrome/Opera/Safari *!*/
+/*    color: #7c7c7c;*/
+/*    font-size: 13px !important;*/
+/*}*/
+/*::-moz-placeholder { !* Firefox 19+ *!*/
+/*    color: #7c7c7c;*/
+/*    font-size: 13px !important;*/
+/*}*/
+/*:-ms-input-placeholder { !* IE 10+ *!*/
+/*    color: #7c7c7c;*/
+/*    font-size: 13px !important;*/
+/*}*/
+/*:-moz-placeholder { !* Firefox 18- *!*/
+/*    color: #7c7c7c;*/
+/*    font-size: 13px !important;*/
+/*}*/
 .map {
     width: 100%;
     height: 400px;

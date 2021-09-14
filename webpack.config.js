@@ -22,10 +22,11 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('map', './assets/map.js')
+    .addEntry('list', './assets/list.js')
     .addEntry('show_map', './assets/show_map.js')
     .addEntry('portal', './assets/portal/app.js')
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
-    .enableStimulusBridge('./assets/controllers.json')
+    //.enableStimulusBridge('./assets/controllers.json')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -71,7 +72,7 @@ Encore
     //.enableIntegrityHashes(Encore.isProduction())
 
     // uncomment if you're having problems with a jQuery plugin
-    //.autoProvidejQuery()
+    .autoProvidejQuery()
 ;
 
 module.exports = Encore.getWebpackConfig();

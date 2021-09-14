@@ -2,6 +2,10 @@
 
 {% block title %}Hello StatementController!{% endblock %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('list') }}
+{% endblock %}
+
 {% block body %}
 
     {% include('statement/header.html.twig') %}

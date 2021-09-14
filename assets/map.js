@@ -1,3 +1,9 @@
+import '@fortawesome/fontawesome-free/js/fontawesome'
+import '@fortawesome/fontawesome-free/js/solid'
+import '@fortawesome/fontawesome-free/js/regular'
+import '@fortawesome/fontawesome-free/js/brands'
+import './scss/portal.scss';
+
 import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -8,6 +14,8 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {fromLonLat} from "ol/proj";
 import {WKT} from "ol/format";
 import {Feature} from "ol";
+
+import './portal/app';
 
 const source = new VectorSource();
 const vector = new VectorLayer({
