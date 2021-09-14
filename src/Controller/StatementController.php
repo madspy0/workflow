@@ -14,6 +14,7 @@ use App\Entity\DevelopmentApplication;
 use App\Form\DevelopmentApplicationType;
 use App\Repository\DevelopmentApplicationRepository;
 use Symfony\Component\Workflow\WorkflowInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -44,7 +45,7 @@ class StatementController extends AbstractController
     /**
      * @Route("/new", name="statement.new")
      */
-    public function new(Request $request, WorkflowInterface $applicationFlowStateMachine): Response
+    public function new(Request $request, WorkflowInterface $applicationFlowStateMachine, ValidatorInterface $validator): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
         $developmentApplication = new DevelopmentApplication();
@@ -60,8 +61,11 @@ class StatementController extends AbstractController
             //           return $this->redirectToRoute('statement.list');
             return $this->render('statement/added.html.twig');
         }
+        $validErrors = $validator->validate($developmentApplication);
+
         return $this->render('statement/new.html.twig', [
             'form' => $form->createView(),
+            'validErrors' => $validErrors
         ]);
     }
 

@@ -137,7 +137,9 @@
                                     <div class="row">
                                         <div class="col col-8">
                                             <div class="form-error">
-                                            {{ form_errors(form) }}
+                                                {% for error in validErrors %}
+                                                    {{ error.message }}
+                                                {% endfor %}
                                             </div>
                                             {{ form_widget(form.geom) }}
                                             <div id="map" class="map"></div>
