@@ -136,6 +136,9 @@
                                     </div>
                                     <div class="row">
                                         <div class="col col-8">
+                                            <div class="form-error">
+                                            {{ form_errors(form) }}
+                                            </div>
                                             {{ form_widget(form.geom) }}
                                             <div id="map" class="map"></div>
                                         </div>

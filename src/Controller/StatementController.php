@@ -168,4 +168,11 @@ class StatementController extends AbstractController
             'solution' => $developmentSolution
         ]);
     }
+    /**
+     * @Route("/calendar", name="statement.calendar")
+     */
+    public function calendar(): Response
+    {
+        return $this->render('statement/calendar.html.twig');
+    }
 }

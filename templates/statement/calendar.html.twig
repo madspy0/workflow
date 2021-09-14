@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello StatementController!{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('calendar') }}
+{% endblock %}
+
+{% block body %}
+
+    {% include('statement/header.html.twig') %}
+
+    <div class="app-wrapper">
+
+        <div class="app-content pt-3 p-md-3 p-lg-4">
+            <div class="container-xl">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="orders-all" role="tabpanel"
+                         aria-labelledby="orders-all-tab">
+                        <div class="app-card app-card-orders-table shadow-sm mb-5">
+                            <div class="app-card-body">
+                                <span id="litepicker"></span>
+                            </div><!--//app-card-body-->
+                        </div><!--//app-card-->
+
+                    </div><!--//tab-pane-->
+
+                </div><!--//tab-content-->
+
+
+            </div><!--//container-fluid-->
+        </div><!--//app-content-->
+
+        {% include('statement/footer.html.twig') %}
+
+    </div><!--//app-wrapper-->
+
+{% endblock %}
