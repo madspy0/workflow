@@ -1,5 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{#{% form_theme form _self %}#}
+{#{% block text_widget %}#}
+{#    <div class="some-custom-class">#}
+{#        #}
+{#    </div>#}
+{#{% endblock %}#}
+
 {% block title %}Hello StatementController!{% endblock %}
 
 {% block stylesheets %}
@@ -30,16 +37,16 @@
                                     {{ form_start(form) }}
                                     <div class="row">
                                         <div class="col">
-                                            <label class="form-label">&nbsp;</label>
+                                            {{ form_label(form.applicantLastname) }}
                                             {{ form_widget(form.applicantLastname) }}
                                         </div>
                                         <div class="col">
-                                            <label class="form-label">&nbsp;</label>
+                                            {{ form_label(form.applicantFirstname) }}
                                             {{ form_widget(form.applicantFirstname) }}
 
                                         </div>
                                         <div class="col">
-                                            <label class="form-label">&nbsp;</label>
+                                            {{ form_label(form.applicantMiddlename) }}
                                             {{ form_widget(form.applicantMiddlename) }}
                                         </div>
                                     </div>
@@ -152,6 +159,15 @@
                                             {{ form_widget(form.planingDocumentation) }}
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col col-6">
+                                            {{ form_label(form.cadastreNumber) }}
+                                            {{ form_widget(form.cadastreNumber) }}
+                                        </div>
+                                    </div>
+
+                                    {{ form_row(form.area) }}
+
                                     {{ form_rest(form) }}
                                     {{ form_end(form) }}
                                 </div><!--//col-->

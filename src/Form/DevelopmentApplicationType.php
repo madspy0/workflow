@@ -28,9 +28,9 @@ class DevelopmentApplicationType extends AbstractType
     {
         $this->entityManager = $options['entity_manager'];
         $builder
-            ->add('applicantLastname', null, ['label' => 'Заявник', 'attr' => ['placeholder' => 'Призвище']])
-            ->add('applicantFirstname', null, ['attr' => ['placeholder' => 'І\'мя']])
-            ->add('applicantMiddlename', null, ['attr' => ['placeholder' => 'По-батькові']])
+            ->add('applicantLastname', null, ['label' => 'Призвище'])
+            ->add('applicantFirstname', null, ['label' => 'І\'мя'])
+            ->add('applicantMiddlename', null, ['label' => 'По-батькові'])
             ->add('phoneNumber', null, ['label' => 'Номер телефона'])
             ->add('email',null,['label'=>'Поштова скринька'])
             ->add('applicantStreetAddress',null,['label'=>'Адреса заявника'])
@@ -44,13 +44,13 @@ class DevelopmentApplicationType extends AbstractType
                 },
             ])
             ->add('postal')
-            ->add('landAddress',null,['label'=>'Адреса земельної ділянки', 'attr' => ['placeholder' => 'Вулиця']])
+            ->add('landAddress',null,['label'=>'Вулиця'])
             ->add('landCity')
             ->add('landRegion')
             ->add('landPostal')
             ->add('landCountry')
             ->add('cadastreNumber')
-            ->add('area')
+            ->add('area',null, ['label'=>'Площа'])
             ->add('purpose')
             ->add('use')
             ->add('planingDocumentation',null,['data'=>true,
@@ -63,10 +63,6 @@ class DevelopmentApplicationType extends AbstractType
                 ]])
             ->add('consent', CheckboxType::class, ['mapped' => false, 'label'=>'Згоден надати персональні данні'])
             ->add('geom', HiddenType::class)
-//            ->add('status')
-//            ->add('createdAt')
-//            ->add('solution', DevelopmentSolutionFormType::class)
-//            ->add('save', SubmitType::class)
         ;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
         $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
