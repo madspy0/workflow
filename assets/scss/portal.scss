@@ -38,7 +38,11 @@ $theme-colors: (
   "info": $theme-info-color,
 );
 
-
+#development_application_geom {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
 
 /*************************** Import Bootstrap  *****************************/
 @import "~bootstrap/scss/bootstrap";

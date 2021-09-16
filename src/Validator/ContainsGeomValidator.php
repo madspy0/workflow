@@ -23,6 +23,7 @@ class ContainsGeomValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, ContainsGeom::class);
         }
 
+ //       $value = $object->getGeom();
         // custom constraints should ignore null and empty values to allow
         // other constraints (NotBlank, NotNull, etc.) to take care of that
         if (null === $value || '' === $value) {
@@ -44,7 +45,9 @@ class ContainsGeomValidator extends ConstraintValidator
 
         $repository = $this->em->getRepository(DevelopmentApplication::class);
         if(!$repository->isValid($value)) {
+        //    dump($this->context->getPropertyPath('geom'));
             $this->context->buildViolation($constraint->message)
+ //               ->atPath('geom')
                 ->setParameter('{{ string }}', $value)
                 ->addViolation();
         }

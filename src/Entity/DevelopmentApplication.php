@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator as AcmeAssert;
+use App\Validator\ContainsGeom;
 
 /**
  * @ORM\Entity(repositoryClass=DevelopmentApplicationRepository::class)
@@ -64,6 +64,7 @@ class DevelopmentApplication
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Assert\Email
      */
     private $email;
 
@@ -216,7 +217,7 @@ class DevelopmentApplication
     /**
      * @ORM\Column(type="geometry")
      * @Assert\NotBlank()
-     * @AcmeAssert\ContainsGeom()
+     * @ContainsGeom()
      */
     private $geom;
 
@@ -227,7 +228,7 @@ class DevelopmentApplication
     /**
      * @return mixed
      */
-    public function getGeom()
+    public function getGeom(): ?string
     {
         return $this->geom;
     }

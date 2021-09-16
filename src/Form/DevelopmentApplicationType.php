@@ -19,6 +19,8 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use App\Validator\ContainsGeom;
 
 class DevelopmentApplicationType extends AbstractType
 {
@@ -62,7 +64,7 @@ class DevelopmentApplicationType extends AbstractType
                     'second choice' => 'second choice'
                 ]])
             ->add('consent', CheckboxType::class, ['mapped' => false, 'label'=>'Згоден надати персональні данні'])
-            ->add('geom', HiddenType::class)
+            ->add('geom',null,['label'=>false,'attr'=>['class'=>'hidden-geom']])
         ;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
         $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
@@ -73,6 +75,8 @@ class DevelopmentApplicationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => DevelopmentApplication::class,
+ //           'error_bubbling' => false,
+//            'cascade_validation' => true
         ]);
         $resolver->setRequired('entity_manager');
     }

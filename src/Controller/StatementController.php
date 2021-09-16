@@ -47,11 +47,14 @@ class StatementController extends AbstractController
      */
     public function new(Request $request, WorkflowInterface $applicationFlowStateMachine, ValidatorInterface $validator): Response
     {
+        $this->addFlash('success', 'log in please');
         $entityManager = $this->getDoctrine()->getManager();
         $developmentApplication = new DevelopmentApplication();
         $form = $this->createForm(DevelopmentApplicationType::class, $developmentApplication, [
             'entity_manager' => $entityManager,
-        ])->add('save', SubmitType::class);
+        ])->add('save', SubmitType::class
+            //['validate'=>false]
+        );
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $applicationFlowStateMachine->getMarking($developmentApplication);
@@ -61,11 +64,9 @@ class StatementController extends AbstractController
             //           return $this->redirectToRoute('statement.list');
             return $this->render('statement/added.html.twig');
         }
-        $validErrors = $validator->validate($developmentApplication);
 
         return $this->render('statement/new.html.twig', [
-            'form' => $form->createView(),
-            'validErrors' => $validErrors
+            'form' => $form->createView()
         ]);
     }
 
