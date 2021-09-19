@@ -2,6 +2,11 @@
 
 {% block title %}Hello StatementController!{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('calendar') }}
+{% endblock %}
+
 {% block javascripts %}
     {{ encore_entry_script_tags('calendar') }}
 {% endblock %}
@@ -19,7 +24,7 @@
                          aria-labelledby="orders-all-tab">
                         <div class="app-card app-card-orders-table shadow-sm mb-5">
                             <div class="app-card-body">
-                                <span id="litepicker"></span>
+                                <div data-provide="calendar"></div>
                             </div><!--//app-card-body-->
                         </div><!--//app-card-->
 

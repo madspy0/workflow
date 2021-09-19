@@ -45,10 +45,8 @@ class StatementController extends AbstractController
     /**
      * @Route("/new", name="statement.new")
      */
-    public function new(Request $request, WorkflowInterface $applicationFlowStateMachine, ValidatorInterface $validator): Response
+    public function new(Request $request, WorkflowInterface $applicationFlowStateMachine,EntityManagerInterface $entityManager): Response
     {
-        $this->addFlash('success', 'log in please');
-        $entityManager = $this->getDoctrine()->getManager();
         $developmentApplication = new DevelopmentApplication();
         $form = $this->createForm(DevelopmentApplicationType::class, $developmentApplication, [
             'entity_manager' => $entityManager,
