@@ -15,8 +15,51 @@
         Save
     </button>
 {% endblock %}
+{# {%- block form_row -%} #}
+{# {%- if compound is defined and compound -%} #}
+{# {%- set element = 'fieldset' -%} #}
+{# {%- endif -%} #}
+{# {%- set widget_attr = {} -%} #}
+{# {%- if help is not empty -%} #}
+{# {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%} #}
+{# {%- endif -%} #}
+{# {%- set row_class = row_class|default(row_attr.class|default('mb-4')|trim) -%} #}
+{# {%- if 'form-floating' in row_class -%} #}
+{# {{- form_widget(form, widget_attr) -}} #}
+{# {{- form_label(form) -}} #}
+{# {%- else -%} #}
+{# {{- form_label(form) -}} #}
+{# {{- form_widget(form, widget_attr) -}} #}
+{# {%- endif -%} #}
+{# {{- form_help(form) -}} #}
+{# {{- form_errors(form) -}} #}
+{# {%- endblock form_row %} #}
+{% macro countries(land) %}
+    <div class="row">
+        <div class="col">
+            {% set addr = land ~ 'Address' %}
+            {{ form_row(form.addr) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.landCountry) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.landRegion) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.landCity) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.landPostal) }}
+        </div>
+    </div>
+{% endmacro %}
 
-{% block title %}Hello StatementController!{% endblock %}
+{% block title %}Заява на розробку документації із землеустрою{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -81,12 +124,10 @@
                                     </div>
                                     <div class="row">
                                         <div class="col">
-                                            {{ form_label(form.city) }}
-                                            {{ form_widget(form.city) }}
+                                            {{ form_row(form.city) }}
                                         </div>
                                         <div class="col">
-                                            {{ form_label(form.postal) }}
-                                            {{ form_widget(form.postal) }}
+                                            {{ form_row(form.postal) }}
                                         </div>
                                     </div>
                                 </div><!--//col-->
@@ -104,28 +145,23 @@
                                 <div class="col-12 col-lg-9">
                                     <div class="row">
                                         <div class="col">
-                                            {{ form_label(form.landAddress) }}
-                                            {{ form_widget(form.landAddress) }}
+                                            {{ form_row(form.landAddress) }}
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
-                                            {{ form_label(form.landCountry) }}
-                                            {{ form_widget(form.landCountry) }}
+                                            {{ form_row(form.landCountry) }}
                                         </div>
                                         <div class="col">
-                                            {{ form_label(form.landRegion) }}
-                                            {{ form_widget(form.landRegion) }}
+                                            {{ form_row(form.landRegion) }}
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
-                                            {{ form_label(form.landCity) }}
-                                            {{ form_widget(form.landCity) }}
+                                            {{ form_row(form.landCity) }}
                                         </div>
                                         <div class="col">
-                                            {{ form_label(form.landPostal) }}
-                                            {{ form_widget(form.landPostal) }}
+                                            {{ form_row(form.landPostal) }}
                                         </div>
                                     </div>
                                     <div class="row">
@@ -137,14 +173,12 @@
 
                                     <div class="row">
                                         <div class="col col-8 form-switch">
-                                            {{ form_label(form.planingDocumentation) }}
-                                            {{ form_widget(form.planingDocumentation) }}
+                                            {{ form_row(form.planingDocumentation) }}
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col col-6">
-                                            {{ form_label(form.cadastreNumber) }}
-                                            {{ form_widget(form.cadastreNumber) }}
+                                            {{ form_row(form.cadastreNumber) }}
                                         </div>
                                     </div>
 

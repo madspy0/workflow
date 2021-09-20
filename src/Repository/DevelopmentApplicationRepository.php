@@ -9,7 +9,6 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @method DevelopmentApplication|null find($id, $lockMode = null, $lockVersion = null)
  * @method DevelopmentApplication|null findOneBy(array $criteria, array $orderBy = null)
- * @method DevelopmentApplication[]    findAll()
  * @method DevelopmentApplication[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class DevelopmentApplicationRepository extends ServiceEntityRepository
@@ -46,8 +45,16 @@ class DevelopmentApplicationRepository extends ServiceEntityRepository
             ->getConnection()
             ->prepare('select ST_MakePolygon( ST_GeomFromText(\'' . $geom . '\') ');
         $stmt->execute();
-        $result = $stmt->fetchAll();
-        return $result;
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * @method DevelopmentApplication[]    findAll()
+     * @return DevelopmentApplication[]
+     */
+    public function findAll():array
+    {
+        return $this->findBy(array(), array('id' => 'DESC'));
     }
     // /**
     //  * @return DevelopmentApplication[] Returns an array of DevelopmentApplication objects

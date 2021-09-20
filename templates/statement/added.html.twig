@@ -1,21 +1,29 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Hello StatementController!{% endblock %}
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        html,
-        body {
-            height: 100%
-        }
-    </style>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('list') }}
 {% endblock %}
+
 {% block body %}
-<div class="h-100 row" align="center">
-    <div class="col">
-        Заява відправлена
-        <a href="{{ path('statement.new') }}">На головну</a>
+
+    {% include('statement/header.html.twig') %}
+
+    <div class="app-wrapper">
+
+        <div class="app-content pt-3 p-md-3 p-lg-4">
+            <div class="container-xl">
+
+                <div class="row g-3 mb-4 align-items-center justify-content-between">
+                    <div class="col-auto">
+                        <h1 class="app-page-title mb-0">Заява відправлена</h1>
+                        <a href="{{ path('homepage') }}">На головну</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include('statement/footer.html.twig') %}
     </div>
-</div>
 
 {% endblock %}
