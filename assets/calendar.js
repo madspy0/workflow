@@ -4,9 +4,11 @@ import '@fortawesome/fontawesome-free/js/regular'
 import '@fortawesome/fontawesome-free/js/brands'
 import './scss/portal.scss';
 
-import 'js-year-calendar';
+import Calendar from 'js-year-calendar';
 import 'js-year-calendar/locales/js-year-calendar.ua';
 import 'js-year-calendar/dist/js-year-calendar.css';
+new Calendar('.calendar',
+    { language: 'ua' });
 
 import './portal/app';
 

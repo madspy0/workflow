@@ -217,7 +217,7 @@ class DevelopmentApplication
     /**
      * @ORM\Column(type="geometry")
      * @Assert\NotBlank()
-     * @ContainsGeom()
+     * @ContainsGeom(message="Геометрія невірна")
      */
     private $geom;
 
