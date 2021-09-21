@@ -14,7 +14,9 @@
 
                 <h1 class="app-page-title">Статистика</h1>
 
-{#                {% include('statement/alertcard.html.twig') %}#}
+                {% if not is_granted('ROLE_USER') %}
+                    {% include('statement/alertcard.html.twig') %}
+                {% endif %}
 
                 <div class="row g-4 mb-4">
                     <div class="col-6 col-lg-3">
