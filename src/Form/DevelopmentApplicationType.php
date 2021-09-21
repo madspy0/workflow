@@ -35,8 +35,10 @@ class DevelopmentApplicationType extends AbstractType
             ->add('applicantMiddlename', null, ['label' => 'По-батькові'])
             ->add('phoneNumber', null, ['label' => 'Номер телефона'])
             ->add('email',null,['label'=>'Поштова скринька'])
-            ->add('applicantStreetAddress',null,['label'=>'Адреса заявника'])
+            ->add('applicantStreetAddress',null,['label'=>'Вулиця'])
+            ->add('applicantBuild',null,['label'=>'Будинок'])
             ->add('country', EntityType::class, [
+                'preferred_choices' => [$this->entityManager->getRepository(Country::class)->find(2)],
                 'class' => Country::class,
                 'choice_label' => 'title_ua',
                 'placeholder' => 'Виберіть країну',
@@ -44,14 +46,25 @@ class DevelopmentApplicationType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.id', 'ASC');
                 },
+                'attr'=>['class'=>'dcountries']
             ])
             ->add('postal')
             ->add('landAddress',null,['label'=>'Вулиця'])
             ->add('landCity')
             ->add('landRegion')
             ->add('landPostal')
-            ->add('landCountry')
-            ->add('cadastreNumber')
+            ->add('landCountry', EntityType::class, [
+                'class' => Country::class,
+                'choice_label' => 'title_ua',
+                'placeholder' => 'Виберіть країну',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.id', 'ASC');
+                },
+                'attr'=>['class'=>'dcountries']
+            ])
+            ->add('landApplicantBuild',null, ['label'=>'Номер'])
+            ->add('cadastreNumber', null, ['label'=>'Кадастровий номер'])
             ->add('area',null, ['label'=>'Площа'])
             ->add('purpose')
             ->add('use')

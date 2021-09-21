@@ -74,6 +74,11 @@ class DevelopmentApplication
     private $applicantStreetAddress;
 
     /**
+     * @ORM\Column(type="string", length=120, nullable=true)
+     */
+    private $applicantBuild;
+
+    /**
      * @ORM\ManyToOne(targetEntity="City")
      * @ORM\JoinColumn(name="city_id", referencedColumnName="city_id")
      */
@@ -170,7 +175,43 @@ class DevelopmentApplication
     private $landCountry;
 
     /**
-     * @ORM\Column(type="string", length=13)
+     * @ORM\Column(type="string", length=120, nullable=true)
+     */
+    private $landApplicantBuild;
+
+    /**
+     * @return mixed
+     */
+    public function getApplicantBuild()
+    {
+        return $this->applicantBuild;
+    }
+
+    /**
+     * @param mixed $applicantBuild
+     */
+    public function setApplicantBuild($applicantBuild): void
+    {
+        $this->applicantBuild = $applicantBuild;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLandApplicantBuild()
+    {
+        return $this->landApplicantBuild;
+    }
+
+    /**
+     * @param mixed $landApplicantBuild
+     */
+    public function setLandApplicantBuild($landApplicantBuild): void
+    {
+        $this->landApplicantBuild = $landApplicantBuild;
+    }
+    /**
+     * @ORM\Column(type="string", length=13, nullable=true)
      */
     private $cadastreNumber;
 
@@ -216,8 +257,8 @@ class DevelopmentApplication
     private $solution;
     /**
      * @ORM\Column(type="geometry")
-     * @Assert\NotBlank()
      * @ContainsGeom(message="Геометрія невірна")
+     * @Assert\NotBlank(message="Намалюйте план ділянки")
      */
     private $geom;
 

@@ -59,7 +59,6 @@ class StatementController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($developmentApplication);
             $em->flush();
-            //           return $this->redirectToRoute('statement.list');
             return $this->render('statement/added.html.twig');
         }
 
