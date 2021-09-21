@@ -44,7 +44,7 @@ class DevelopmentApplicationType extends AbstractType
                 'placeholder' => 'Виберіть країну',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
-                        ->orderBy('c.id', 'ASC');
+                        ->orderBy('c.title_ru', 'ASC');
                 },
                 'attr'=>['class'=>'dcountries']
             ])
@@ -59,7 +59,7 @@ class DevelopmentApplicationType extends AbstractType
                 'placeholder' => 'Виберіть країну',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
-                        ->orderBy('c.id', 'ASC');
+                        ->orderBy('c.title_ru', 'ASC');
                 },
                 'attr'=>['class'=>'dcountries']
             ])
