@@ -73,11 +73,13 @@ document.querySelectorAll('.dcountries').forEach(item => {
         Request.open('get', '/regions?country=' + country.value);
         Request.send();
         Request.onreadystatechange = function () {
+            document.body.style.cursor = "progress";
             if (Request.readyState == 3) {
                 // загрузка
             }
             if (Request.readyState == 4) {
                 // запрос завершён
+                document.body.style.cursor = "default";
                 let options;
                 let city_options;
                 let city;
@@ -126,11 +128,13 @@ document.querySelectorAll('.dregions').forEach(item => {
         Request.open('get', '/cities?region=' + region.value);
         Request.send();
         Request.onreadystatechange = function () {
+            document.body.style.cursor = "progress";
             if (Request.readyState == 3) {
                 // загрузка
             }
             if (Request.readyState == 4) {
                 // запрос завершён
+                document.body.style.cursor = "default";
                 let city;
                 let options;
                 if(id.substr(id.lastIndexOf('_')+1) == 'region') {
