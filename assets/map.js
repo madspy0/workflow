@@ -75,5 +75,6 @@ window.onload = function () {
             geometry: new WKT().readGeometry(geom)
         });
         vector.getSource().addFeature(feature);
+        map.getView().fit(feature.getGeometry().getExtent());
     }
 }

@@ -29,6 +29,7 @@ class DevelopmentApplicationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->entityManager = $options['entity_manager'];
+        $ukraineCountry = $this->entityManager->getRepository(Country::class)->findBy(['title_ru'=>'Украина']);
         $builder
             ->add('applicantLastname', null, ['label' => 'Призвище'])
             ->add('applicantFirstname', null, ['label' => 'І\'мя'])
@@ -38,7 +39,7 @@ class DevelopmentApplicationType extends AbstractType
             ->add('applicantStreetAddress',null,['label'=>'Вулиця'])
             ->add('applicantBuild',null,['label'=>'Будинок'])
             ->add('country', EntityType::class, [
-                'preferred_choices' => [$this->entityManager->getRepository(Country::class)->find(2)],
+                'preferred_choices' => $ukraineCountry,
                 'class' => Country::class,
                 'choice_label' => 'title_ua',
                 'placeholder' => 'Виберіть країну',
@@ -46,28 +47,25 @@ class DevelopmentApplicationType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.title_ru', 'ASC');
                 },
-                'attr'=>['class'=>'dcountries']
+                'attr'=>['class'=>'dcountries'],
+                'label'=>'Країни'
             ])
-            ->add('postal')
+            ->add('postal',null, ['label'=>'Поштовий індекс'])
             ->add('landAddress',null,['label'=>'Вулиця'])
-            ->add('landCity')
-            ->add('landRegion')
-            ->add('landPostal')
+            ->add('landPostal',null, ['label'=>'Поштовий індекс'])
             ->add('landCountry', EntityType::class, [
                 'class' => Country::class,
                 'choice_label' => 'title_ua',
                 'placeholder' => 'Виберіть країну',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')
-                        ->orderBy('c.title_ru', 'ASC');
-                },
-                'attr'=>['class'=>'dcountries']
+                'choices'=>$ukraineCountry,
+                'attr'=>['class'=>'dcountries'],
+                'label'=>'Країни'
             ])
             ->add('landApplicantBuild',null, ['label'=>'Номер'])
             ->add('cadastreNumber', null, ['label'=>'Кадастровий номер'])
-            ->add('area',null, ['label'=>'Площа'])
-            ->add('purpose')
-            ->add('use')
+            ->add('area',null, ['label'=>'Площа (га)'])
+            ->add('purpose', null, ['label'=>'Цільове призначення'])
+            ->add('use', null, ['label'=>'Вид використання'])
             ->add('planingDocumentation',null,['data'=>true,
                 'label'=>'Необхідність розроблення містобудівної документації',
                 'attr'=>['class'=>'form-switch']])
@@ -75,9 +73,9 @@ class DevelopmentApplicationType extends AbstractType
                 'choices' => [
                     'First choice' => 'first choice',
                     'second choice' => 'second choice'
-                ]])
+                ], 'label'=> 'Тип документації'])
             ->add('consent', CheckboxType::class, ['mapped' => false, 'label'=>'Згоден надати персональні данні'])
-            ->add('geom',null,['label'=>false,'attr'=>['class'=>'hidden-geom']])
+            ->add('geom',null,['label'=>false,'attr'=>['class'=>'hidden-geom'],'required'=>false])
         ;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
         $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
@@ -94,7 +92,7 @@ class DevelopmentApplicationType extends AbstractType
         $resolver->setRequired('entity_manager');
     }
 
-    protected function addElements(FormInterface $form, Country $country = null, Region $region = null)
+    protected function addElements(FormInterface $form, Country $country = null, Region $region = null, Country $landCoutry = null, Region $landRegion = null)
     {
 //        $form->add('country', EntityType::class, array(
 //            'required' => true,
@@ -103,36 +101,9 @@ class DevelopmentApplicationType extends AbstractType
 //            'class' => Country::class
 //        ));
 // Neighborhoods empty, unless there is a selected City (Edit View)
-        $regions = array();
-        if ($country) {
-            $repoRegions = $this->entityManager->getRepository(Region::class);
-            $regions = $repoRegions->createQueryBuilder("r")
-                ->where("r.country = :countryid")
-                ->setParameter("countryid", $country->getId())
-                ->getQuery()
-                ->getResult();
-        }
-        $form->add('region', EntityType::class, array(
-            'required' => true,
-            'placeholder' => 'Спочатку виберіть країну ...',
-            'class' => Region::class,
-            'choices' => $regions
-        ));
-        $cities = array();
-        if($region) {
-            $repoCities = $this->entityManager->getRepository(City::class);
-            $cities = $repoCities->createQueryBuilder("c")
-                ->where("c.region = :regionid")
-                ->setParameter("regionid", $region->getId())
-                ->getQuery()
-                ->getResult();
-        }
-        $form->add('city', EntityType::class, array(
-            'required' => true,
-            'placeholder' => 'Спочатку виберіть регіон ...',
-            'class' => City::class,
-            'choices' => $cities
-        ));
+        $this->addRegions($country, $landCoutry, $form);
+
+        $this->addCities($region, $landRegion, $form);
     }
 
     function onPreSubmit(FormEvent $event)
@@ -142,13 +113,85 @@ class DevelopmentApplicationType extends AbstractType
         $country = empty($data['country']) ? null : $this->entityManager->getRepository(Country::class)->find($data['country']);
  //       $this->addElements($form, $country);
         $region = empty($data['region']) ? null : $this->entityManager->getRepository(Region::class)->find($data['region']);
-        $this->addElements($form, $country, $region);
+        $landCountry = empty($data['landCountry']) ? null : $this->entityManager->getRepository(Country::class)->find($data['landCountry']);
+        $landRegion = empty($data['landRegion']) ? null : $this->entityManager->getRepository(Region::class)->find($data['landRegion']);
+        $this->addElements($form, $country, $region, $landCountry, $landRegion);
     }
 
     function onPreSetData(FormEvent $event)
     {
         $form = $event->getForm();
         $data = $event->getData();
-        $this->addElements($form, $data->getCountry());
+        $this->addElements($form, $data->getCountry(), $data->getRegion(), $data->getLandCountry(), $data->getLandRegion());
+    }
+
+    function addRegions($country, $landCountry, $form) {
+        $regions = [];
+        $landRegions = [];
+        if ($country) {
+            $regions = $this->searchRegions($country);
+        }
+        if($landCountry) {
+            $landRegions = $this->searchRegions($landCountry);
+        }
+        $form->add('region', EntityType::class, array(
+            'required' => true,
+            'placeholder' => 'Спочатку виберіть країну ...',
+            'class' => Region::class,
+            'choices' => $regions,
+            'attr'=>['class'=>'dregions'],
+            'label'=>'Регіони'
+        ));
+        $form->add('landRegion', EntityType::class, array(
+            'required' => true,
+            'placeholder' => 'Спочатку виберіть країну ...',
+            'class' => Region::class,
+            'choices' => $landRegions,
+            'attr'=>['class'=>'dregions'],
+            'label'=>'Регіони'
+        ));
+    }
+
+    function addCities($region, $landRegion, $form) {
+        $cities = [];
+        $landCities = [];
+        if($region) {
+            $cities = $this->searchCities($region);
+        }
+        if($landRegion) {
+            $landCities = $this->searchCities($landRegion);
+        }
+        $form->add('city', EntityType::class, array(
+            'required' => true,
+            'placeholder' => 'Спочатку виберіть регіон ...',
+            'class' => City::class,
+            'choices' => $cities,
+            'label'=>'Міста'
+        ));
+        $form->add('landCity', EntityType::class, array(
+            'required' => true,
+            'placeholder' => 'Спочатку виберіть регіон ...',
+            'class' => City::class,
+            'choices' => $landCities,
+            'label'=>'Міста'
+        ));
+    }
+    function searchRegions($country)
+    {
+        $repoRegions = $this->entityManager->getRepository(Region::class);
+        return $repoRegions->createQueryBuilder("r")
+            ->where("r.country = :countryid")
+            ->setParameter("countryid", $country->getId())
+            ->getQuery()
+            ->getResult();
+    }
+    function searchCities($region)
+    {
+        return $this->entityManager->getRepository(City::class)
+            ->createQueryBuilder("c")
+            ->where("c.region = :regionid")
+            ->setParameter("regionid", $region->getId())
+            ->getQuery()
+            ->getResult();
     }
 }

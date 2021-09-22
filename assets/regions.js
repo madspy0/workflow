@@ -1,6 +1,6 @@
-let country = document.getElementById('development_application_country');
-let region = document.getElementById('development_application_region');
-let city = document.getElementById('development_application_city');
+// let country = document.getElementById('development_application_country');
+// let region = document.getElementById('development_application_region');
+// let city = document.getElementById('development_application_city');
 
 // country.onchange = function () {
 //     let Request = new XMLHttpRequest();
@@ -38,33 +38,33 @@ let city = document.getElementById('development_application_city');
 //     };
 // }
 
-region.onchange = function () {
-    let Request = new XMLHttpRequest();
-    Request.open('get', '/cities?region=' + region.value);
-    Request.send();
-    Request.onreadystatechange = function () {
-        if (Request.readyState == 3) {
-            // загрузка
-        }
-        if (Request.readyState == 4) {
-            // запрос завершён
-            let city = document.getElementById('development_application_city');
-            let options = document.querySelectorAll('#development_application_city option');
-            options.forEach(o => o.remove());
-            let opt = document.createElement('option');
-            opt.value = null;
-            opt.innerHTML = "Виберіть місто";
-            city.appendChild(opt);
-            let arr = JSON.parse(Request.responseText);
-            arr.forEach(function (item, i) {
-                let opt = document.createElement('option');
-                opt.value = item.id;
-                opt.innerHTML = item.name;
-                city.appendChild(opt);
-            })
-        }
-    };
-}
+// region.onchange = function () {
+//     let Request = new XMLHttpRequest();
+//     Request.open('get', '/cities?region=' + region.value);
+//     Request.send();
+//     Request.onreadystatechange = function () {
+//         if (Request.readyState == 3) {
+//             // загрузка
+//         }
+//         if (Request.readyState == 4) {
+//             // запрос завершён
+//             let city = document.getElementById('development_application_city');
+//             let options = document.querySelectorAll('#development_application_city option');
+//             options.forEach(o => o.remove());
+//             let opt = document.createElement('option');
+//             opt.value = null;
+//             opt.innerHTML = "Виберіть місто";
+//             city.appendChild(opt);
+//             let arr = JSON.parse(Request.responseText);
+//             arr.forEach(function (item, i) {
+//                 let opt = document.createElement('option');
+//                 opt.value = item.id;
+//                 opt.innerHTML = item.name;
+//                 city.appendChild(opt);
+//             })
+//         }
+//     };
+// }
 document.querySelectorAll('.dcountries').forEach(item => {
     item.addEventListener('change', event => {
         let id = event.target.id;
@@ -80,11 +80,17 @@ document.querySelectorAll('.dcountries').forEach(item => {
                 // запрос завершён
                 let options;
                 let city_options;
+                let city;
+                let region;
                 if(id.substr(id.lastIndexOf('_')+1) == 'country') {
+                    region = document.getElementById('development_application_region');
                     options = document.querySelectorAll('#development_application_region option');
+                    city = document.getElementById('development_application_city');
                     city_options = document.querySelectorAll('#development_application_city option');
                 } else {
+                    region = document.getElementById('development_application_landRegion');
                     options = document.querySelectorAll('#development_application_landRegion option');
+                    city = document.getElementById('development_application_landCity');
                     city_options = document.querySelectorAll('#development_application_landCity option');
                 }
                 options.forEach(o => o.remove());
@@ -107,6 +113,45 @@ document.querySelectorAll('.dcountries').forEach(item => {
                 // console.log(Request.response)
 
 
+            }
+        };
+    })
+})
+
+document.querySelectorAll('.dregions').forEach(item => {
+    item.addEventListener('change', event => {
+        let id = event.target.id;
+        let region = document.getElementById(id);
+        let Request = new XMLHttpRequest();
+        Request.open('get', '/cities?region=' + region.value);
+        Request.send();
+        Request.onreadystatechange = function () {
+            if (Request.readyState == 3) {
+                // загрузка
+            }
+            if (Request.readyState == 4) {
+                // запрос завершён
+                let city;
+                let options;
+                if(id.substr(id.lastIndexOf('_')+1) == 'region') {
+                    city = document.getElementById('development_application_city');
+                    options = document.querySelectorAll('#development_application_city option');
+                } else {
+                    city = document.getElementById('development_application_landCity');
+                    options = document.querySelectorAll('#development_application_landCity option');
+                }
+                options.forEach(o => o.remove());
+                let opt = document.createElement('option');
+                opt.value = null;
+                opt.innerHTML = "Виберіть місто";
+                city.appendChild(opt);
+                let arr = JSON.parse(Request.responseText);
+                arr.forEach(function (item, i) {
+                    let opt = document.createElement('option');
+                    opt.value = item.id;
+                    opt.innerHTML = item.name;
+                    city.appendChild(opt);
+                })
             }
         };
     })

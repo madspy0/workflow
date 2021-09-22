@@ -134,12 +134,14 @@ class DevelopmentApplication
     private $landAddress;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\ManyToOne(targetEntity="City")
+     * @ORM\JoinColumn(name="land_city_id", referencedColumnName="city_id")
      */
     private $landCity;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\ManyToOne(targetEntity="Region")
+     * @ORM\JoinColumn(name="land_region_id", referencedColumnName="region_id")
      */
     private $landRegion;
 
@@ -170,7 +172,8 @@ class DevelopmentApplication
     private $postal;
 
     /**
-     * @ORM\Column(type="string", length=25)
+     * @ORM\ManyToOne(targetEntity="Country")
+     * @ORM\JoinColumn(name="land_country_id", referencedColumnName="country_id")
      */
     private $landCountry;
 
@@ -257,8 +260,8 @@ class DevelopmentApplication
     private $solution;
     /**
      * @ORM\Column(type="geometry")
-     * @ContainsGeom(message="Геометрія невірна")
      * @Assert\NotBlank(message="Намалюйте план ділянки")
+     * @ContainsGeom(message="Геометрія невірна")
      */
     private $geom;
 
@@ -385,7 +388,7 @@ class DevelopmentApplication
     /**
      * @return mixed
      */
-    public function getCountry()
+    public function getCountry(): ?Country
     {
         return $this->country;
     }
@@ -398,24 +401,24 @@ class DevelopmentApplication
         $this->country = $country;
     }
 
-    public function getLandCity(): ?string
+    public function getLandCity(): ?City
     {
         return $this->landCity;
     }
 
-    public function setLandCity(string $landCity): self
+    public function setLandCity(City $landCity): self
     {
         $this->landCity = $landCity;
 
         return $this;
     }
 
-    public function getLandRegion(): ?string
+    public function getLandRegion(): ?Region
     {
         return $this->landRegion;
     }
 
-    public function setLandRegion(string $landRegion): self
+    public function setLandRegion(Region $landRegion): self
     {
         $this->landRegion = $landRegion;
 
@@ -434,12 +437,12 @@ class DevelopmentApplication
         return $this;
     }
 
-    public function getLandCountry(): ?string
+    public function getLandCountry(): ?Country
     {
         return $this->landCountry;
     }
 
-    public function setLandCountry(string $landCountry): self
+    public function setLandCountry(Country $landCountry): self
     {
         $this->landCountry = $landCountry;
 
