@@ -56,11 +56,18 @@ class DevelopmentApplicationType extends AbstractType
             ->add('landCountry', EntityType::class, [
                 'class' => Country::class,
                 'choice_label' => 'title_ua',
-                'placeholder' => 'Виберіть країну',
+          //      'placeholder' => 'Виберіть країну',
                 'choices'=>$ukraineCountry,
-                'attr'=>['class'=>'dcountries'],
                 'label'=>'Країни'
             ])
+            ->add('landRegion', EntityType::class, array(
+                'required' => true,
+                'placeholder' => 'Виберіть регіон',
+                'class' => Region::class,
+                'choices' => $this->searchRegions($ukraineCountry[0]),
+                'attr'=>['class'=>'dregions'],
+                'label'=>'Регіони'
+            ))
             ->add('landApplicantBuild',null, ['label'=>'Номер'])
             ->add('cadastreNumber', null, ['label'=>'Кадастровий номер'])
             ->add('area',null, ['label'=>'Площа (га)'])
@@ -142,14 +149,16 @@ class DevelopmentApplicationType extends AbstractType
             'attr'=>['class'=>'dregions'],
             'label'=>'Регіони'
         ));
-        $form->add('landRegion', EntityType::class, array(
-            'required' => true,
-            'placeholder' => 'Спочатку виберіть країну ...',
-            'class' => Region::class,
-            'choices' => $landRegions,
-            'attr'=>['class'=>'dregions'],
-            'label'=>'Регіони'
-        ));
+
+//        $form->add('landRegion', EntityType::class, array(
+//            'required' => true,
+//            'placeholder' => 'Спочатку виберіть країну ...',
+//            'class' => Region::class,
+//            'choices' => $landRegions,
+//            'attr'=>['class'=>'dregions'],
+//            'label'=>'Регіони'
+//        ));
+
     }
 
     function addCities($region, $landRegion, $form) {

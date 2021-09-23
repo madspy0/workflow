@@ -265,6 +265,11 @@ class DevelopmentApplication
      */
     private $geom;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=CouncilSession::class, inversedBy="developmentApplications")
+     */
+    private $councilSession;
+
     public function __construct()
     {
         $this->solution = new ArrayCollection();
@@ -562,6 +567,18 @@ class DevelopmentApplication
     public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCouncilSession(): ?CouncilSession
+    {
+        return $this->councilSession;
+    }
+
+    public function setCouncilSession(?CouncilSession $councilSession): self
+    {
+        $this->councilSession = $councilSession;
 
         return $this;
     }

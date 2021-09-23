@@ -57,6 +57,9 @@ const draw = new Draw({
 map.addInteraction(draw);
 const snap = new Snap({source: source});
 map.addInteraction(snap);
+draw.on('drawstart', function() {
+    source.clear();
+})
 draw.on('drawend', function (event) {
     let feature = event.feature;
     let geom = new WKT().writeGeometry(feature.getGeometry(feature.getGeometry()));

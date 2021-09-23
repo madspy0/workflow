@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\DevelopmentSolution;
+use App\Form\ApplicationSessionType;
 use App\Form\DevelopmentSolutionFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -108,6 +109,7 @@ class StatementController extends AbstractController
             {
                 $form = $this->createFormBuilder($developmentApplication)
                     ->add('appealNumber', TextType::class,['label'=>'Присвоїти номер'])
+                    ->add('isAt', ApplicationSessionType::class, ['mapped'=>false])
                     ->add('save', SubmitType::class)
                     ->getForm();
                 $form->handleRequest($request);
@@ -121,7 +123,7 @@ class StatementController extends AbstractController
                         dump($exception);
                     }
                 }
-                return $this->render('statement/add_number.html.twig', [
+                return $this->render('statement/connect_session.twig', [
                     'developmentApplication' => $developmentApplication,
                     'form' => $form->createView(),
                 ]);

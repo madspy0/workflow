@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello StatementController!{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('show_map') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('show_map') }}
+{% endblock %}
+
+{% block body %}
+
+    {% include('statement/header.html.twig') %}
+
+    <div class="app-wrapper">
+
+        <div class="app-content pt-3 p-md-3 p-lg-4">
+            <div class="container-xl">
+
+                <div class="row g-3 mb-4 align-items-center justify-content-between">
+                    <div class="col-auto">
+                        {% if exception is defined %}
+                            {{ exception.message }}
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-6">
+                                <h2>Заява на розробку</h2>
+                                <p class="frmDesc">Заява на розробку документації із землеустрою</p>
+                                <hr>
+                                {{ form_start(form) }}
+                                <div class="row">
+                                    <div class="col">
+                                        Заявник
+                                        {{ developmentApplication.applicantLastname }}
+                                    </div>
+                                    <div class="col">
+
+                                        {{ developmentApplication.applicantFirstname }}
+
+                                    </div>
+                                    <div class="col">
+
+                                        {{ developmentApplication.applicantMiddlename }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        Номер телефона
+                                        {{ developmentApplication.phoneNumber }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        email
+                                        {{ developmentApplication.email }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        applicantStreetAddress
+                                        {{ developmentApplication.applicantStreetAddress }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        city
+                                        {{ developmentApplication.city }}
+                                    </div>
+                                    <div class="col">
+                                        region
+                                        {{ developmentApplication.region }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        postal
+                                        {{ developmentApplication.postal }}
+                                    </div>
+                                    <div class="col">
+                                        country
+                                        {{ developmentApplication.country.TitleUa }}
+                                    </div>
+                                </div>
+                                <div id="map" class="map" data-geom="{{ developmentApplication.geom }}"></div>
+                            </div>
+                            <div class="col-6">
+                                <input id="litepicker" style="visibility: hidden"></input>
+                                {{ form(form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include('statement/footer.html.twig') %}
+    </div>
+{% endblock %}

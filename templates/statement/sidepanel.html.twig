@@ -1,8 +1,6 @@
-{% set currentRoute = path(app.request.attributes.get('_route')) %}
 {% macro active(link) %}
-<a class="nav-link{% if path(app.request.attributes.get('_route')) == link %} active{% endif %}" href="{{ link }}">
-{% endmacro %}
-
+<a class="nav-link{% if (link == app.request.attributes.get('_route')) %} active{% endif %}" href="{{ path(link) }}">
+    {% endmacro %}
     <div id="app-sidepanel" class="app-sidepanel">
         <div id="sidepanel-drop" class="sidepanel-drop"></div>
         <div class="sidepanel-inner d-flex flex-column">
@@ -17,7 +15,7 @@
             <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
                 <ul class="app-menu list-unstyled accordion" id="menu-accordion">
                     <li class="nav-item">
-                        {{ _self.active(path('homepage')) }}
+                        {{ _self.active('homepage') }}
                         <span class="nav-icon">
 						        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-house-door"
                                      fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -27,8 +25,8 @@
                                 </svg>
 						         </span>
                         <span class="nav-link-text">Головна</span>
-                        </a><!--//nav-link-->
-            </li><!--//nav-item-->
+</a><!--//nav-link-->
+</li><!--//nav-item-->
 <li class="nav-item has-submenu">
     <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
     <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1"
@@ -43,7 +41,7 @@
 	</svg>
 						         </span>
         <span class="nav-link-text">Заявки
-{#            на розробку документації із землеустрою#}
+{# на розробку документації із землеустрою #}
         </span>
         <span class="submenu-arrow">
 		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
@@ -54,13 +52,17 @@
 	                             </span><!--//submenu-arrow-->
     </a><!--//nav-link-->
     <div id="submenu-1" class="{% if
-        (path(app.request.attributes.get('_route')) != path('statement.new')
-        and (path(app.request.attributes.get('_route')) != path('statement.list')))%}
-        collapse
-        {% endif%} submenu submenu-1" data-bs-parent="#menu-accordion">
+        (('statement.new' != app.request.attributes.get('_route')) and (('statement.list' != app.request.attributes.get('_route'))) and (('statement.update' != app.request.attributes.get('_route')))) %}
+        collapsed
+        {% endif %} submenu submenu-1" data-bs-parent="#menu-accordion">
         <ul class="submenu-list list-unstyled">
-            <li class="submenu-item">{{ _self.active(path('statement.list')) }}Реестр заявок</a></li>
-            <li class="submenu-item">{{ _self.active(path('statement.new')) }}Нова заява</a></li>
+            {% if ('/update' in app.request.uri) %}
+                <a class="nav-link active" href="{{ app.request.uri }}">Реестр заявок</a></li>
+            {% else %}
+                <li class="submenu-item">{{ _self.active('statement.list') }}Реестр заявок</a></li>
+            {% endif %}
+            <li class="submenu-item">
+                {{ _self.active('statement.new') }}Нова заява</a></li>
         </ul>
     </div>
 </li><!--//nav-item-->
@@ -92,13 +94,13 @@
   <circle cx="3.5" cy="10.5" r=".5"/>
 </svg>
 						         </span>
-    <span class="nav-link-text">Рішення</span>
+        <span class="nav-link-text">Рішення</span>
     </a><!--//nav-link-->
 </li><!--//nav-item-->
 
 <li class="nav-item">
     <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-    {{ _self.active(path('statement.calendar')) }}
+    {{ _self.active('statement.calendar') }}
     <span class="nav-icon">
 						        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder"
                                      fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -125,7 +127,7 @@
 </li><!--//nav-item-->
 </ul><!--//app-menu-->
 </nav><!--//app-nav-->
-{#{% include('statement/sidebar_footer.html.twig') %}#}
+{# {% include('statement/sidebar_footer.html.twig') %} #}
 
 </div><!--//sidepanel-inner-->
 </div><!--//app-sidepanel-->

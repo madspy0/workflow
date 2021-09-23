@@ -65,6 +65,16 @@
 //         }
 //     };
 // }
+function appOpt(obj, opt, responseText) {
+    obj.appendChild(opt);
+    let arr = JSON.parse(responseText);
+    arr.forEach(function (item, i) {
+        let opt = document.createElement('option');
+        opt.value = item.id;
+        opt.innerHTML = item.name;
+        obj.appendChild(opt);
+    })
+}
 document.querySelectorAll('.dcountries').forEach(item => {
     item.addEventListener('change', event => {
         let id = event.target.id;
@@ -104,17 +114,7 @@ document.querySelectorAll('.dcountries').forEach(item => {
                 let opt = document.createElement('option');
                 opt.value = null;
                 opt.innerHTML = "Виберіть регіон";
-                region.appendChild(opt);
-                let arr = JSON.parse(Request.responseText);
-                arr.forEach(function (item, i) {
-                    let opt = document.createElement('option');
-                    opt.value = item.id;
-                    opt.innerHTML = item.name;
-                    region.appendChild(opt);
-                })
-                // console.log(Request.response)
-
-
+                appOpt(region, opt, Request.responseText);
             }
         };
     })
@@ -148,14 +148,7 @@ document.querySelectorAll('.dregions').forEach(item => {
                 let opt = document.createElement('option');
                 opt.value = null;
                 opt.innerHTML = "Виберіть місто";
-                city.appendChild(opt);
-                let arr = JSON.parse(Request.responseText);
-                arr.forEach(function (item, i) {
-                    let opt = document.createElement('option');
-                    opt.value = item.id;
-                    opt.innerHTML = item.name;
-                    city.appendChild(opt);
-                })
+                appOpt(city, opt, Request.responseText)
             }
         };
     })
