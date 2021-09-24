@@ -19,6 +19,14 @@ class CouncilSessionRepository extends ServiceEntityRepository
         parent::__construct($registry, CouncilSession::class);
     }
 
+    public function findByDate($date)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.isAt = :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
     // /**
     //  * @return CouncilSession[] Returns an array of CouncilSession objects
     //  */

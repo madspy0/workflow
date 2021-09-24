@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CouncilSession;
 use App\Entity\DevelopmentSolution;
 use App\Form\ApplicationSessionType;
 use App\Form\DevelopmentSolutionFormType;
@@ -109,12 +110,14 @@ class StatementController extends AbstractController
             {
                 $form = $this->createFormBuilder($developmentApplication)
                     ->add('appealNumber', TextType::class,['label'=>'Присвоїти номер'])
-                    ->add('isAt', ApplicationSessionType::class, ['mapped'=>false])
+                    ->add('councilSession', ApplicationSessionType::class, ['label'=>false])
                     ->add('save', SubmitType::class)
                     ->getForm();
                 $form->handleRequest($request);
                 if ($form->isSubmitted() && $form->isValid()) {
                     try {
+                        $session = $developmentApplication->getCouncilSession();
+                        dd($entityManager->getRepository(CouncilSession::class)->findByDate($session->getIsAt()));
                         $applicationFlowStateMachine->apply($developmentApplication, "to_number");
                         $entityManager->persist($developmentApplication);
                         $entityManager->flush();

@@ -51,7 +51,7 @@ map.getView().fit(feature.getGeometry().getExtent());
 
 window.disableLitepickerStyles = true;
 new Litepicker({
-    element: document.getElementById('litepicker'),
+    element: document.getElementById('form_councilSession_isAt'),
     inlineMode: true,
     lang: "uk-UA"
 })

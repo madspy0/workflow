@@ -14,7 +14,9 @@ class ApplicationSessionType extends AbstractType
     {
         $builder
             ->add('isAt', DateType::class, [
-                'widget' => 'single_text'])
+                'widget' => 'single_text',
+                'label' => 'Дата сесії',
+                'html5' => false ])
         ;
     }
 
