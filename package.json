@@ -23,6 +23,7 @@
         "@popperjs/core": "^2.10.1",
         "js-year-calendar": "^2.0.0",
         "litepicker": "^2.0.11",
+        "litepicker-polyfills-ie11": "^0.0.1",
         "moment": "^2.29.1",
         "ol": "^6.6.1"
     }

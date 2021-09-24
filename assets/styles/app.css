@@ -70,3 +70,6 @@ hr {
 .reject {
     color: red;
 }
+#form_isAt_isAt {
+    visibility: hidden;
+}

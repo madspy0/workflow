@@ -13,6 +13,7 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {WKT} from "ol/format";
 import {Feature} from "ol";
 import 'moment';
+import 'litepicker-polyfills-ie11';
 import Litepicker from 'litepicker';
 
 const source = new VectorSource();
@@ -53,5 +54,6 @@ window.disableLitepickerStyles = true;
 new Litepicker({
     element: document.getElementById('form_councilSession_isAt'),
     inlineMode: true,
-    lang: "uk-UA"
+    lang: "uk-UA",
+    highlightedDays: document.getElementById('session-dates').dataset.sessionDates.split(','),
 })

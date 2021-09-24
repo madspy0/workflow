@@ -25,7 +25,15 @@ class CouncilSessionRepository extends ServiceEntityRepository
             ->andWhere('s.isAt = :date')
             ->setParameter('date', $date)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
+    }
+
+    public function findAllDates()
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->select('s.isAt')
+            ->getQuery();
+        return $qb->getArrayResult();
     }
     // /**
     //  * @return CouncilSession[] Returns an array of CouncilSession objects

@@ -15,6 +15,6 @@ import '@fortawesome/fontawesome-free/js/brands'
 import './scss/portal.scss';
 // start the Stimulus application
 // import './bootstrap';
-import './plugins/chart.js/chart.min'
-import './portal/index-charts'
+// import './plugins/chart.js/chart.min'
+// import './portal/index-charts'
 import './portal/app';

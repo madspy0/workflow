@@ -20,7 +20,7 @@ class CouncilSession
     private $id;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
      */
     private $isAt;
 
@@ -39,12 +39,12 @@ class CouncilSession
         return $this->id;
     }
 
-    public function getIsAt(): ?\DateTimeImmutable
+    public function getIsAt(): ?\DateTime
     {
         return $this->isAt;
     }
 
-    public function setIsAt(\DateTimeImmutable $isAt): self
+    public function setIsAt(\DateTime $isAt): self
     {
         $this->isAt = $isAt;
 

@@ -16,7 +16,6 @@ use App\Entity\DevelopmentApplication;
 use App\Form\DevelopmentApplicationType;
 use App\Repository\DevelopmentApplicationRepository;
 use Symfony\Component\Workflow\WorkflowInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -29,7 +28,6 @@ class StatementController extends AbstractController
     {
         return $this->render('statement/index.html.twig');
     }
-
 
 
     /**
@@ -47,13 +45,13 @@ class StatementController extends AbstractController
     /**
      * @Route("/new", name="statement.new")
      */
-    public function new(Request $request, WorkflowInterface $applicationFlowStateMachine,EntityManagerInterface $entityManager): Response
+    public function new(Request $request, WorkflowInterface $applicationFlowStateMachine, EntityManagerInterface $entityManager): Response
     {
         $developmentApplication = new DevelopmentApplication();
         $form = $this->createForm(DevelopmentApplicationType::class, $developmentApplication, [
             'entity_manager' => $entityManager,
         ])->add('save', SubmitType::class
-            //['validate'=>false]
+        //['validate'=>false]
         );
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -106,40 +104,50 @@ class StatementController extends AbstractController
     public function update(WorkflowInterface $applicationFlowStateMachine, DevelopmentApplication $developmentApplication, EntityManagerInterface $entityManager, Request $request): Response
     {
         // $applicationFlowStateMachine->apply($developmentApplication, "reopen");
+        $session_dates = [];
+        foreach($entityManager->getRepository(CouncilSession::class)->findAllDates() as $session_date) {
+            $session_dates[]=$session_date['isAt']->format('Y-m-d');
+        }
         if ($applicationFlowStateMachine->can($developmentApplication, 'to_number')) {
-            {
-                $form = $this->createFormBuilder($developmentApplication)
-                    ->add('appealNumber', TextType::class,['label'=>'Присвоїти номер'])
-                    ->add('councilSession', ApplicationSessionType::class, ['label'=>false])
-                    ->add('save', SubmitType::class)
-                    ->getForm();
-                $form->handleRequest($request);
-                if ($form->isSubmitted() && $form->isValid()) {
-                    try {
+            $form = $this->createFormBuilder($developmentApplication)
+                ->add('appealNumber', TextType::class, ['label' => 'Присвоїти номер'])
+                ->add('councilSession', ApplicationSessionType::class, ['label' => false])
+                ->add('save', SubmitType::class)
+                ->getForm();
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                try {
+                    $session = $entityManager->getRepository(CouncilSession::class)->findByDate($developmentApplication->getCouncilSession()->getIsAt());
+                    if ($session) {
+                        $developmentApplication->setCouncilSession($session);
+                    } else {
                         $session = $developmentApplication->getCouncilSession();
-                        dd($entityManager->getRepository(CouncilSession::class)->findByDate($session->getIsAt()));
-                        $applicationFlowStateMachine->apply($developmentApplication, "to_number");
-                        $entityManager->persist($developmentApplication);
-                        $entityManager->flush();
-                        return $this->redirectToRoute('statement.list');
-                    } catch (LogicException $exception) {
-                        dump($exception);
                     }
+
+                    $applicationFlowStateMachine->apply($developmentApplication, "to_number");
+                    $entityManager->persist($session);
+                    $entityManager->persist($developmentApplication);
+                    $entityManager->persist($developmentApplication);
+                    $entityManager->flush();
+                    return $this->redirectToRoute('statement.list');
+                } catch (LogicException $exception) {
+                    dump($exception);
                 }
-                return $this->render('statement/connect_session.twig', [
-                    'developmentApplication' => $developmentApplication,
-                    'form' => $form->createView(),
-                ]);
             }
+            return $this->render('statement/connect_session.twig', [
+                'developmentApplication' => $developmentApplication,
+                'form' => $form->createView(),
+                'sessionDates' => implode($session_dates,',')
+            ]);
         }
 
         if ($applicationFlowStateMachine->can($developmentApplication, 'publish')) {
-            $developmentSolution  = new DevelopmentSolution();
+            $developmentSolution = new DevelopmentSolution();
             $form = $this->createForm(DevelopmentSolutionFormType::class, $developmentSolution)->add('save', SubmitType::class);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    if($developmentSolution->getAction()) {
+                    if ($developmentSolution->getAction()) {
                         $applicationFlowStateMachine->apply($developmentApplication, "reject");
                     } else {
                         $applicationFlowStateMachine->apply($developmentApplication, "publish");
@@ -166,6 +174,7 @@ class StatementController extends AbstractController
             'solution' => $developmentApplication->getSolution()->last()
         ]);
     }
+
     /**
      * @Route("/history/{id}", name="statement.history")
      */
@@ -175,6 +184,7 @@ class StatementController extends AbstractController
             'solution' => $developmentSolution
         ]);
     }
+
     /**
      * @Route("/calendar", name="statement.calendar")
      */
