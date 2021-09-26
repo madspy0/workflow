@@ -69,7 +69,7 @@ class DevelopmentApplicationType extends AbstractType
                 'label'=>'Регіони'
             ))
             ->add('landApplicantBuild',null, ['label'=>'Номер'])
-            ->add('cadastreNumber', null, ['label'=>'Кадастровий номер'])
+            ->add('cadastreNumber', null, ['label'=>'Кадастровий номер (не обов\'язково)', 'required'=>false])
             ->add('area',null, ['label'=>'Площа (га)'])
             ->add('purpose', null, ['label'=>'Цільове призначення'])
             ->add('use', null, ['label'=>'Вид використання'])

@@ -6,6 +6,7 @@ use App\Entity\CouncilSession;
 use App\Entity\DevelopmentSolution;
 use App\Form\ApplicationSessionType;
 use App\Form\DevelopmentSolutionFormType;
+use App\Repository\CouncilSessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -15,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\DevelopmentApplication;
 use App\Form\DevelopmentApplicationType;
 use App\Repository\DevelopmentApplicationRepository;
+use App\Repository\DevelopmentSolutionRepository;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -31,7 +33,7 @@ class StatementController extends AbstractController
 
 
     /**
-     * @Route("/list", name="statement.list")
+     * @Route("/appl", name="statement.list")
      */
     public function list(DevelopmentApplicationRepository $developmentApplicationRepository): Response
     {
@@ -40,6 +42,38 @@ class StatementController extends AbstractController
         return $this->render('statement/list.html.twig', [
             'developmentApplications' => $developmentApplications,
         ]);
+    }
+
+    /**
+     * @Route("/sess", name="statement.sessions")
+     */
+    public function sessions(CouncilSessionRepository $repository): Response
+    {
+        $sessions = $repository->findAll();
+
+        return $this->render('statement/session_list.html.twig', [
+            'sessions' => $sessions,
+        ]);
+    }
+
+    /**
+     * @Route("/sol", name="statement.solutions")
+     */
+    public function solutions(DevelopmentSolutionRepository $repository): Response
+    {
+        $solutions = $repository->findAll();
+
+        return $this->render('statement/solutions_list.html.twig', [
+            'solutions' => $solutions,
+        ]);
+    }
+
+    /**
+     * @Route("/sess/{id}", name="statement.session")
+     */
+    public function session(CouncilSession $session) {
+        return $this->render('statement/list.html.twig',[
+            'developmentApplications'=>$session->getDevelopmentApplications()]);
     }
 
     /**
@@ -84,7 +118,7 @@ class StatementController extends AbstractController
                 $em->persist($developmentSolution);
                 $em->flush();
             } catch (LogicException $exception) {
-                return $this->render('add_solution.html.twig', [
+                return $this->render('statement/connect_session.twig', [
                     'developmentApplication' => $developmentApplication,
                     'exception' => $exception,
                     'form' => $form->createView(),
@@ -92,14 +126,14 @@ class StatementController extends AbstractController
             }
             return $this->redirectToRoute('statement.list');
         }
-        return $this->render('add_solution.html.twig', [
+        return $this->render('statement/connect_session.twig', [
             'developmentApplication' => $developmentApplication,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/update/{id}", name="statement.update")
+     * @Route("/appl/{id}", name="statement.update")
      */
     public function update(WorkflowInterface $applicationFlowStateMachine, DevelopmentApplication $developmentApplication, EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -165,13 +199,13 @@ class StatementController extends AbstractController
                 }
                 return $this->redirectToRoute('statement.list');
             }
-            return $this->render('statement/add_number.html.twig', [
+            return $this->render('statement/solution.html.twig', [
                 'developmentApplication' => $developmentApplication,
                 'form' => $form->createView(),
             ]);
         }
-        return $this->render('statement/history.html.twig', [
-            'solution' => $developmentApplication->getSolution()->last()
+        return $this->render('statement/solution_view.html.twig', [
+            'developmentApplication' => $developmentApplication
         ]);
     }
 
@@ -180,8 +214,8 @@ class StatementController extends AbstractController
      */
     public function history(DevelopmentSolution $developmentSolution): Response
     {
-        return $this->render('statement/history.html.twig', [
-            'solution' => $developmentSolution
+        return $this->render('statement/solution_view.html.twig', [
+            'developmentApplication' => $developmentSolution->getDevelopmentApplication()
         ]);
     }
 

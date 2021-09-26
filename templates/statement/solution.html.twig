@@ -1,19 +1,4 @@
 {% extends 'base.html.twig' %}
-{% form_theme form _self %}
-{% block _form_save_row %}
-    <button type="submit" id="form_save" name="form[save]"
-            class="app-btn-primary btn">
-        <svg width="1em" height="1em" viewBox="0 0 16 16"
-             class="bi bi-file-earmark-arrow-down me-2" fill="currentColor"
-             xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 0h5.5v1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h1V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z"/>
-            <path d="M9.5 3V0L14 4.5h-3A1.5 1.5 0 0 1 9.5 3z"/>
-            <path fill-rule="evenodd"
-                  d="M8 6a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 10.293V6.5A.5.5 0 0 1 8 6z"/>
-        </svg>
-        Призначити
-    </button>
-{% endblock %}
 
 {% block title %}Hello StatementController!{% endblock %}
 
@@ -34,13 +19,13 @@
     <div class="app-wrapper">
         <div class="app-content pt-3 p-md-3 p-lg-4">
             <div class="container-xl">
-                <h1 class="app-page-title">Призначити до сесії <span id="date-session"></span></h1>
+                <h1 class="app-page-title">Рішення</h1>
                 {% if exception is defined %}
                     {{ exception.message }}
                 {% endif %}
                 <div class="row g-4 mb-4">
                     <div class="col-12 col-lg-6">
-                    {% include('statement/address.html.twig') %}
+                        {% include('statement/address.html.twig') %}
                     </div><!--//col-->
                     <div class="col-12 col-lg-6">
                         <div class="app-card app-card-chart shadow-sm">
@@ -65,6 +50,5 @@
             </div>
         </div>
         {% include('statement/footer.html.twig') %}
-        <div data-session-dates="{{ sessionDates }}" id="session-dates"></div>
     </div>
 {% endblock %}

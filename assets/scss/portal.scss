@@ -30,8 +30,8 @@ $theme-color-zip: #252930;
 
 
 $theme-colors: (
-  "primary":  $theme-color-primary, 
-  "secondary": $theme-text-color-secondary, 
+  "primary":  $theme-color-primary,
+  "secondary": $theme-text-color-secondary,
   "success": $theme-success-color,
   "danger": $theme-danger-color,
   "warning": $theme-warning-color,
@@ -40,8 +40,6 @@ $theme-colors: (
 
 #development_application_geom {
   visibility: hidden;
-  width: 0;
-  height: 0;
 }
 
 /*************************** Import Bootstrap  *****************************/

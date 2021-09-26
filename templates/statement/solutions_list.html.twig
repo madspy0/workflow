@@ -15,7 +15,7 @@
 
                 <div class="row g-3 mb-4 align-items-center justify-content-between">
                     <div class="col-auto">
-                        <h1 class="app-page-title mb-0">Сесії</h1>
+                        <h1 class="app-page-title mb-0">Рішення</h1>
                     </div>
                     <div class="col-auto">
                         <div class="page-utilities">
@@ -65,10 +65,10 @@
                     <a class="flex-sm-fill text-sm-center nav-link active" id="orders-all-tab" data-toggle="tab"
                        href="#orders-all" role="tab" aria-controls="orders-all" aria-selected="true">Всі</a>
                     <a class="flex-sm-fill text-sm-center nav-link" id="orders-paid-tab" data-toggle="tab"
-                       href="#orders-paid" role="tab" aria-controls="orders-paid" aria-selected="false">Заплановані</a>
+                       href="#orders-paid" role="tab" aria-controls="orders-paid" aria-selected="false">Cхвалено</a>
                     <a class="flex-sm-fill text-sm-center nav-link" id="orders-pending-tab" data-toggle="tab"
                        href="#orders-pending" role="tab" aria-controls="orders-pending"
-                       aria-selected="false">Минулі</a>
+                       aria-selected="false">Відмовлено</a>
                 </nav>
 
 
@@ -82,21 +82,41 @@
                                         <thead>
                                         <tr>
                                             <th class="cell"></th>
-                                            <th class="cell">Date</th>
-                                            <th class="cell">Кількість заявок</th>
+                                            <th class="cell">Дата</th>
+                                            <th class="cell">Замовник</th>
+                                            <th class="cell">Адреса ділянки</th>
+                                            <th class="cell">Площа (Га)</th>
+                                            <th class="cell">Статус</th>
                                             <th class="cell"></th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for session in sessions %}
+                                        {% for solution in solutions %}
                                             <tr>
-                                                <td class="cell">#{{ session.id }}</td>
+                                                <td class="cell">#{{ solution.id }}</td>
                                                 <td class="cell"><span
-                                                            class="cell-data">{{ session.isAt |format_date(locale='uk') }}</span>
+                                                            class="cell-data">{{ solution.createdAt |format_date(locale='uk') }}</span>
                                                 </td>
-                                                <td class="cell">{{ session.developmentApplications.count }}</td>
+                                                <td class="cell">
+                                                    {{ solution.developmentApplication.applicantLastname }}
+                                                    {{ solution.developmentApplication.applicantFirstname }}
+                                                    {{ solution.developmentApplication.applicantMiddlename }}
+                                                </td>
+                                                <td class="cell">
+                                                    {{ solution.developmentApplication.landAddress }}
+                                                    {{ solution.developmentApplication.landCity }}
+                                                    {{ solution.developmentApplication.landRegion }}
+                                                </td>
+                                                <td class="cell">
+                                                    {{ solution.developmentApplication.area }}
+                                                </td>
+                                                {% if solution.action %}
+                                                    <td class="cell"><span class="badge bg-danger">Відхилено</span></td>
+                                                {% else %}
+                                                    <td class="cell"><span class="badge bg-success">Прийнято</span></td>
+                                                {% endif %}
                                                 <td class="cell"><a class="btn-sm app-btn-secondary"
-                                                                    href="{{ path('statement.session',{'id':session.id}) }}">View</a>
+                                                                    href="{{ path('statement.history',{'id':solution.id}) }}">View</a>
                                                 </td>
                                             </tr>
                                         {% endfor %}

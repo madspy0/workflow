@@ -38,4 +38,8 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
          - { path: ^/new, roles: ROLE_USER }
-         - { path: ^/list, roles: ROLE_USER }
+         - { path: ^/appl, roles: ROLE_USER }
+         - { path: ^/sess, roles: ROLE_USER }
+         - { path: ^/sol, roles: ROLE_USER }
+         - { path: ^/statement, roles: ROLE_USER }
+         - { path: ^/history, roles: ROLE_USER }
