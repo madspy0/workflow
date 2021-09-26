@@ -17,6 +17,7 @@ use App\Entity\DevelopmentApplication;
 use App\Form\DevelopmentApplicationType;
 use App\Repository\DevelopmentApplicationRepository;
 use App\Repository\DevelopmentSolutionRepository;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -222,8 +223,8 @@ class StatementController extends AbstractController
     /**
      * @Route("/calendar", name="statement.calendar")
      */
-    public function calendar(): Response
+    public function calendar(CouncilSessionRepository $repository, SerializerInterface $serializer): Response
     {
-        return $this->render('statement/calendar.html.twig');
+        return $this->render('statement/calendar.html.twig', ['sessionDates'=>$serializer->serialize($repository->findAllDates(), 'json')]);
     }
 }
