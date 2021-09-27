@@ -71,8 +71,16 @@ class DevelopmentApplicationType extends AbstractType
             ->add('landApplicantBuild',null, ['label'=>'Номер'])
             ->add('cadastreNumber', null, ['label'=>'Кадастровий номер (не обов\'язково)', 'required'=>false])
             ->add('area',null, ['label'=>'Площа (га)'])
-            ->add('purpose', null, ['label'=>'Цільове призначення'])
-            ->add('use', null, ['label'=>'Вид використання'])
+            ->add('purpose', ChoiceType::class, ['label'=>'Цільове призначення',
+                'choices' => [
+                    'First choice' => 'first choice',
+                    'second choice' => 'second choice'
+                ]])
+            ->add('use', ChoiceType::class, ['label'=>'Вид використання',
+                'choices' => [
+                    'First choice' => 'first choice',
+                    'second choice' => 'second choice'
+                ]])
             ->add('planingDocumentation',null,['data'=>true,
                 'label'=>'Необхідність розроблення містобудівної документації',
                 'attr'=>['class'=>'form-switch']])

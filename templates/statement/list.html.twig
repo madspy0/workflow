@@ -103,8 +103,8 @@
                                                 </td>
                                                 <td class="cell">{{ developmentApplication.applicantLastname }} {{ developmentApplication.applicantFirstname }}</td>
                                                 <td class="cell"><span
-                                                            class="cell-data">{{ developmentApplication.createdAt |format_datetime(locale='uk') }}</span><span
-                                                            class="note">{{ developmentApplication.createdAt | date("H:m:s") }}</span>
+                                                            class="cell-data">{{ developmentApplication.createdAt |format_date(locale='uk') }}</span><span
+                                                            class="note">{{ developmentApplication.createdAt |format_time(locale='uk')}}</span>
                                                 </td>
                                                 {% if developmentApplication.status == 'draft' %}
                                                     <td class="cell"><span class="badge bg-warning">Не зареєстровано</span></td>

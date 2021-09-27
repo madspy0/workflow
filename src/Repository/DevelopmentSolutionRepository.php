@@ -9,7 +9,6 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @method DevelopmentSolution|null find($id, $lockMode = null, $lockVersion = null)
  * @method DevelopmentSolution|null findOneBy(array $criteria, array $orderBy = null)
- * @method DevelopmentSolution[]    findAll()
  * @method DevelopmentSolution[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class DevelopmentSolutionRepository extends ServiceEntityRepository
@@ -47,4 +46,12 @@ class DevelopmentSolutionRepository extends ServiceEntityRepository
         ;
     }
     */
+    /**
+     * @method DevelopmentSolution[]    findAll()
+     * @return DevelopmentSolution[]
+     */
+    public function findAll():array
+    {
+        return $this->findBy(array(), array('id' => 'DESC'));
+    }
 }

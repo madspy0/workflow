@@ -85,7 +85,7 @@
                                             <th class="cell">Дата</th>
                                             <th class="cell">Замовник</th>
                                             <th class="cell">Адреса ділянки</th>
-                                            <th class="cell">Площа (Га)</th>
+                                            <th class="cell">Площа</th>
                                             <th class="cell">Статус</th>
                                             <th class="cell"></th>
                                         </tr>
@@ -108,12 +108,12 @@
                                                     {{ solution.developmentApplication.landRegion }}
                                                 </td>
                                                 <td class="cell">
-                                                    {{ solution.developmentApplication.area }}
+                                                    {{ solution.developmentApplication.area }} Га
                                                 </td>
-                                                {% if solution.action %}
-                                                    <td class="cell"><span class="badge bg-danger">Відхилено</span></td>
-                                                {% else %}
+                                                {% if solution.developmentApplication.status == 'published' %}
                                                     <td class="cell"><span class="badge bg-success">Прийнято</span></td>
+                                                {% elseif solution.developmentApplication.status == 'rejected' %}
+                                                    <td class="cell"><span class="badge bg-danger">Відхилено</span></td>
                                                 {% endif %}
                                                 <td class="cell"><a class="btn-sm app-btn-secondary"
                                                                     href="{{ path('statement.history',{'id':solution.id}) }}">View</a>

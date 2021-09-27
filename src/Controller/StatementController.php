@@ -120,7 +120,6 @@ class StatementController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                dd($developmentSolution);
                 $applicationFlowStateMachine->apply($developmentApplication, "to_number");
                 $this->addFlash(
                     'success',

@@ -45,7 +45,7 @@ class DevelopmentSolution
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $action;
+    private $action = true;
 
     public function getId(): ?int
     {

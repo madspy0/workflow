@@ -9,7 +9,6 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @method CouncilSession|null find($id, $lockMode = null, $lockVersion = null)
  * @method CouncilSession|null findOneBy(array $criteria, array $orderBy = null)
- * @method CouncilSession[]    findAll()
  * @method CouncilSession[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class CouncilSessionRepository extends ServiceEntityRepository
@@ -35,32 +34,12 @@ class CouncilSessionRepository extends ServiceEntityRepository
             ->getQuery();
         return $qb->getArrayResult();
     }
-    // /**
-    //  * @return CouncilSession[] Returns an array of CouncilSession objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @method CouncilSession[]    findAll()
+     * @return CouncilSession[]
+     */
+    public function findAll():array
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->findBy(array(), array('id' => 'DESC'));
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?CouncilSession
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
