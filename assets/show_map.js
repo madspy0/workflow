@@ -50,14 +50,17 @@ let feature = new Feature({
 vector.getSource().addFeature(feature);
 map.getView().fit(feature.getGeometry().getExtent());
 
-window.disableLitepickerStyles = true;
-let picker = new Litepicker({
-    element: document.getElementById('form_councilSession_isAt'),
-    inlineMode: true,
-    lang: "uk-UA",
-    highlightedDays: document.getElementById('session-dates').dataset.sessionDates.split(','),
-});
-picker.on('preselect', (date) => {
-    let formatter = new Intl.DateTimeFormat("ru");
-    document.getElementById('date-session').innerHTML = formatter.format(date.dateInstance);
-});
+let sessionDates = document.getElementById('form_councilSession_isAt');
+if(sessionDates) {
+    window.disableLitepickerStyles = true;
+    let picker = new Litepicker({
+        element: document.getElementById('form_councilSession_isAt'),
+        inlineMode: true,
+        lang: "uk-UA",
+        highlightedDays: document.getElementById('session-dates').dataset.sessionDates.split(','),
+    });
+    picker.on('preselect', (date) => {
+        let formatter = new Intl.DateTimeFormat("ru");
+        document.getElementById('date-session').innerHTML = formatter.format(date.dateInstance);
+    });
+}

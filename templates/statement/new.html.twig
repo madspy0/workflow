@@ -15,6 +15,14 @@
         Save
     </button>
 {% endblock %}
+{% block _development_application_planingDocumentation_row %}Необхідність розроблення містобудівної документації
+    <div class="mb-3 input-group form-check form-switch land-solution">
+
+        <div class="input-group-prepend">Ні</div>
+        <input type="checkbox" id="development_application_planingDocumentation" name="development_application[planingDocumentation]" class="form-switch form-check-input" value="1" checked="checked">
+        <label class="form-check-label" for="development_application_planingDocumentation">Так</label>
+    </div>
+{% endblock %}
 {# {%- block form_row -%} #}
 {# {%- if compound is defined and compound -%} #}
 {# {%- set element = 'fieldset' -%} #}
@@ -175,10 +183,11 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col col-8 form-switch">
+                                        <div class="col col-8">
                                             {{ form_row(form.planingDocumentation) }}
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col col-6">
                                             {{ form_row(form.cadastreNumber) }}

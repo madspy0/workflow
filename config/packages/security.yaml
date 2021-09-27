@@ -43,3 +43,4 @@ security:
          - { path: ^/sol, roles: ROLE_USER }
          - { path: ^/statement, roles: ROLE_USER }
          - { path: ^/history, roles: ROLE_USER }
+         - { path: ^/calendar, roles: ROLE_USER }

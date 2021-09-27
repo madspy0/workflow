@@ -8,20 +8,25 @@ import Calendar from 'js-year-calendar';
 import 'js-year-calendar/locales/js-year-calendar.ua';
 import 'js-year-calendar/dist/js-year-calendar.css';
 
-let sessionDates = JSON.parse(document.getElementById('session-dates').dataset.sessionDates);
 let getSessDates = () => {
-    let res = [];
-    sessionDates.forEach(function (item) {
-        res.push({startDate: new Date(item['isAt']), endDate: new Date(item['isAt'])});
-    })
-    return res;
+    let sessionDates = JSON.parse(document.getElementById('session-dates').dataset.sessionDates);
+    if(sessionDates.length) {
+        return sessionDates.map(r => ({
+            startDate: new Date(r.startDate),
+            endDate: new Date(r.startDate),
+            color: '#ffeb3b'
+            // name: '#' + r.number + ' - ' + r.title,
+            // details: r.comments + ' comments'
+        }));
+    }
 }
 
-const currentYear = new Date().getFullYear();
+// const currentYear = new Date().getFullYear();
 new Calendar('.calendar',
     {
         dataSource: getSessDates,
-        language: 'ua'
+        language: 'ua',
+        style: 'background'
     });
 
 import './portal/app';

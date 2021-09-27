@@ -27,9 +27,13 @@ class StatementController extends AbstractController
     /**
      * @Route("/", name="homepage")
      */
-    public function index(): Response
+    public function index(DevelopmentApplicationRepository $applicationRepository, DevelopmentSolutionRepository $solutionRepository, CouncilSessionRepository $sessionRepository): Response
     {
-        return $this->render('statement/index.html.twig');
+        return $this->render('statement/index.html.twig', [
+            'applicationNumber' => count($applicationRepository->findAll()),
+            'solutionNumber' => count($solutionRepository->findAll()),
+            'sessionNumber' => count($sessionRepository->findAll())
+        ]);
     }
 
 
@@ -91,10 +95,14 @@ class StatementController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $applicationFlowStateMachine->getMarking($developmentApplication);
+            $this->addFlash(
+                'success',
+                ['Додана нова заявка', date("d-m-Y H:i:s")]
+            );
             $em = $this->getDoctrine()->getManager();
             $em->persist($developmentApplication);
             $em->flush();
-            return $this->render('statement/added.html.twig');
+            return $this->redirectToRoute('statement.list');
         }
 
         return $this->render('statement/new.html.twig', [
@@ -112,7 +120,12 @@ class StatementController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                dd($developmentSolution);
                 $applicationFlowStateMachine->apply($developmentApplication, "to_number");
+                $this->addFlash(
+                    'success',
+                    ['Додано рішення по заявці №'.$developmentSolution->getNumber(), date("d-m-Y H:i:s")]
+                );
                 $developmentSolution->setDevelopmentApplication($developmentApplication);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($developmentApplication);
@@ -136,13 +149,13 @@ class StatementController extends AbstractController
     /**
      * @Route("/appl/{id}", name="statement.update")
      */
-    public function update(WorkflowInterface $applicationFlowStateMachine, DevelopmentApplication $developmentApplication, EntityManagerInterface $entityManager, Request $request): Response
+    public function update(WorkflowInterface $applicationFlowStateMachine, DevelopmentApplication $developmentApplication,
+                           EntityManagerInterface $entityManager, Request $request): Response
     {
         // $applicationFlowStateMachine->apply($developmentApplication, "reopen");
-        $session_dates = [];
-        foreach($entityManager->getRepository(CouncilSession::class)->findAllDates() as $session_date) {
-            $session_dates[]=$session_date['isAt']->format('Y-m-d');
-        }
+        $callback = function ($v) {
+           return $v->getIsAt()->format('Y-m-d');
+        };
         if ($applicationFlowStateMachine->can($developmentApplication, 'to_number')) {
             $form = $this->createFormBuilder($developmentApplication)
                 ->add('appealNumber', TextType::class, ['label' => 'Присвоїти номер'])
@@ -158,8 +171,12 @@ class StatementController extends AbstractController
                     } else {
                         $session = $developmentApplication->getCouncilSession();
                     }
-
                     $applicationFlowStateMachine->apply($developmentApplication, "to_number");
+                    $this->addFlash(
+                        'success',
+                        ['Заявка №'.$developmentApplication->getAppealNumber().' винесена на сесію '.
+                            $developmentApplication->getCouncilSession()->getIsAt()->format('d-m-Y'), date("d-m-Y H:i:s")]
+                    );
                     $entityManager->persist($session);
                     $entityManager->persist($developmentApplication);
                     $entityManager->persist($developmentApplication);
@@ -172,7 +189,7 @@ class StatementController extends AbstractController
             return $this->render('statement/connect_session.twig', [
                 'developmentApplication' => $developmentApplication,
                 'form' => $form->createView(),
-                'sessionDates' => implode($session_dates,',')
+                'sessionDates' => implode(',',array_map($callback, $entityManager->getRepository(CouncilSession::class)->findAll()))
             ]);
         }
 
@@ -182,11 +199,14 @@ class StatementController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    if ($developmentSolution->getAction()) {
+                    ($developmentSolution->getAction()) ?
+                        $applicationFlowStateMachine->apply($developmentApplication, "publish")
+                    :
                         $applicationFlowStateMachine->apply($developmentApplication, "reject");
-                    } else {
-                        $applicationFlowStateMachine->apply($developmentApplication, "publish");
-                    }
+                    $this->addFlash(
+                        'success',
+                        ['Додано рішення по заявці №'.$developmentApplication->getAppealNumber(), date("d-m-Y H:i:s")]
+                    );
                     $developmentSolution->setDevelopmentApplication($developmentApplication);
                     $entityManager->persist($developmentApplication);
                     $entityManager->persist($developmentSolution);
@@ -225,6 +245,6 @@ class StatementController extends AbstractController
      */
     public function calendar(CouncilSessionRepository $repository, SerializerInterface $serializer): Response
     {
-        return $this->render('statement/calendar.html.twig', ['sessionDates'=>$serializer->serialize($repository->findAllDates(), 'json')]);
+        return $this->render('statement/calendar.html.twig', ['sessionDates'=>$serializer->serialize($repository->findAll(), 'json',['groups' => 'dates'])]);
     }
 }

@@ -1,5 +1,14 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme form _self %}
+{% block _development_solution_form_action_row %}
+    <div class="mb-3 input-group form-check form-switch land-solution">
+        <div class="input-group-prepend">Відмовити</div>
+            <input type="checkbox" id="development_solution_form_action" name="development_solution_form[action]" class="form-switch form-check-input" value="1" checked="checked">
+            <label class="form-check-label" for="development_solution_form_action">Схвалити</label>
+    </div>
+{% endblock %}
+
 {% block title %}Hello StatementController!{% endblock %}
 
 {% block stylesheets %}
