@@ -22,6 +22,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('map', './assets/map.js')
+    .addEntry('fullMap', './assets/full-map.js')
     .addEntry('list', './assets/list.js')
     .addEntry('calendar', './assets/calendar.js')
     .addEntry('show_map', './assets/show_map.js')
@@ -61,7 +62,6 @@ Encore
 
     // enables Sass/SCSS support
     .enableSassLoader()
-
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
 

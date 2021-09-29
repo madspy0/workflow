@@ -246,4 +246,12 @@ class StatementController extends AbstractController
     {
         return $this->render('statement/calendar.html.twig', ['sessionDates'=>$serializer->serialize($repository->findAll(), 'json',['groups' => 'dates'])]);
     }
+
+    /**
+     * @Route("/map", name="statement.map")
+     */
+    public function map(): Response
+    {
+        return $this->render('statement/map.html.twig');
+    }
 }

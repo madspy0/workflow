@@ -199,6 +199,7 @@ class DevelopmentApplicationType extends AbstractType
         return $repoRegions->createQueryBuilder("r")
             ->where("r.country = :countryid")
             ->setParameter("countryid", $country->getId())
+            ->addOrderBy("r.title_ua")
             ->getQuery()
             ->getResult();
     }
