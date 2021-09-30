@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\ContainsGeom;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=DevelopmentApplicationRepository::class)
@@ -260,6 +261,7 @@ class DevelopmentApplication
     private $solution;
     /**
      * @ORM\Column(type="geometry")
+     * @Groups({"geoms"})
      * @Assert\NotBlank(message="Намалюйте план ділянки")
      * @ContainsGeom(message="Геометрія невірна")
      */

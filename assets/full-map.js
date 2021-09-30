@@ -17,9 +17,12 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {fromLonLat} from "ol/proj";
 
 import LayerSwitcher from 'ol-layerswitcher';
+import EditButtonsControl from './edit_buttons_control';
 
 import './portal/app';
 import LayerGroup from "ol/layer/Group";
+import {Feature} from "ol";
+import {WKT} from "ol/format";
 
 const source = new VectorSource();
 const vector = new VectorLayer({
@@ -35,6 +38,24 @@ const vector = new VectorLayer({
         }),
     }),
 });
+
+let Request = new XMLHttpRequest();
+Request.open('get', '/geoms');
+Request.send();
+Request.onreadystatechange = function () {
+    if (Request.readyState == 3) {
+        // загрузка
+    }
+    if (Request.readyState == 4) {
+        let geoms = JSON.parse(Request.response);
+        geoms.forEach(function (item, index) {
+            let feature = new Feature({
+                geometry: new WKT().readGeometry(item.geom)
+            });
+            vector.getSource().addFeature(feature);
+        });
+    }
+}
 
 let parcelSource = new TileWMSSource({
     url: 'http://map.land.gov.ua/geowebcache/service/wms',
@@ -85,6 +106,9 @@ const map = new Map({
 
 const layerSwitcher = new LayerSwitcher({
     reverse: true,
-    groupSelectStyle: 'group'
+    groupSelectStyle: 'group',
+    target : document.getElementsByClassName('edit-buttons')[0]
 });
+
+map.addControl(new EditButtonsControl());
 map.addControl(layerSwitcher);

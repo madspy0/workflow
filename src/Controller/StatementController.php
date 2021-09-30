@@ -10,6 +10,7 @@ use App\Repository\CouncilSessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -76,9 +77,10 @@ class StatementController extends AbstractController
     /**
      * @Route("/sess/{id}", name="statement.session")
      */
-    public function session(CouncilSession $session) {
-        return $this->render('statement/list.html.twig',[
-            'developmentApplications'=>$session->getDevelopmentApplications()]);
+    public function session(CouncilSession $session)
+    {
+        return $this->render('statement/list.html.twig', [
+            'developmentApplications' => $session->getDevelopmentApplications()]);
     }
 
     /**
@@ -123,7 +125,7 @@ class StatementController extends AbstractController
                 $applicationFlowStateMachine->apply($developmentApplication, "to_number");
                 $this->addFlash(
                     'success',
-                    ['Додано рішення по заявці №'.$developmentSolution->getNumber(), date("d-m-Y H:i:s")]
+                    ['Додано рішення по заявці №' . $developmentSolution->getNumber(), date("d-m-Y H:i:s")]
                 );
                 $developmentSolution->setDevelopmentApplication($developmentApplication);
                 $em = $this->getDoctrine()->getManager();
@@ -148,12 +150,12 @@ class StatementController extends AbstractController
     /**
      * @Route("/appl/{id}", name="statement.update")
      */
-    public function update(WorkflowInterface $applicationFlowStateMachine, DevelopmentApplication $developmentApplication,
+    public function update(WorkflowInterface      $applicationFlowStateMachine, DevelopmentApplication $developmentApplication,
                            EntityManagerInterface $entityManager, Request $request): Response
     {
         // $applicationFlowStateMachine->apply($developmentApplication, "reopen");
         $callback = function ($v) {
-           return $v->getIsAt()->format('Y-m-d');
+            return $v->getIsAt()->format('Y-m-d');
         };
         if ($applicationFlowStateMachine->can($developmentApplication, 'to_number')) {
             $form = $this->createFormBuilder($developmentApplication)
@@ -173,7 +175,7 @@ class StatementController extends AbstractController
                     $applicationFlowStateMachine->apply($developmentApplication, "to_number");
                     $this->addFlash(
                         'success',
-                        ['Заявка №'.$developmentApplication->getAppealNumber().' винесена на сесію '.
+                        ['Заявка №' . $developmentApplication->getAppealNumber() . ' винесена на сесію ' .
                             $developmentApplication->getCouncilSession()->getIsAt()->format('d-m-Y'), date("d-m-Y H:i:s")]
                     );
                     $entityManager->persist($session);
@@ -188,7 +190,7 @@ class StatementController extends AbstractController
             return $this->render('statement/connect_session.twig', [
                 'developmentApplication' => $developmentApplication,
                 'form' => $form->createView(),
-                'sessionDates' => implode(',',array_map($callback, $entityManager->getRepository(CouncilSession::class)->findAll()))
+                'sessionDates' => implode(',', array_map($callback, $entityManager->getRepository(CouncilSession::class)->findAll()))
             ]);
         }
 
@@ -200,11 +202,11 @@ class StatementController extends AbstractController
                 try {
                     ($developmentSolution->getAction()) ?
                         $applicationFlowStateMachine->apply($developmentApplication, "publish")
-                    :
+                        :
                         $applicationFlowStateMachine->apply($developmentApplication, "reject");
                     $this->addFlash(
                         'success',
-                        ['Додано рішення по заявці №'.$developmentApplication->getAppealNumber(), date("d-m-Y H:i:s")]
+                        ['Додано рішення по заявці №' . $developmentApplication->getAppealNumber(), date("d-m-Y H:i:s")]
                     );
                     $developmentSolution->setDevelopmentApplication($developmentApplication);
                     $entityManager->persist($developmentApplication);
@@ -244,7 +246,7 @@ class StatementController extends AbstractController
      */
     public function calendar(CouncilSessionRepository $repository, SerializerInterface $serializer): Response
     {
-        return $this->render('statement/calendar.html.twig', ['sessionDates'=>$serializer->serialize($repository->findAll(), 'json',['groups' => 'dates'])]);
+        return $this->render('statement/calendar.html.twig', ['sessionDates' => $serializer->serialize($repository->findAll(), 'json', ['groups' => 'dates'])]);
     }
 
     /**
@@ -253,5 +255,18 @@ class StatementController extends AbstractController
     public function map(): Response
     {
         return $this->render('statement/map.html.twig');
+    }
+
+    /**
+     * @Route("/geoms", name="statement.all_appl_geoms")
+     */
+    public function allApplGeoms(DevelopmentApplicationRepository $repository, SerializerInterface $serializer): Response
+    {
+        try {
+            $geoms = $serializer->serialize($repository->findAll(), 'json', ['groups' => 'geoms']);
+            return new Response($geoms);//$this->json($geoms, Response::HTTP_OK);
+        } catch (\Exception $exception) {
+            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
