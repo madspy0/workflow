@@ -25,9 +25,26 @@ import {Feature} from "ol";
 import {WKT} from "ol/format";
 
 const source = new VectorSource();
+const measureSource = new VectorSource();
+
 const vector = new VectorLayer({
+    source: measureSource,
+    style: new Style({
+        fill: new Fill({
+            color: 'rgba(255, 255, 255, 0.2)',
+        }),
+        stroke: new Stroke({
+            color: '#ffcc33',
+            width: 2,
+        }),
+    }),
+});
+
+const plants = new VectorLayer({
     source: source,
-    name: 'vector',
+    name: 'plants',
+    title: 'Ділянки',
+    visible: false,
     style: new Style({
         fill: new Fill({
             color: 'rgb(216,0,254,0.2)',
@@ -52,7 +69,7 @@ Request.onreadystatechange = function () {
             let feature = new Feature({
                 geometry: new WKT().readGeometry(item.geom)
             });
-            vector.getSource().addFeature(feature);
+            plants.getSource().addFeature(feature);
         });
     }
 }
@@ -76,7 +93,7 @@ let parcelSource = new TileWMSSource({
 let parcels = new TileLayer({
     source: parcelSource,
     visible: 0,
-    title: 'Kadastre'
+    title: 'Кадатр'
 });
 
 const osm = new TileLayer({
@@ -90,6 +107,7 @@ const baseMaps = new LayerGroup({
     title: 'Base maps',
     layers: [
         osm,
+        plants,
         vector,
         parcels
     ]
