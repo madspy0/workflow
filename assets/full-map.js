@@ -11,7 +11,7 @@ import './../assets/scss/app/full-map.scss';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import {Fill, Stroke, Style} from 'ol/style';
-import {Draw, Modify, Snap} from 'ol/interaction';
+
 import {OSM, Vector as VectorSource, TileWMS as TileWMSSource} from 'ol/source';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {fromLonLat} from "ol/proj";
@@ -129,4 +129,5 @@ const layerSwitcher = new LayerSwitcher({
 });
 
 map.addControl(new EditButtonsControl());
+//document.getElementsByClassName('edit-buttons')[0].append(layerSwitcher);
 map.addControl(layerSwitcher);

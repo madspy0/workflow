@@ -1,3 +1,16 @@
+@mixin button-bg($bg) {
+  background: white;
+  &.hover,
+  &:hover {
+    background:darken($bg,8%);
+    transition: all 0.3s ease;
+  }
+  &.active,
+  &:active {
+    background:darken($bg,25%);
+  }
+}
+
 .full-map {
   width: 100%;
   height: 100%;
@@ -13,25 +26,69 @@
 }
 .edit-buttons {
 
- // //height: 80px;
- // -webkit-border-radius: 4px;
- // -moz-border-radius: 4px;
- // border-radius: 4px;
- //// background-color: #298eb3;
- // box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.24), 0 0 2px 0 rgba(0, 0, 0, 0.12);
- // color: rgba(0, 0, 0, 0.54);
- right: .5em;
+  // //height: 80px;
+  // -webkit-border-radius: 4px;
+  // -moz-border-radius: 4px;
+  // border-radius: 4px;
+  //// background-color: #298eb3;
+  // box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.24), 0 0 2px 0 rgba(0, 0, 0, 0.12);
+  // color: rgba(0, 0, 0, 0.54);
+  right: .5em;
   top: .5em;
- position: absolute;
- // transition: left 1s;
-  button {
+  position: absolute;
+  padding: 2px;
+  //background-color: white !important;
+  // transition: left 1s;
+  .btn {
     width: 38px;
     height: 38px;
-    color: rgba(0,60,136,0.5);
-    background-color: white;
+    color: #158da2;
+    @include button-bg(#ecfafd);
   }
 }
 
 .layer-switcher {
-  top: calc(.5em + 78px) !important;
+  top: calc(.5em + 79px) !important;
+
+}
+
+//.btn-edits:hover, .btn-edits:focus, .btn-edits:active, .btn-edits.active, .open>.dropdown-toggle.btn-edits {
+//  color: #158da2 !important;
+//  background-color: #ecfafd !important;
+//}
+
+.ol-tooltip {
+  position: relative;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  color: white;
+  padding: 4px 8px;
+  opacity: 0.7;
+  white-space: nowrap;
+  font-size: 12px;
+  cursor: default;
+  user-select: none;
+}
+.ol-tooltip-measure {
+  opacity: 1;
+  font-weight: bold;
+}
+.ol-tooltip-static {
+  background-color: #ffcc33;
+  color: black;
+  border: 1px solid white;
+}
+.ol-tooltip-measure:before,
+.ol-tooltip-static:before {
+  border-top: 6px solid rgba(0, 0, 0, 0.5);
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  margin-left: -7px;
+  left: 50%;
+}
+.ol-tooltip-static:before {
+  border-top-color: #ffcc33;
 }
