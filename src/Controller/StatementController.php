@@ -18,6 +18,10 @@ use App\Entity\DevelopmentApplication;
 use App\Form\DevelopmentApplicationType;
 use App\Repository\DevelopmentApplicationRepository;
 use App\Repository\DevelopmentSolutionRepository;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Component\Workflow\Exception\LogicException;
@@ -151,7 +155,7 @@ class StatementController extends AbstractController
      * @Route("/appl/{id}", name="statement.update")
      */
     public function update(WorkflowInterface      $applicationFlowStateMachine, DevelopmentApplication $developmentApplication,
-                           EntityManagerInterface $entityManager, Request $request): Response
+                           EntityManagerInterface $entityManager, SerializerInterface $serializer, Request $request): Response
     {
         // $applicationFlowStateMachine->apply($developmentApplication, "reopen");
         $callback = function ($v) {
@@ -190,7 +194,8 @@ class StatementController extends AbstractController
             return $this->render('statement/connect_session.twig', [
                 'developmentApplication' => $developmentApplication,
                 'form' => $form->createView(),
-                'sessionDates' => implode(',', array_map($callback, $entityManager->getRepository(CouncilSession::class)->findAll()))
+                'sessionDates' => $serializer->serialize($entityManager->getRepository(CouncilSession::class)->findAll(), 'json', ['groups' => 'dates'])
+              //  'sessionDates' => implode(',', array_map($callback, $entityManager->getRepository(CouncilSession::class)->findAll()))
             ]);
         }
 
@@ -246,6 +251,19 @@ class StatementController extends AbstractController
      */
     public function calendar(CouncilSessionRepository $repository, SerializerInterface $serializer): Response
     {
+      //  $encoder = new JsonEncoder();
+//        $countCallback = function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) {
+//            return count($innerObject) ;
+//        };
+//        $defaultContext = [
+//            AbstractNormalizer::CALLBACKS => [
+//                'developmentApplications' => $countCallback,
+//            ],
+//        ];
+    //    $normalizer = new GetSetMethodNormalizer(null, null, null, null, null, $defaultContext);
+        //$newSerializer = new Serializer([$normalizer], [$encoder]);
+        //$serializer->serialize($repository->findAll(), 'json', ['groups' => 'dates',])
+
         return $this->render('statement/calendar.html.twig', ['sessionDates' => $serializer->serialize($repository->findAll(), 'json', ['groups' => 'dates'])]);
     }
 

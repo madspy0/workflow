@@ -51,13 +51,19 @@ vector.getSource().addFeature(feature);
 map.getView().fit(feature.getGeometry().getExtent());
 
 let sessionDates = document.getElementById('form_councilSession_isAt');
+
+let highlighted = [];
+JSON.parse(document.getElementById('session-dates').dataset.sessionDates).forEach((item)=>{
+    highlighted.push(item.startDate)
+})
+
 if(sessionDates) {
     window.disableLitepickerStyles = true;
     let picker = new Litepicker({
         element: document.getElementById('form_councilSession_isAt'),
         inlineMode: true,
         lang: "uk-UA",
-        highlightedDays: document.getElementById('session-dates').dataset.sessionDates.split(','),
+        highlightedDays: highlighted//document.getElementById('session-dates').dataset.sessionDates.split(','),
     });
     picker.on('preselect', (date) => {
         let formatter = new Intl.DateTimeFormat("ru");

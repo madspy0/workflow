@@ -17,6 +17,7 @@ class CouncilSession
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @Groups({"dates"})
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -30,6 +31,7 @@ class CouncilSession
 
     /**
      * @ORM\OneToMany(targetEntity=DevelopmentApplication::class, mappedBy="councilSession")
+     * @Groups({"dates"})
      */
     private $developmentApplications;
 

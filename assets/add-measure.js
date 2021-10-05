@@ -90,6 +90,11 @@ export function toggleMeasure(smap) {
     map.getInteractions().forEach((interaction) => {
         if (interaction instanceof Draw) {
             map.removeInteraction(interaction);
+            let source = addMeasureLayer();
+            source.clear();
+            map.getOverlays().getArray().slice(0).forEach(function(overlay) {
+                map.removeOverlay(overlay);
+            });
             active = false;
         }
     });

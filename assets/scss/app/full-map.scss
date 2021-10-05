@@ -9,6 +9,10 @@
   &:active {
     background:darken($bg,25%);
   }
+  &.visited,
+  &:visited {
+    background:white;
+  }
 }
 
 .full-map {
@@ -42,14 +46,25 @@
   .btn {
     width: 38px;
     height: 38px;
+  }
+  .btn:focus, .btn:active:focus, .btn.active:focus {
+    outline: 0 none;
+  }
+  .btn-edit {
     color: #158da2;
-    @include button-bg(#ecfafd);
+    background: white;
+  }
+   .btn-edit:focus, .btn-edit:active, .btn-edit.active, .open > .dropdown-toggle.btn-primary {
+    background: white;
+  }
+  .btn-edit:hover, .btn-edit:active, .btn-edit.active {
+    background: #ecfafd;
+    box-shadow: none;
   }
 }
 
 .layer-switcher {
   top: calc(.5em + 79px) !important;
-
 }
 
 //.btn-edits:hover, .btn-edits:focus, .btn-edits:active, .btn-edits.active, .open>.dropdown-toggle.btn-edits {

@@ -1,7 +1,6 @@
 'use strict';
 const bootstrap = require('bootstrap');
 /* ===== Enable Bootstrap Popover (on element  ====== */
-
 var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="popover"]'))
 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
   return new bootstrap.Popover(popoverTriggerEl)
@@ -47,12 +46,10 @@ function responsiveSidePanel() {
 
 sidePanelToggler.addEventListener('click', () => {
 	if (sidePanel.classList.contains('sidepanel-visible')) {
-		console.log('visible');
 		sidePanel.classList.remove('sidepanel-visible');
 		sidePanel.classList.add('sidepanel-hidden');
 
 	} else {
-		console.log('hidden');
 		sidePanel.classList.remove('sidepanel-hidden');
 		sidePanel.classList.add('sidepanel-visible');
 	}
