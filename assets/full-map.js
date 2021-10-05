@@ -67,7 +67,8 @@ Request.onreadystatechange = function () {
         let geoms = JSON.parse(Request.response);
         geoms.forEach(function (item, index) {
             let feature = new Feature({
-                geometry: new WKT().readGeometry(item.geom)
+                geometry: new WKT().readGeometry(item.geom),
+                appl: item.applicantLastname
             });
             plants.getSource().addFeature(feature);
         });

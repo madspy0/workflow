@@ -1,8 +1,7 @@
 import {Control} from 'ol/control';
 import './add-measure';
 import {toggleMeasure} from "./add-measure";
-import {unByKey} from "ol/Observable";
-import {Button} from "bootstrap";
+import {clickInfo} from "./click-info";
 
 class EditButtonsControl extends Control {
     constructor(opt_options) {
@@ -35,15 +34,21 @@ class EditButtonsControl extends Control {
             target: options.target,
         });
 
+        infoButton.addEventListener('click', this.handleInfo.bind(this), false);
         areaButton.addEventListener('click', this.handleArea.bind(this), false);
     }
 
     handleArea(evt) {
         evt.preventDefault();
-        let areaButton = new Button(evt.currentTarget);
+ //       let areaButton = new Button(evt.currentTarget);
  //       areaButton.toggle();
-        console.log(areaButton)
+ //       console.log(areaButton)
         toggleMeasure(this.getMap());
+    }
+
+    handleInfo(evt) {
+        evt.preventDefault();
+        clickInfo(this.getMap())
     }
 
 }

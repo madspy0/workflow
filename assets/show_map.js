@@ -69,4 +69,7 @@ if(sessionDates) {
         let formatter = new Intl.DateTimeFormat("ru");
         document.getElementById('date-session').innerHTML = formatter.format(date.dateInstance);
     });
+    // picker.on('tooltip', (tooltip, day) => {
+    //     console.log(day)
+    // });
 }
