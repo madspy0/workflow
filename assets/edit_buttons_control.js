@@ -38,17 +38,29 @@ class EditButtonsControl extends Control {
         areaButton.addEventListener('click', this.handleArea.bind(this), false);
     }
 
+    toggleButtons(elem) {
+        let buttons = document.getElementsByClassName("btn-edit");
+        buttons.forEach(function(b) {
+            if(elem !== b) {
+                b.classList.remove("active");
+            }
+        })
+    }
+
     handleArea(evt) {
         evt.preventDefault();
- //       let areaButton = new Button(evt.currentTarget);
- //       areaButton.toggle();
- //       console.log(areaButton)
-        toggleMeasure(this.getMap());
+        this.toggleButtons(evt.currentTarget);
+        let map = this.getMap();
+        clickInfo(map, false);
+        toggleMeasure(map, evt.currentTarget.classList.contains('active'));
     }
 
     handleInfo(evt) {
         evt.preventDefault();
-        clickInfo(this.getMap())
+        this.toggleButtons(evt.currentTarget);
+        let map = this.getMap();
+        toggleMeasure(map, false);
+        clickInfo(map, evt.currentTarget.classList.contains('active'));
     }
 
 }

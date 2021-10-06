@@ -79,7 +79,7 @@ function createMeasureTooltip() {
     map.addOverlay(measureTooltip);
 }
 
-export function toggleMeasure(smap) {
+export function toggleMeasure(smap, status) {
     map = smap;
     let active = true;
     // let areaButton = new Button(document.getElementsByClassName('btn-edits')[1]);
@@ -98,7 +98,7 @@ export function toggleMeasure(smap) {
             active = false;
         }
     });
-    if (active) {
+    if (active && status) {
         const type = 'Polygon';
         let source = addMeasureLayer();
         let draw = new Draw({

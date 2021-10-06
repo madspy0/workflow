@@ -53,10 +53,12 @@ map.getView().fit(feature.getGeometry().getExtent());
 let sessionDates = document.getElementById('form_councilSession_isAt');
 
 let highlighted = [];
-JSON.parse(document.getElementById('session-dates').dataset.sessionDates).forEach((item)=>{
-    highlighted.push(item.startDate)
-})
-
+let session_dates = document.getElementById('session-dates');
+if(session_dates) {
+    JSON.parse(session_dates.dataset.sessionDates).forEach((item) => {
+        highlighted.push(item.startDate)
+    })
+}
 if(sessionDates) {
     window.disableLitepickerStyles = true;
     let picker = new Litepicker({
