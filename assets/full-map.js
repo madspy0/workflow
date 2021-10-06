@@ -68,7 +68,7 @@ Request.onreadystatechange = function () {
         geoms.forEach(function (item, index) {
             let feature = new Feature({
                 geometry: new WKT().readGeometry(item.geom),
-                appl: item.applicantLastname,
+                appl: '<div>Заявник: ' + item.applicantLastname + ' ' + item.applicantFirstname + ' ' + item.applicantMiddlename + '</div><div>Площа: '+ item.area + ' Га</div>',
                 nom: item.id
             });
             plants.getSource().addFeature(feature);

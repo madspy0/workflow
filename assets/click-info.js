@@ -37,7 +37,7 @@ let tooltip_on_move = (e) => {
         let name = selected.get('appl');
         let geom = selected.get('geometry');
         let tooltipCoord = geom.getInteriorPoint().getCoordinates();
-        infoTooltipElement.innerHTML = 'Заявник ' + name;
+        infoTooltipElement.innerHTML =  name;
         infoTooltip.setPosition(tooltipCoord);
     } else {
         createInfoTooltip();
