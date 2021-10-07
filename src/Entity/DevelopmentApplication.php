@@ -52,11 +52,13 @@ class DevelopmentApplication
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"geoms"})
      */
     private $applicantFirstname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"geoms"})
      */
     private $applicantMiddlename;
 
@@ -223,6 +225,7 @@ class DevelopmentApplication
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"geoms"})
      */
     private $area;
 

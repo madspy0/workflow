@@ -22,6 +22,7 @@ class DevelopmentSolutionFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => DevelopmentSolution::class,
+//            'novalidate' => 'novalidate',
         ]);
     }
 }

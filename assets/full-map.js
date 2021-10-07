@@ -68,7 +68,7 @@ Request.onreadystatechange = function () {
         geoms.forEach(function (item, index) {
             let feature = new Feature({
                 geometry: new WKT().readGeometry(item.geom),
-                appl: item.applicantLastname,
+                appl: '<div>Заявник: ' + item.applicantLastname + ' ' + item.applicantFirstname + ' ' + item.applicantMiddlename + '</div><div>Площа: ' + item.area + ' Га</div>',
                 nom: item.id
             });
             plants.getSource().addFeature(feature);
@@ -127,9 +127,17 @@ const map = new Map({
 const layerSwitcher = new LayerSwitcher({
     reverse: true,
     groupSelectStyle: 'group',
-    target : document.getElementsByClassName('edit-buttons')[0]
+    target: document.getElementsByClassName('edit-buttons')[0]
 });
 
 map.addControl(new EditButtonsControl());
 //document.getElementsByClassName('edit-buttons')[0].append(layerSwitcher);
 map.addControl(layerSwitcher);
+
+let elem_coords = document.getElementById('coord');
+let cc = elem_coords.dataset.cc.split(',');
+if (cc.length === 2) {
+    map.getView().setCenter(cc);
+    map.getView().setZoom(elem_coords.dataset.z);
+    plants.setVisible(true);
+}

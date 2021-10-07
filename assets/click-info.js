@@ -37,7 +37,7 @@ let tooltip_on_move = (e) => {
         let name = selected.get('appl');
         let geom = selected.get('geometry');
         let tooltipCoord = geom.getInteriorPoint().getCoordinates();
-        infoTooltipElement.innerHTML = 'Заявник ' + name;
+        infoTooltipElement.innerHTML = name;
         infoTooltip.setPosition(tooltipCoord);
     } else {
         createInfoTooltip();
@@ -51,7 +51,7 @@ let reload_url = (e) => {
         return true;
     });
     if (selected != null) {
-        redirect('/appl/' + selected.get('nom'));
+        redirect('/appl/' + selected.get('nom') + '?cc=' + map.getView().getCenter().join() + '&z=' + map.getView().getZoom());
     }
 }
 
