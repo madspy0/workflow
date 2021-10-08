@@ -65,7 +65,8 @@
                     <a class="flex-sm-fill text-sm-center nav-link active" id="orders-all-tab" data-toggle="tab"
                        href="#orders-all" role="tab" aria-controls="orders-all" aria-selected="true">Всі</a>
                     <a class="flex-sm-fill text-sm-center nav-link" id="orders-paid-tab" data-toggle="tab"
-                       href="#orders-paid" role="tab" aria-controls="orders-paid" aria-selected="false">Незареєстровані</a>
+                       href="#orders-paid" role="tab" aria-controls="orders-paid"
+                       aria-selected="false">Незареєстровані</a>
                     <a class="flex-sm-fill text-sm-center nav-link" id="orders-pending-tab" data-toggle="tab"
                        href="#orders-pending" role="tab" aria-controls="orders-pending"
                        aria-selected="false">Очікують рішення</a>
@@ -104,12 +105,14 @@
                                                 <td class="cell">{{ developmentApplication.applicantLastname }} {{ developmentApplication.applicantFirstname }}</td>
                                                 <td class="cell"><span
                                                             class="cell-data">{{ developmentApplication.createdAt |format_date(locale='uk') }}</span><span
-                                                            class="note">{{ developmentApplication.createdAt |format_time(locale='uk')}}</span>
+                                                            class="note">{{ developmentApplication.createdAt |format_time(locale='uk') }}</span>
                                                 </td>
                                                 {% if developmentApplication.status == 'draft' %}
-                                                    <td class="cell"><span class="badge bg-warning">Не зареєстровано</span></td>
+                                                    <td class="cell"><span
+                                                                class="badge bg-warning">Не зареєстровано</span></td>
                                                 {% elseif developmentApplication.status == 'numbered' %}
-                                                    <td class="cell"><span class="badge bg-primary">Очікує рішення</span></td>
+                                                    <td class="cell"><span
+                                                                class="badge bg-primary">Очікує рішення</span></td>
                                                 {% elseif developmentApplication.status == 'rejected' %}
                                                     <td class="cell"><span class="badge bg-danger">Відхилено</span></td>
                                                 {% else %}
@@ -130,15 +133,41 @@
                         </div><!--//app-card-->
                         <nav class="app-pagination">
                             <ul class="pagination justify-content-center">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Next</a>
-                                </li>
+                                {# <li class="page-item disabled"> #}
+                                {# <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a> #}
+                                {# </li> #}
+                                {# <li class="page-item active"><a class="page-link" href="#">1</a></li> #}
+                                {# <li class="page-item"><a class="page-link" href="#">2</a></li> #}
+                                {# <li class="page-item"><a class="page-link" href="#">3</a></li> #}
+                                {# <li class="page-item"> #}
+                                {# <a class="page-link" href="#">Next</a> #}
+                                {# </li> #}
+                                {% set offset = (next - previous) / 2 | abs %}
+                                {% if (previous >= 0) %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ path('statement.list', { offset: previous }) }}">Попередня</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ path('statement.list', { offset: previous }) }}">{{ previous / offset + 1 | abs }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="{{ path('statement.list', { offset: previous }) }}">Попередня</a>
+                                    </li>
+                                {% endif %}
+                                <li class="page-item active"><a class="page-link" href="#">{{ next / offset | abs }}</a></li>
+                                {% if next < developmentApplications|length %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ path('statement.list', { offset: next }) }}">{{ next/offset + 1 | abs}}</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ path('statement.list', { offset: next }) }}">Наступна</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="{{ path('statement.list', { offset: next }) }}">Наступна</a>
+                                    </li>
+                                {% endif %}
                             </ul>
                         </nav><!--//app-pagination-->
 

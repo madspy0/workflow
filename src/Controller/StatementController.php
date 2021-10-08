@@ -45,12 +45,15 @@ class StatementController extends AbstractController
     /**
      * @Route("/appl", name="statement.list")
      */
-    public function list(DevelopmentApplicationRepository $developmentApplicationRepository): Response
+    public function list(DevelopmentApplicationRepository $developmentApplicationRepository, Request $request): Response
     {
-        $developmentApplications = $developmentApplicationRepository->findAll();
-
+//        $developmentApplications = $developmentApplicationRepository->findAll();
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $developmentApplicationRepository->getApplPaginator($offset);
         return $this->render('statement/list.html.twig', [
-            'developmentApplications' => $developmentApplications,
+            'developmentApplications' => $paginator,
+            'previous' => $offset - DevelopmentApplicationRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + DevelopmentApplicationRepository::PAGINATOR_PER_PAGE),
         ]);
     }
 

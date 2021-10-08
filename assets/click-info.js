@@ -34,12 +34,14 @@ let tooltip_on_move = (e) => {
         return true;
     });
     if (selected != null) {
+        document.body.style.cursor = 'pointer';
         let name = selected.get('appl');
         let geom = selected.get('geometry');
         let tooltipCoord = geom.getInteriorPoint().getCoordinates();
         infoTooltipElement.innerHTML = name;
         infoTooltip.setPosition(tooltipCoord);
     } else {
+        document.body.style.cursor = 'default';
         createInfoTooltip();
     }
 }
