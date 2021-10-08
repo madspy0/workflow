@@ -140,4 +140,6 @@ if (cc.length === 2) {
     map.getView().setCenter(cc);
     map.getView().setZoom(elem_coords.dataset.z);
     plants.setVisible(true);
+    let edit_buttons = document.getElementsByClassName('btn-edit');
+    edit_buttons[0].dispatchEvent(new Event("click"));
 }
