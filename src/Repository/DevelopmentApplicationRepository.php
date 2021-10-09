@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\DevelopmentApplication;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Driver\Exception;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @method DevelopmentApplication|null find($id, $lockMode = null, $lockVersion = null)
@@ -37,7 +39,7 @@ class DevelopmentApplicationRepository extends ServiceEntityRepository
 
     /**
      * @throws \Doctrine\DBAL\Exception
-     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws Exception
      */
     public function isPolygonValid($geom): array
     {
@@ -56,6 +58,21 @@ class DevelopmentApplicationRepository extends ServiceEntityRepository
     {
         return $this->findBy(array(), array('id' => 'DESC'));
     }
+
+    public const PAGINATOR_PER_PAGE = 3;
+
+    public function getApplPaginator(int $offset): Paginator
+    {
+        $query = $this->createQueryBuilder('da')
+            ->orderBy('da.createdAt', 'DESC')
+            ->setMaxResults(self::PAGINATOR_PER_PAGE)
+            ->setFirstResult($offset)
+            ->getQuery()
+        ;
+
+        return new Paginator($query);
+    }
+
     // /**
     //  * @return DevelopmentApplication[] Returns an array of DevelopmentApplication objects
     //  */

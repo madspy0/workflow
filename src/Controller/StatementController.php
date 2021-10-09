@@ -45,12 +45,15 @@ class StatementController extends AbstractController
     /**
      * @Route("/appl", name="statement.list")
      */
-    public function list(DevelopmentApplicationRepository $developmentApplicationRepository): Response
+    public function list(DevelopmentApplicationRepository $developmentApplicationRepository, Request $request): Response
     {
-        $developmentApplications = $developmentApplicationRepository->findAll();
-
+//        $developmentApplications = $developmentApplicationRepository->findAll();
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $developmentApplicationRepository->getApplPaginator($offset);
         return $this->render('statement/list.html.twig', [
-            'developmentApplications' => $developmentApplications,
+            'developmentApplications' => $paginator,
+            'previous' => $offset - DevelopmentApplicationRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + DevelopmentApplicationRepository::PAGINATOR_PER_PAGE),
         ]);
     }
 
@@ -161,6 +164,15 @@ class StatementController extends AbstractController
         $callback = function ($v) {
             return $v->getIsAt()->format('Y-m-d');
         };
+
+        $cc = $request->query->get('cc');
+        $temp = explode(',', $cc);
+        $z = $request->query->get('z');
+        if ($z && !(is_float($temp[0] + 0) && is_float($temp[1] + 0) && is_float($z + 0))) {
+            $cc = null;
+            $z = null;
+        }
+
         if ($applicationFlowStateMachine->can($developmentApplication, 'to_number')) {
             $form = $this->createFormBuilder($developmentApplication)
                 ->add('appealNumber', TextType::class, ['label' => 'Присвоїти номер'])
@@ -194,8 +206,9 @@ class StatementController extends AbstractController
             return $this->render('statement/connect_session.twig', [
                 'developmentApplication' => $developmentApplication,
                 'form' => $form->createView(),
-                'sessionDates' => $serializer->serialize($entityManager->getRepository(CouncilSession::class)->findAll(), 'json', ['groups' => 'dates'])
-              //  'sessionDates' => implode(',', array_map($callback, $entityManager->getRepository(CouncilSession::class)->findAll()))
+                'sessionDates' => $serializer->serialize($entityManager->getRepository(CouncilSession::class)->findAll(), 'json', ['groups' => 'dates']),
+                'cc'=>$cc, 'z'=>$z
+                //  'sessionDates' => implode(',', array_map($callback, $entityManager->getRepository(CouncilSession::class)->findAll()))
             ]);
         }
 
@@ -229,10 +242,13 @@ class StatementController extends AbstractController
             return $this->render('statement/solution.html.twig', [
                 'developmentApplication' => $developmentApplication,
                 'form' => $form->createView(),
+                'cc' => $cc,
+                'z' => $z
             ]);
         }
         return $this->render('statement/solution_view.html.twig', [
-            'developmentApplication' => $developmentApplication
+            'developmentApplication' => $developmentApplication,
+            'cc'=>$cc, 'z'=>$z
         ]);
     }
 
@@ -251,7 +267,7 @@ class StatementController extends AbstractController
      */
     public function calendar(CouncilSessionRepository $repository, SerializerInterface $serializer): Response
     {
-      //  $encoder = new JsonEncoder();
+        //  $encoder = new JsonEncoder();
 //        $countCallback = function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) {
 //            return count($innerObject) ;
 //        };
@@ -260,7 +276,7 @@ class StatementController extends AbstractController
 //                'developmentApplications' => $countCallback,
 //            ],
 //        ];
-    //    $normalizer = new GetSetMethodNormalizer(null, null, null, null, null, $defaultContext);
+        //    $normalizer = new GetSetMethodNormalizer(null, null, null, null, null, $defaultContext);
         //$newSerializer = new Serializer([$normalizer], [$encoder]);
         //$serializer->serialize($repository->findAll(), 'json', ['groups' => 'dates',])
 
@@ -270,9 +286,21 @@ class StatementController extends AbstractController
     /**
      * @Route("/map", name="statement.map")
      */
-    public function map(): Response
+    public function map(Request $request): Response
     {
-        return $this->render('statement/map.html.twig');
+        $cc = $request->query->get('cc');
+        $temp = explode(',', $cc);
+        if (count($temp) == 2) {
+            $z = $request->query->get('z');
+            if (!(is_float($temp[0] + 0) && is_float($temp[1] + 0) && is_float($z + 0))) {
+                $cc = null;
+                $z = null;
+            }
+        } else {
+            $cc = null;
+            $z = null;
+        }
+        return $this->render('statement/map.html.twig', ['cc' => $cc, 'z' => $z]);
     }
 
     /**

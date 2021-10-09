@@ -41,6 +41,9 @@
                                     {% set solution  = developmentApplication.solution | last%}
                                     {{ solution.number }}
                                     {{ solution.solution }}
+                                    {% if cc != null %}
+                                        <a href="/map?cc={{ cc }}&z={{ z }}">повернутися до мапи</a>
+                                    {% endif %}
                                 </div>
                             </div><!--//app-card-body-->
                         </div><!--//app-card-->
