@@ -38,7 +38,8 @@ let tooltip_on_move = (e) => {
         let name = selected.get('appl');
         let geom = selected.get('geometry');
         let tooltipCoord = geom.getInteriorPoint().getCoordinates();
-        infoTooltipElement.innerHTML = name;
+        let status = selected.get('status');
+        infoTooltipElement.innerHTML = name + " " + status;
         infoTooltip.setPosition(tooltipCoord);
     } else {
         document.body.style.cursor = 'default';

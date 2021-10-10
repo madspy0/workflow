@@ -131,45 +131,7 @@
 
                             </div><!--//app-card-body-->
                         </div><!--//app-card-->
-                        <nav class="app-pagination">
-                            <ul class="pagination justify-content-center">
-                                {# <li class="page-item disabled"> #}
-                                {# <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a> #}
-                                {# </li> #}
-                                {# <li class="page-item active"><a class="page-link" href="#">1</a></li> #}
-                                {# <li class="page-item"><a class="page-link" href="#">2</a></li> #}
-                                {# <li class="page-item"><a class="page-link" href="#">3</a></li> #}
-                                {# <li class="page-item"> #}
-                                {# <a class="page-link" href="#">Next</a> #}
-                                {# </li> #}
-                                {% set offset = (next - previous) / 2 | abs %}
-                                {% if (previous >= 0) %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="{{ path('statement.list', { offset: previous }) }}">Попередня</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="{{ path('statement.list', { offset: previous }) }}">{{ previous / offset + 1 | abs }}</a>
-                                    </li>
-                                {% else %}
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="{{ path('statement.list', { offset: previous }) }}">Попередня</a>
-                                    </li>
-                                {% endif %}
-                                <li class="page-item active"><a class="page-link" href="#">{{ next / offset | abs }}</a></li>
-                                {% if next < developmentApplications|length %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="{{ path('statement.list', { offset: next }) }}">{{ next/offset + 1 | abs}}</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="{{ path('statement.list', { offset: next }) }}">Наступна</a>
-                                    </li>
-                                {% else %}
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="{{ path('statement.list', { offset: next }) }}">Наступна</a>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </nav><!--//app-pagination-->
+                        {% include "/statement/pagination.html.twig" with {'next': next, 'previous': previous, 'all': developmentApplications, 'url': 'statement.list'} %}
 
                     </div><!--//tab-pane-->
 

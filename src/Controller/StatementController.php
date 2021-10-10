@@ -45,14 +45,14 @@ class StatementController extends AbstractController
     /**
      * @Route("/appl", name="statement.list")
      */
-    public function list(DevelopmentApplicationRepository $developmentApplicationRepository, Request $request): Response
+    public function list(DevelopmentApplicationRepository $repository, Request $request): Response
     {
 //        $developmentApplications = $developmentApplicationRepository->findAll();
         $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $developmentApplicationRepository->getApplPaginator($offset);
+        $paginator = $repository->getPaginator($offset);
         return $this->render('statement/list.html.twig', [
             'developmentApplications' => $paginator,
-            'previous' => $offset - DevelopmentApplicationRepository::PAGINATOR_PER_PAGE,
+            'previous' => $offset - $repository::PAGINATOR_PER_PAGE,
             'next' => min(count($paginator), $offset + DevelopmentApplicationRepository::PAGINATOR_PER_PAGE),
         ]);
     }
@@ -60,34 +60,47 @@ class StatementController extends AbstractController
     /**
      * @Route("/sess", name="statement.sessions")
      */
-    public function sessions(CouncilSessionRepository $repository): Response
+    public function sessions(CouncilSessionRepository $repository, Request $request): Response
     {
-        $sessions = $repository->findAll();
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $repository->getPaginator($offset);
 
         return $this->render('statement/session_list.html.twig', [
-            'sessions' => $sessions,
+            'sessions' => $paginator,
+            'previous' => $offset - $repository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + DevelopmentApplicationRepository::PAGINATOR_PER_PAGE),
         ]);
     }
 
     /**
      * @Route("/sol", name="statement.solutions")
      */
-    public function solutions(DevelopmentSolutionRepository $repository): Response
+    public function solutions(DevelopmentSolutionRepository $repository, Request $request): Response
     {
-        $solutions = $repository->findAll();
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $repository->getPaginator($offset);
 
         return $this->render('statement/solutions_list.html.twig', [
-            'solutions' => $solutions,
+            'solutions' => $paginator,
+            'previous' => $offset - $repository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + DevelopmentApplicationRepository::PAGINATOR_PER_PAGE),
         ]);
     }
 
     /**
      * @Route("/sess/{id}", name="statement.session")
      */
-    public function session(CouncilSession $session)
+    public function session(CouncilSession $session, DevelopmentApplicationRepository $developmentApplicationRepository, Request $request)
     {
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $developmentApplicationRepository->getApplbySessPaginator($session, $offset);
         return $this->render('statement/list.html.twig', [
-            'developmentApplications' => $session->getDevelopmentApplications()]);
+            'developmentApplications' => $paginator,
+            'previous' => $offset - DevelopmentApplicationRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + DevelopmentApplicationRepository::PAGINATOR_PER_PAGE),
+        ]);
+//        return $this->render('statement/list.html.twig', [
+//            'developmentApplications' => $session->getDevelopmentApplications()]);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\CouncilSession;
 use App\Entity\DevelopmentApplication;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Driver\Exception;
@@ -12,9 +13,12 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  * @method DevelopmentApplication|null find($id, $lockMode = null, $lockVersion = null)
  * @method DevelopmentApplication|null findOneBy(array $criteria, array $orderBy = null)
  * @method DevelopmentApplication[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method DevelopmentApplication[]    findAll()
  */
 class DevelopmentApplicationRepository extends ServiceEntityRepository
 {
+    use TraitRepository;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, DevelopmentApplication::class);
@@ -50,20 +54,13 @@ class DevelopmentApplicationRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
-    /**
-     * @method DevelopmentApplication[]    findAll()
-     * @return DevelopmentApplication[]
-     */
-    public function findAll():array
-    {
-        return $this->findBy(array(), array('id' => 'DESC'));
-    }
-
     public const PAGINATOR_PER_PAGE = 3;
 
-    public function getApplPaginator(int $offset): Paginator
+    public function getApplbySessPaginator(CouncilSession $session, int $offset): Paginator
     {
         $query = $this->createQueryBuilder('da')
+            ->andWhere('da.councilSession = :session')
+            ->setParameter('session', $session)
             ->orderBy('da.createdAt', 'DESC')
             ->setMaxResults(self::PAGINATOR_PER_PAGE)
             ->setFirstResult($offset)
@@ -72,7 +69,6 @@ class DevelopmentApplicationRepository extends ServiceEntityRepository
 
         return new Paginator($query);
     }
-
     // /**
     //  * @return DevelopmentApplication[] Returns an array of DevelopmentApplication objects
     //  */

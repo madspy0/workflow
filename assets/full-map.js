@@ -24,7 +24,84 @@ import LayerGroup from "ol/layer/Group";
 import {Feature} from "ol";
 import {WKT} from "ol/format";
 
-const source = new VectorSource();
+let itemStyles = {
+    'draft': new Style({
+        fill: new Fill({
+            color: 'rgba(255, 255, 115, 0.2)',
+        }),
+        stroke: new Stroke({
+            color: 'rgb(255, 255, 115)',
+            width: 2,
+        }),
+    }),
+    'numbered': new Style({
+        fill: new Fill({
+            color: 'rgba(201, 247, 111, 0.2)',
+        }),
+        stroke: new Stroke({
+            color: 'rgb(201, 247, 111)',
+            width: 2,
+        }),
+    }),
+    'published': new Style({
+        fill: new Fill({
+            color: 'rgba(230, 103, 175, 0.2)',
+        }),
+        stroke: new Stroke({
+            color: 'rgb(230, 103, 175)',
+            width: 2,
+        }),
+    }),
+    'rejected': new Style({
+        fill: new Fill({
+            color: 'rgba(173, 102, 213, 0.2)',
+        }),
+        stroke: new Stroke({
+            color: 'rgb(173, 102, 213)',
+            width: 2,
+        }),
+    })
+};
+const source = new VectorSource({
+    //format: new GeoJSON(),
+    loader: function (extent, resolution, projection, success, failure) {
+        // var proj = projection.getCode();
+        // var url = 'https://ahocevar.com/geoserver/wfs?service=WFS&' +
+        //     'version=1.1.0&request=GetFeature&typename=osm:water_areas&' +
+        //     'outputFormat=application/json&srsname=' + proj + '&' +
+        //     'bbox=' + extent.join(',') + ',' + proj;
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', '/geoms');
+        let onError = function () {
+            source.removeLoadedExtent(extent);
+            failure();
+        }
+        xhr.onerror = onError;
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                let geoms = JSON.parse(xhr.response);
+                geoms.forEach(function (item, index) {
+                    let feature = new Feature({
+                        geometry: new WKT().readGeometry(item.geom),
+                        appl: '<div>Заявник: ' + item.applicantLastname + ' ' + item.applicantFirstname + ' ' + item.applicantMiddlename + '</div>' +
+                            '<div>Площа: ' + item.area + ' Га</div>',
+                        nom: item.id,
+                        status: item.status,
+                    });
+                    feature.setStyle(itemStyles[item.status]);
+                    source.addFeature(feature);
+                });
+                // let features = source.getFormat().readFeatures(xhr.responseText);
+                // source.addFeatures(features);
+                success();
+            } else {
+                onError();
+            }
+        }
+        xhr.send();
+    },
+//    strategy: bbox
+});
 const measureSource = new VectorSource();
 
 const vector = new VectorLayer({
@@ -45,36 +122,16 @@ const plants = new VectorLayer({
     name: 'plants',
     title: 'Ділянки',
     visible: false,
-    style: new Style({
-        fill: new Fill({
-            color: 'rgb(216,0,254,0.2)',
-        }),
-        stroke: new Stroke({
-            color: 'rgb(216,0,254,0.2)',
-            width: 2,
-        }),
-    }),
+    // style: new Style({
+    //     fill: new Fill({
+    //         color: 'rgb(216,0,254,0.2)',
+    //     }),
+    //     stroke: new Stroke({
+    //         color: 'rgb(216,0,254,0.2)',
+    //         width: 2,
+    //     }),
+    // }),
 });
-
-let Request = new XMLHttpRequest();
-Request.open('get', '/geoms');
-Request.send();
-Request.onreadystatechange = function () {
-    if (Request.readyState == 3) {
-        // загрузка
-    }
-    if (Request.readyState == 4) {
-        let geoms = JSON.parse(Request.response);
-        geoms.forEach(function (item, index) {
-            let feature = new Feature({
-                geometry: new WKT().readGeometry(item.geom),
-                appl: '<div>Заявник: ' + item.applicantLastname + ' ' + item.applicantFirstname + ' ' + item.applicantMiddlename + '</div><div>Площа: ' + item.area + ' Га</div>',
-                nom: item.id
-            });
-            plants.getSource().addFeature(feature);
-        });
-    }
-}
 
 let parcelSource = new TileWMSSource({
     url: 'http://map.land.gov.ua/geowebcache/service/wms',
