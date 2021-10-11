@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('fullMap') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('fullMap') }}
+{% endblock %}
+
+{% block body %}
+
+    {% include('statement/header.html.twig') %}
+
+    <div class="app-wrapper">
+        <div class="app-card app-card-map shadow-sm">
+            <div class="app-card-body">
+                <div id="full-map" class="full-map"></div>
+            </div><!--//app-card-body-->
+        </div><!--//app-card-->
+    </div><!--//app-wrapper-->
+    {% include('statement/footer.html.twig') %}
+{% endblock %}

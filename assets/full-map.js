@@ -27,10 +27,10 @@ import {WKT} from "ol/format";
 let itemStyles = {
     'draft': new Style({
         fill: new Fill({
-            color: 'rgba(255, 255, 115, 0.2)',
+            color: 'rgba(255, 255, 0, 0.2)',
         }),
         stroke: new Stroke({
-            color: 'rgb(255, 255, 115)',
+            color: 'rgb(255, 255, 0)',
             width: 2,
         }),
     }),

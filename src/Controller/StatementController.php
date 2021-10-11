@@ -322,6 +322,25 @@ class StatementController extends AbstractController
     }
 
     /**
+     * @Route("/dr_map", name="statement.draw_map")
+     */
+    public function drawMap(Request $request): Response
+    {
+        $cc = $request->query->get('cc');
+        $temp = explode(',', $cc);
+        if (count($temp) == 2) {
+            $z = $request->query->get('z');
+            if (!(is_float($temp[0] + 0) && is_float($temp[1] + 0) && is_float($z + 0))) {
+                $cc = null;
+                $z = null;
+            }
+        } else {
+            $cc = null;
+            $z = null;
+        }
+        return $this->render('statement/draw_map.html.twig', ['cc' => $cc, 'z' => $z]);
+    }
+    /**
      * @Route("/geoms", name="statement.all_appl_geoms")
      */
     public function allApplGeoms(DevelopmentApplicationRepository $repository, SerializerInterface $serializer): Response
