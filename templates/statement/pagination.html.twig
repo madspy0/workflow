@@ -3,10 +3,10 @@
         {% set offset = ((next - previous) / 2) | round %}
         {% if (previous >= 0) %}
             <li class="page-item">
-                <a class="page-link" href="{{ path(url, { offset: previous }) }}">Попередня</a>
+                <a class="page-link" href="{{ path(url, { offset: previous, status: app.request.get('status') }) }}">Попередня</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="{{ path(url, { offset: previous }) }}">{{ (previous / offset + 1) | round }}</a>
+                <a class="page-link" href="{{ path(url, { offset: previous, status: app.request.get('status') }) }}">{{ (previous / offset + 1) | round }}</a>
             </li>
         {% else %}
             <li class="page-item disabled">
@@ -16,10 +16,10 @@
         <li class="page-item active"><a class="page-link" href="#">{{ (next / offset) | round }}</a></li>
         {% if next < all|length %}
             <li class="page-item">
-                <a class="page-link" href="{{ path(url, { offset: next }) }}">{{ (next/offset + 1) | round}}</a>
+                <a class="page-link" href="{{ path(url, { offset: next, status: app.request.get('status') }) }}">{{ (next/offset + 1) | round}}</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="{{ path(url, { offset: next }) }}">Наступна</a>
+                <a class="page-link" href="{{ path(url, { offset: next, status: app.request.get('status') }) }}">Наступна</a>
             </li>
         {% else %}
             <li class="page-item disabled">

@@ -43,9 +43,9 @@ class DevelopmentSolution
     private $solution;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", name="action")
      */
-    private $action = false;
+    private $status = false;
 
     public function getId(): ?int
     {
@@ -123,14 +123,14 @@ class DevelopmentSolution
         return $this;
     }
 
-    public function getAction(): ?bool
+    public function getStatus(): ?bool
     {
-        return $this->action;
+        return $this->status;
     }
 
-    public function setAction(?bool $action): self
+    public function setStatus(?bool $status): self
     {
-        $this->action = $action;
+        $this->status = $status;
 
         return $this;
     }

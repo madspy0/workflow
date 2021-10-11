@@ -62,18 +62,18 @@
 
                 <nav id="orders-table-tab"
                      class="orders-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-                    <a class="flex-sm-fill text-sm-center nav-link active" id="orders-all-tab" data-toggle="tab"
-                       href="#orders-all" role="tab" aria-controls="orders-all" aria-selected="true">Всі</a>
-                    <a class="flex-sm-fill text-sm-center nav-link" id="orders-paid-tab" data-toggle="tab"
-                       href="#orders-paid" role="tab" aria-controls="orders-paid"
+                    <a class="flex-sm-fill text-sm-center nav-link {% if (app.request.get('status')=='') %}active{% endif %}" id="orders-all-tab" data-toggle="tab"
+                       href="{{ path('statement.list') }}" role="tab" aria-controls="orders-all" aria-selected="true">Всі</a>
+                    <a class="flex-sm-fill text-sm-center nav-link {% if (app.request.get('status')=='draft') %}active{% endif %}" id="orders-paid-tab" data-toggle="tab"
+                       href="{{ path('statement.list', {'status': 'draft'}) }}" role="tab" aria-controls="orders-paid"
                        aria-selected="false">Незареєстровані</a>
-                    <a class="flex-sm-fill text-sm-center nav-link" id="orders-pending-tab" data-toggle="tab"
-                       href="#orders-pending" role="tab" aria-controls="orders-pending"
+                    <a class="flex-sm-fill text-sm-center nav-link {% if (app.request.get('status')=='numbered') %}active{% endif %}" id="orders-pending-tab" data-toggle="tab"
+                       href="{{ path('statement.list', {'status': 'numbered'}) }}" role="tab" aria-controls="orders-pending"
                        aria-selected="false">Очікують рішення</a>
-                    <a class="flex-sm-fill text-sm-center nav-link" id="orders-cancelled-tab" data-toggle="tab"
-                       href="#orders-cancelled" role="tab" aria-controls="orders-cancelled" aria-selected="false">Відхилені</a>
-                    <a class="flex-sm-fill text-sm-center nav-link" id="orders-cancelled-tab" data-toggle="tab"
-                       href="#orders-cancelled" role="tab" aria-controls="orders-cancelled" aria-selected="false">Прийняті</a>
+                    <a class="flex-sm-fill text-sm-center nav-link {% if (app.request.get('status')=='rejected') %}active{% endif %}" id="orders-cancelled-tab" data-toggle="tab"
+                       href="{{ path('statement.list', {'status': 'rejected'}) }}" role="tab" aria-controls="orders-cancelled" aria-selected="false">Відхилені</a>
+                    <a class="flex-sm-fill text-sm-center nav-link {% if (app.request.get('status')=='published') %}active{% endif %}" id="orders-cancelled-tab" data-toggle="tab"
+                       href="{{ path('statement.list', {'status': 'published'}) }}" role="tab" aria-controls="orders-cancelled" aria-selected="false">Прийняті</a>
                 </nav>
 
 
@@ -103,9 +103,9 @@
                                                             class="truncate">{{ developmentApplication.landAddress }}</span>
                                                 </td>
                                                 <td class="cell">{{ developmentApplication.applicantLastname }} {{ developmentApplication.applicantFirstname }}</td>
-                                                <td class="cell"><span
-                                                            class="cell-data">{{ developmentApplication.createdAt |format_date(locale='uk') }}</span><span
-                                                            class="note">{{ developmentApplication.createdAt |format_time(locale='uk') }}</span>
+                                                <td class="cell">
+                                                    <span class="cell-data">{{ developmentApplication.createdAt |format_date(locale='uk') }}</span>
+                                                    <span class="note">{{ developmentApplication.createdAt |format_time(locale='uk') }}</span>
                                                 </td>
                                                 {% if developmentApplication.status == 'draft' %}
                                                     <td class="cell"><span

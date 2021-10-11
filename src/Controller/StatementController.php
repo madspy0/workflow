@@ -48,8 +48,13 @@ class StatementController extends AbstractController
     public function list(DevelopmentApplicationRepository $repository, Request $request): Response
     {
 //        $developmentApplications = $developmentApplicationRepository->findAll();
+
         $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $repository->getPaginator($offset);
+        $status='';
+        if($request->query->getAlpha('status')) {
+            $status = $request->query->getAlpha('status');
+        }
+        $paginator = $repository->getPaginator($offset, $status);
         return $this->render('statement/list.html.twig', [
             'developmentApplications' => $paginator,
             'previous' => $offset - $repository::PAGINATOR_PER_PAGE,
@@ -231,7 +236,7 @@ class StatementController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    ($developmentSolution->getAction()) ?
+                    ($developmentSolution->getStatus()) ?
                         $applicationFlowStateMachine->apply($developmentApplication, "publish")
                         :
                         $applicationFlowStateMachine->apply($developmentApplication, "reject");

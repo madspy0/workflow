@@ -94,8 +94,13 @@
                                         {% for solution in solutions %}
                                             <tr>
                                                 <td class="cell">#{{ solution.id }}</td>
-                                                <td class="cell"><span
-                                                            class="cell-data">{{ solution.createdAt |format_date(locale='uk') }}</span>
+                                                <td class="cell">
+                                                    <span class="cell-data">
+                                                        {{ solution.createdAt| format_date(pattern='d MMMM', locale='uk') }}
+                                                    </span>
+                                                    <span class="note">
+                                                        {{ solution.createdAt| format_date(pattern='Y') }}
+                                                    </span>
                                                 </td>
                                                 <td class="cell">
                                                     {{ solution.developmentApplication.applicantLastname }}

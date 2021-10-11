@@ -14,7 +14,7 @@ class DevelopmentSolutionFormType extends AbstractType
         $builder
             ->add('number',null,['label'=>'Номер'])
             ->add('solution',null,['label'=>'Рішення', 'attr'=>['rows'=>'15']])
-            ->add('action',null,['label'=>'Результат', 'attr'=>['class'=>'form-switch']])
+            ->add('status',null,['label'=>'Результат', 'attr'=>['class'=>'form-switch']])
         ;
     }
 
