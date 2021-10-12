@@ -2,11 +2,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('fullMap') }}
+    {{ encore_entry_link_tags('drawMap') }}
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('fullMap') }}
+    {{ encore_entry_script_tags('drawMap') }}
 {% endblock %}
 
 {% block body %}
@@ -20,5 +20,7 @@
             </div><!--//app-card-body-->
         </div><!--//app-card-->
     </div><!--//app-wrapper-->
+    {% include('statement/modals/draw_modal.html.twig') %}
     {% include('statement/footer.html.twig') %}
+    <div id="coord" data-cc="{{ cc }}" data-z="{{ z }}"></div>
 {% endblock %}

@@ -15,6 +15,9 @@
 
             <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
                 <ul class="app-menu list-unstyled accordion" id="menu-accordion">
+
+                    {% if not('/dr_map' in app.request.uri) %}
+
                     <li class="nav-item">
                         {{ _self.active('homepage') }}
                         <span class="nav-icon">
@@ -26,122 +29,136 @@
                                 </svg>
 						         </span>
                         <span class="nav-link-text">Головна</span>
-</a><!--//nav-link-->
-</li><!--//nav-item-->
-<li class="nav-item">
-    {{ _self.active('statement.map') }}
-    <span class="nav-icon">
-						        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-house-door"
-                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.502.502 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103zM10 1.91l-4-.8v12.98l4 .8V1.91zm1 12.98 4-.8V1.11l-4 .8v12.98zm-6-.8V1.11l-4 .8v12.98l4-.8z"/>
-                                </svg>
-						         </span>
-    <span class="nav-link-text">Мапа</span>
     </a><!--//nav-link-->
-</li><!--//nav-item-->
+    </li><!--//nav-item-->
+    <li class="nav-item">
+        {{ _self.active('statement.map') }}
+        <span class="nav-icon">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-house-door"
+                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd"
+              d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.502.502 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103zM10 1.91l-4-.8v12.98l4 .8V1.91zm1 12.98 4-.8V1.11l-4 .8v12.98zm-6-.8V1.11l-4 .8v12.98l4-.8z"/>
+                                        </svg>
+                                         </span>
+        <span class="nav-link-text">Мапа</span>
+        </a><!--//nav-link-->
+    </li><!--//nav-item-->
 
 
-<li class="nav-item has-submenu">
-    <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-    <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1"
-       aria-expanded="false" aria-controls="submenu-1">
-						        <span class="nav-icon">
-						        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-						        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-files"
-                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-	  <path fill-rule="evenodd"
-            d="M4 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4z"/>
-	  <path d="M6 0h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1H4a2 2 0 0 1 2-2z"/>
-	</svg>
-						         </span>
-        <span class="nav-link-text">Заявки
-{# на розробку документації із землеустрою#}
-        </span>
-        <span class="submenu-arrow">
-		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
-                                          fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-	  <path fill-rule="evenodd"
-            d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-	</svg>
-	                             </span><!--//submenu-arrow-->
-    </a><!--//nav-link-->
-    <div id="submenu-1" class="
-        {% if (('statement.new' != app.request.attributes.get('_route')) and
-        (('statement.list' != app.request.attributes.get('_route'))) and
-        (('statement.update' != app.request.attributes.get('_route')))) %}
-        collapse
-        {% endif %} submenu submenu-1" data-bs-parent="#menu-accordion">
-        <ul class="submenu-list list-unstyled">
-            <li class="submenu-item">{{ _self.active('statement.list') }}Реестр заявок</a></li>
-            <li class="submenu-item">
-                {{ _self.active('statement.new') }}Нова заява</a></li>
-        </ul>
-    </div>
-</li><!--//nav-item-->
-<li class="nav-item">
-    <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-    {{ _self.active('statement.sessions') }}
-    <span class="nav-icon">
-<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list"
-     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z"/>
-  <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-2 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
-</svg>
-						         </span>
-    <span class="nav-link-text">Сесії</span>
-    </a><!--//nav-link-->
-</li><!--//nav-item-->
-<li class="nav-item">
-    <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-    {{ _self.active('statement.solutions') }}
-    <span class="nav-icon">
-						        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list"
-                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd"
-        d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
-  <path fill-rule="evenodd"
-        d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"/>
-  <circle cx="3.5" cy="5.5" r=".5"/>
-  <circle cx="3.5" cy="8" r=".5"/>
-  <circle cx="3.5" cy="10.5" r=".5"/>
-</svg>
-						         </span>
-    <span class="nav-link-text">Рішення</span>
-    </a><!--//nav-link-->
-</li><!--//nav-item-->
+    <li class="nav-item has-submenu">
+        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1"
+           aria-expanded="false" aria-controls="submenu-1">
+                                        <span class="nav-icon">
+                                        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-files"
+                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                    d="M4 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4z"/>
+              <path d="M6 0h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1H4a2 2 0 0 1 2-2z"/>
+            </svg>
+                                         </span>
+            <span class="nav-link-text">Заявки
+    {#     на розробку документації із землеустрою #}
+                </span>
+            <span class="submenu-arrow">
+                                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
+                                                  fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                    d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+            </svg>
+                                         </span><!--//submenu-arrow-->
+        </a><!--//nav-link-->
+        <div id="submenu-1" class="
+                {% if (('statement.new' != app.request.attributes.get('_route')) and
+            (('statement.list' != app.request.attributes.get('_route'))) and
+            (('statement.update' != app.request.attributes.get('_route')))) %}
+                collapse
+                {% endif %} submenu submenu-1" data-bs-parent="#menu-accordion">
+            <ul class="submenu-list list-unstyled">
+                <li class="submenu-item">{{ _self.active('statement.list') }}Реестр заявок</a></li>
+                <li class="submenu-item">
+                    {{ _self.active('statement.new') }}Нова заява</a></li>
+            </ul>
+        </div>
+    </li><!--//nav-item-->
+    <li class="nav-item">
+        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+        {{ _self.active('statement.sessions') }}
+        <span class="nav-icon">
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list"
+             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z"/>
+          <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-2 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+        </svg>
+                                         </span>
+        <span class="nav-link-text">Сесії</span>
+        </a><!--//nav-link-->
+    </li><!--//nav-item-->
+    <li class="nav-item">
+        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+        {{ _self.active('statement.solutions') }}
+        <span class="nav-icon">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list"
+                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd"
+                d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+          <path fill-rule="evenodd"
+                d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"/>
+          <circle cx="3.5" cy="5.5" r=".5"/>
+          <circle cx="3.5" cy="8" r=".5"/>
+          <circle cx="3.5" cy="10.5" r=".5"/>
+        </svg>
+                                         </span>
+        <span class="nav-link-text">Рішення</span>
+        </a><!--//nav-link-->
+    </li><!--//nav-item-->
 
-<li class="nav-item">
-    <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-    {{ _self.active('statement.calendar') }}
-    <span class="nav-icon">
-						        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder"
-                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z"/>
-  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-</svg>
-						         </span>
-    <span class="nav-link-text">Календар</span>
-    </a><!--//nav-link-->
-</li><!--//nav-item-->
+    <li class="nav-item">
+        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+        {{ _self.active('statement.calendar') }}
+        <span class="nav-icon">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder"
+                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z"/>
+          <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+        </svg>
+                                         </span>
+        <span class="nav-link-text">Календар</span>
+        </a><!--//nav-link-->
+    </li><!--//nav-item-->
+    {% else %}
+        <li class="nav-item">
+        {{ _self.active('drawen.draw_map') }}
+        <span class="nav-icon">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-house-door"
+                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd"
+              d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.502.502 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103zM10 1.91l-4-.8v12.98l4 .8V1.91zm1 12.98 4-.8V1.11l-4 .8v12.98zm-6-.8V1.11l-4 .8v12.98l4-.8z"/>
+                                        </svg>
+                                         </span>
+        <span class="nav-link-text">Мапа</span>
+        </a><!--//nav-link-->
+    </li><!--//nav-item-->
+{% endif %}
+    <li class="nav-item">
+        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+        <a class="nav-link" href="help.html">
+                                        <span class="nav-icon">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-question-circle"
+                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+        </svg>
+                                         </span>
+            <span class="nav-link-text">Допомога</span>
+        </a><!--//nav-link-->
+    </li><!--//nav-item-->
 
-<li class="nav-item">
-    <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-    <a class="nav-link" href="help.html">
-						        <span class="nav-icon">
-						        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-question-circle"
-                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-  <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
-</svg>
-						         </span>
-        <span class="nav-link-text">Допомога</span>
-    </a><!--//nav-link-->
-</li><!--//nav-item-->
 
+    </ul><!--//app-menu-->
+    </nav><!--//app-nav-->
+    {# {% include('statement/sidebar_footer.html.twig') %} #}
 
-</ul><!--//app-menu-->
-</nav><!--//app-nav-->
-{# {% include('statement/sidebar_footer.html.twig') %} #}
-
-</div><!--//sidepanel-inner-->
-</div><!--//app-sidepanel-->
+    </div><!--//sidepanel-inner-->
+    </div><!--//app-sidepanel-->

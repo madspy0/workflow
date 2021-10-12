@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\CouncilSession;
 use App\Entity\DevelopmentSolution;
+use App\Entity\DrawnArea;
 use App\Form\ApplicationSessionType;
 use App\Form\DevelopmentSolutionFormType;
+use App\Form\DrawnAreaType;
 use App\Repository\CouncilSessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -321,25 +323,6 @@ class StatementController extends AbstractController
         return $this->render('statement/map.html.twig', ['cc' => $cc, 'z' => $z]);
     }
 
-    /**
-     * @Route("/dr_map", name="statement.draw_map")
-     */
-    public function drawMap(Request $request): Response
-    {
-        $cc = $request->query->get('cc');
-        $temp = explode(',', $cc);
-        if (count($temp) == 2) {
-            $z = $request->query->get('z');
-            if (!(is_float($temp[0] + 0) && is_float($temp[1] + 0) && is_float($z + 0))) {
-                $cc = null;
-                $z = null;
-            }
-        } else {
-            $cc = null;
-            $z = null;
-        }
-        return $this->render('statement/draw_map.html.twig', ['cc' => $cc, 'z' => $z]);
-    }
     /**
      * @Route("/geoms", name="statement.all_appl_geoms")
      */
