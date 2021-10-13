@@ -52,11 +52,11 @@ class DrawButtonsControl extends Control {
 
     toggleButtons(elem) {
         let buttons = document.getElementsByClassName("btn-edit");
-        buttons.forEach(function(b) {
+        for(let b of buttons) {
             if(elem !== b) {
                 b.classList.remove("active");
             }
-        })
+        }
     }
 
     handleArea(evt) {
