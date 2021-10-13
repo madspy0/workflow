@@ -4,15 +4,19 @@ namespace App\Entity;
 
 use App\Repository\DrawnAreaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=DrawnAreaRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class DrawnArea
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @Groups({"geoms"})
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -24,16 +28,19 @@ class DrawnArea
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"geoms"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"geoms"})
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"geoms"})
      */
     private $middlename;
 
@@ -63,17 +70,19 @@ class DrawnArea
     private $solutedAt;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $publishedAt;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"geoms"})
      */
     private $status;
 
     /**
      * @ORM\Column(type="geometry")
+     * @Groups({"geoms"})
      */
     private $geom;
 
@@ -224,5 +233,17 @@ class DrawnArea
         $this->geom = $geom;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function updatedTimestamps(): void
+    {
+        $dateTimeNow = new \DateTimeImmutable('now');
+
+        if ($this->getCreatedAt() === null) {
+            $this->setCreatedAt($dateTimeNow);
+        }
     }
 }

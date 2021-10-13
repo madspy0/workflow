@@ -4,7 +4,9 @@ namespace App\Form;
 
 use App\Entity\DrawnArea;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 USE Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -20,15 +22,20 @@ class DrawnAreaType extends AbstractType
             ->add('middlename')
   //          ->add('createdAt')
             ->add('address')
-            ->add('use')
+            ->add('use', ChoiceType::class, ['label'=>'Вид використання',
+                'choices' => [
+                    'First choice' => 'вибір',
+                    'second choice' => 'інший choice'
+                ]])
             ->add('numberSolution')
             ->add('solutedAt', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Дата',
+                'input' => 'datetime_immutable',
                 'html5' => false ])
 //            ->add('publishedAt')
 //            ->add('status')
-//            ->add('geom')
+            ->add('geom', HiddenType::class)
             ->add('save', SubmitType::class, [
                 'attr' => ['class' => 'save'],
             ]);

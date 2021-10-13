@@ -72,7 +72,7 @@ const source = new VectorSource({
         //     'outputFormat=application/json&srsname=' + proj + '&' +
         //     'bbox=' + extent.join(',') + ',' + proj;
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', '/geoms');
+        xhr.open('GET', '/drawen_geoms');
         let onError = function () {
             source.removeLoadedExtent(extent);
             failure();
@@ -84,8 +84,7 @@ const source = new VectorSource({
                 geoms.forEach(function (item, index) {
                     let feature = new Feature({
                         geometry: new WKT().readGeometry(item.geom),
-                        appl: '<div>Заявник: ' + item.applicantLastname + ' ' + item.applicantFirstname + ' ' + item.applicantMiddlename + '</div>' +
-                            '<div>Площа: ' + item.area + ' Га</div>',
+                        appl: '<div>' + item.lastname + ' ' + item.firstname  + '</div>',
                         nom: item.id,
                         status: item.status,
                     });
@@ -122,7 +121,7 @@ const plants = new VectorLayer({
     source: source,
     name: 'plants',
     title: 'Ділянки',
-    visible: false,
+    visible: true,
     // style: new Style({
     //     fill: new Fill({
     //         color: 'rgb(216,0,254,0.2)',

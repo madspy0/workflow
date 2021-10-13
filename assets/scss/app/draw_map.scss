@@ -23,6 +23,7 @@ $modal-fade-transform: scale(.8);
 .app-card-body {
   height: calc(100vh - 112px) !important;
 }
+
 .container-map {
   padding-left: 0 !important;
   padding-right: 0 !important;
@@ -113,4 +114,7 @@ $modal-fade-transform: scale(.8);
   padding: 0;
   border-width: 0;
   opacity: 0;
+}
+.modal-header, .modal-footer {
+  padding: .5rem;
 }

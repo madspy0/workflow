@@ -251,7 +251,7 @@ class DevelopmentApplication
 
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      * @Groups({"geoms"})
      */
     private $status;

@@ -4,6 +4,7 @@ import Overlay from 'ol/Overlay';
 import {Draw} from 'ol/interaction';
 import {Fill, Stroke, Style, Circle} from 'ol/style';
 import {Modal} from "bootstrap";
+import {WKT} from "ol/format";
 
 let map;
 
@@ -85,11 +86,13 @@ export function toggleDraw(smap, status) {
         map.addInteraction(draw);
 
         draw.on('drawend', function (evt) {
+            let feature = evt.feature;
+            let geom = new WKT().writeGeometry(feature.getGeometry(feature.getGeometry()));
+            document.getElementById('drawn_area_geom').value = geom;
             const myModal = new Modal(document.getElementById('draw_modal'), {
                 backdrop: true
             })
             myModal.show();
-            console.log(myModal);
         });
     }
 }
