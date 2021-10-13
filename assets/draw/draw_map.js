@@ -85,7 +85,7 @@ const source = new VectorSource({
                     let feature = new Feature({
                         geometry: new WKT().readGeometry(item.geom),
                         appl: '<div>' + item.lastname + ' ' + item.firstname  + '</div>',
-                        nom: item.id,
+                        number: item.id,
                         status: item.status,
                     });
                     feature.setStyle(itemStyles[item.status]);

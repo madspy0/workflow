@@ -54,7 +54,9 @@ let reload_url = (e) => {
         return true;
     });
     if (selected != null) {
-        redirect('/appl/' + selected.get('nom') + '?cc=' + map.getView().getCenter().join() + '&z=' + map.getView().getZoom());
+        if (typeof selected.get('nom') !== 'undefined') {
+            redirect('/appl/' + selected.get('nom') + '?cc=' + map.getView().getCenter().join() + '&z=' + map.getView().getZoom());
+        }
     }
 }
 

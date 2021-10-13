@@ -41,14 +41,13 @@ class DrawenAreaController extends AbstractController
     /**
      * @Route("/dr_add", name="drawen.draw_add")
      */
-    public function add(Request $request, EntityManagerInterface $em, WorkflowInterface $applicationFlowStateMachine): Response
+    public function add(Request $request, EntityManagerInterface $em): Response
     {
         try {
             $drawnArea = new DrawnArea();
             $form = $this->createForm(DrawnAreaType::class, $drawnArea);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $applicationFlowStateMachine->getMarking($drawnArea);
                 $em->persist($drawnArea);
                 $em->flush();
                 $this->addFlash(

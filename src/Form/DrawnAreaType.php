@@ -34,7 +34,14 @@ class DrawnAreaType extends AbstractType
                 'input' => 'datetime_immutable',
                 'html5' => false ])
 //            ->add('publishedAt')
-//            ->add('status')
+            ->add('status')
+            ->add('status', ChoiceType::class, ['label'=>'Статус',
+                'choices' => [
+                    'Внесено' => 'draft' ,
+                    'Підтверджено' => 'numbered',
+                    'Опубліковано' => 'published',
+                    'Скасувано' => 'rejected'
+                ]])
             ->add('geom', HiddenType::class)
             ->add('save', SubmitType::class, [
                 'attr' => ['class' => 'save'],
