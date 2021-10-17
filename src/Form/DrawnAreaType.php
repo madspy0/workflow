@@ -52,7 +52,7 @@ class DrawnAreaType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => DrawnArea::class,
+            'data_class' => DrawnArea::class
         ]);
     }
 }

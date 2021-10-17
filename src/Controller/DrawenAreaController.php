@@ -6,13 +6,12 @@ use App\Entity\DrawnArea;
 use App\Form\DrawnAreaType;
 use App\Repository\DrawnAreaRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
-use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class DrawenAreaController extends AbstractController
@@ -22,7 +21,8 @@ class DrawenAreaController extends AbstractController
      */
     public function drawMap(Request $request): Response
     {
-        $form = $this->createForm(DrawnAreaType::class, new DrawnArea(),['action' => $this->generateUrl('drawen.draw_add'),]);
+        $form = $this->createForm(DrawnAreaType::class, new DrawnArea());
+
         $cc = $request->query->get('cc');
         $temp = explode(',', $cc);
         if (count($temp) == 2) {
@@ -50,26 +50,27 @@ class DrawenAreaController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $em->persist($drawnArea);
                 $em->flush();
-                $this->addFlash(
-                    'success',
-                    ['Дiлянка додана', date("d-m-Y H:i:s")]
-                );
-                return $this->redirectToRoute('drawen.draw_map');
+                return new JsonResponse(['success' => true]);
             }
-            return new JsonResponse(['errors'=>count($form->getErrors())]);
-        } catch (\Exception $exception) {
+            $content = $this->renderView(
+                'statement/modals:draw_modal.html.twig',
+                array('form' => $form)
+            );
+            return new JsonResponse(['form'=> $content]);
+        } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
     /**
      * @Route("/drawen_geoms", name="drawen.all_geoms")
      */
-    public function allGeoms(DrawnAreaRepository $repository, SerializerInterface $serializer): Response
+    public
+    function allGeoms(DrawnAreaRepository $repository, SerializerInterface $serializer): Response
     {
         try {
             $geoms = $serializer->serialize($repository->findAll(), 'json', ['groups' => 'geoms']);
             return new Response($geoms);//$this->json($geoms, Response::HTTP_OK);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

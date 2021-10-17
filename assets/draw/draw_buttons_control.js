@@ -47,7 +47,9 @@ class DrawButtonsControl extends Control {
 
         infoButton.addEventListener('click', this.handleInfo.bind(this), false);
         areaButton.addEventListener('click', this.handleArea.bind(this), false);
-        drawButton.addEventListener('click',this.handleDraw.bind(this), false)
+        drawButton.addEventListener('click',this.handleDraw.bind(this), false);
+
+
     }
 
     toggleButtons(elem) {

@@ -5,7 +5,7 @@ import {Draw} from 'ol/interaction';
 import {Fill, Stroke, Style, Circle} from 'ol/style';
 import {getArea} from 'ol/sphere';
 import {unByKey} from 'ol/Observable';
-
+import {sourceClear} from "./draw/draw_map";
 /**
  * Format area output.
  * @param {Polygon} polygon The polygon.
@@ -31,29 +31,29 @@ function addMeasureLayer() {
             source = el.getSource();
         }
     })
-    if (!source) {
-        source = new VectorSource();
-        let layer = new VectorLayer({
-            name: 'measure_layer',
-            source: source,
-            style: new Style({
-                fill: new Fill({
-                    color: 'rgba(255, 255, 255, 0.2)',
-                }),
-                stroke: new Stroke({
-                    color: '#ffcc33',
-                    width: 2,
-                }),
-                image: new Circle({
-                    radius: 7,
-                    fill: new Fill({
-                        color: '#ffcc33',
-                    }),
-                }),
-            }),
-        });
-        map.addLayer(layer);
-    }
+    // if (!source) {
+    //     source = new VectorSource();
+    //     let layer = new VectorLayer({
+    //         name: 'measure_layer',
+    //         source: source,
+    //         style: new Style({
+    //             fill: new Fill({
+    //                 color: 'rgba(255, 255, 255, 0.2)',
+    //             }),
+    //             stroke: new Stroke({
+    //                 color: '#ffcc33',
+    //                 width: 2,
+    //             }),
+    //             image: new Circle({
+    //                 radius: 7,
+    //                 fill: new Fill({
+    //                     color: '#ffcc33',
+    //                 }),
+    //             }),
+    //         }),
+    //     });
+    //     map.addLayer(layer);
+    // }
     return source;
 }
 
@@ -81,24 +81,24 @@ function createMeasureTooltip() {
 
 export function toggleMeasure(smap, status) {
     map = smap;
-    let active = true;
     // let areaButton = new Button(document.getElementsByClassName('btn-edits')[1]);
     // areaButton.toggle();
     // areaButton.classList.toggle('active');
     // areaButton.classList.toggle('focus');
     // areaButton.classList.toggle('hover');
-    map.getInteractions().forEach((interaction) => {
-        if (interaction instanceof Draw) {
-            map.removeInteraction(interaction);
-            let source = addMeasureLayer();
-            source.clear();
-            map.getOverlays().getArray().slice(0).forEach(function(overlay) {
-                map.removeOverlay(overlay);
-            });
-            active = false;
-        }
-    });
-    if (active && status) {
+    if(!status) {
+        map.getInteractions().forEach((interaction) => {
+            if (interaction instanceof Draw) {
+                map.removeInteraction(interaction);
+                // let source = addMeasureLayer();
+                // source.clear();
+                sourceClear();
+                map.getOverlays().getArray().slice(0).forEach(function (overlay) {
+                    map.removeOverlay(overlay);
+                });
+            }
+        });
+    } else {
         const type = 'Polygon';
         let source = addMeasureLayer();
         let draw = new Draw({

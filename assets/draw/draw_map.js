@@ -102,20 +102,6 @@ const source = new VectorSource({
     },
 //    strategy: bbox
 });
-const measureSource = new VectorSource();
-
-const vector = new VectorLayer({
-    source: measureSource,
-    style: new Style({
-        fill: new Fill({
-            color: 'rgba(255, 255, 255, 0.2)',
-        }),
-        stroke: new Stroke({
-            color: '#ffcc33',
-            width: 2,
-        }),
-    }),
-});
 
 const plants = new VectorLayer({
     source: source,
@@ -133,7 +119,21 @@ const plants = new VectorLayer({
     // }),
 });
 
-let parcelSource = new TileWMSSource({
+const vector = new VectorLayer({
+    source: new VectorSource(),
+    name: 'measure_layer',
+    style: new Style({
+        fill: new Fill({
+            color: 'rgba(255, 255, 255, 0.2)',
+        }),
+        stroke: new Stroke({
+            color: '#ffcc33',
+            width: 2,
+        }),
+    }),
+});
+
+let cadastreSource = new TileWMSSource({
     url: 'http://map.land.gov.ua/geowebcache/service/wms',
     params: {
         'LAYERS': 'kadastr',
@@ -149,8 +149,8 @@ let parcelSource = new TileWMSSource({
     }
 });
 
-let parcels = new TileLayer({
-    source: parcelSource,
+let cadastre = new TileLayer({
+    source: cadastreSource,
     visible: 0,
     title: 'Кадатр'
 });
@@ -168,7 +168,7 @@ const baseMaps = new LayerGroup({
         osm,
         plants,
         vector,
-        parcels
+        cadastre
     ]
 });
 
@@ -206,3 +206,13 @@ let picker = new Litepicker({
     inlineMode: true,
     lang: "uk-UA",
 });
+export function sourceClear(with_plants=false) {
+    map.getLayers().forEach(function (el) {
+        if ((el.get('name') === 'drawn') || (el.get('name') === 'measure_layer')) {
+            el.getSource().clear();
+        }
+        if((el.get('name')==='plants') && with_plants) {
+            el.getSource().refresh();
+        }
+    })
+}
