@@ -53,10 +53,10 @@ class DrawenAreaController extends AbstractController
                 return new JsonResponse(['success' => true]);
             }
             $content = $this->renderView(
-                'statement/modals:draw_modal.html.twig',
-                array('form' => $form)
+                'statement/modals/draw_modal.html.twig',
+                array('form' => $form->createView())
             );
-            return new JsonResponse(['form'=> $content]);
+            return new JsonResponse(['content'=> $content]);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

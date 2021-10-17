@@ -49,7 +49,7 @@ export function toggleDraw(smap, status) {
     // areaButton.classList.toggle('active');
     // areaButton.classList.toggle('focus');
     // areaButton.classList.toggle('hover');
-    if(!status) {
+    if (!status) {
         map.getInteractions().forEach((interaction) => {
             if (interaction instanceof Draw) {
                 map.removeInteraction(interaction);
@@ -95,7 +95,17 @@ export function toggleDraw(smap, status) {
             let feature = evt.feature;
             let geom = new WKT().writeGeometry(feature.getGeometry(feature.getGeometry()));
             document.getElementById('drawn_area_geom').value = geom;
-            myModal.show();
+            //myModal.show();
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", '/dr_add', true);
+            //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (this.readyState != 4) return;
+                //myModal.innerHTML(this.response.content);
+                myModal.show();
+                alert(this.responseText);
+            }
+            xhr.send();
         });
 
         let form = document.forms[0];
@@ -104,8 +114,8 @@ export function toggleDraw(smap, status) {
             let xhr = new XMLHttpRequest();
             let formData = new FormData(form);
             xhr.open("POST", '/dr_add', true);
-    //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function() {
+            //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
                 if (this.readyState != 4) return;
                 //alert( this.responseText );
                 sourceClear(true);

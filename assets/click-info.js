@@ -1,6 +1,6 @@
 import Overlay from 'ol/Overlay';
 import {redirect} from "./redirect";
-
+import {update_draw} from "./draw/update";
 let map;
 let infoTooltip;
 let infoTooltipElement;
@@ -58,6 +58,7 @@ let reload_url = (e) => {
             redirect('/appl/' + selected.get('nom') + '?cc=' + map.getView().getCenter().join() + '&z=' + map.getView().getZoom());
         } else if (typeof selected.get('number') !== 'undefined'){
             console.log(selected.get('number'))
+            update_draw();
         }
 
     }
