@@ -88,9 +88,6 @@ export function toggleDraw(smap, status) {
             }),
         });
         map.addInteraction(draw);
-        let myModal = new Modal(document.getElementById('draw_modal'), {
-            backdrop: true
-        })
         draw.on('drawend', function (evt) {
             let feature = evt.feature;
             let geom = new WKT().writeGeometry(feature.getGeometry(feature.getGeometry()));
@@ -98,12 +95,21 @@ export function toggleDraw(smap, status) {
             //myModal.show();
             let xhr = new XMLHttpRequest();
             xhr.open("POST", '/dr_add', true);
+            xhr.responseType = 'json';
             //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function () {
                 if (this.readyState != 4) return;
                 //myModal.innerHTML(this.response.content);
+     //           myModal.show();
+     //           alert(this.response.content);
+                let body = document.getElementsByTagName('body')[0];
+                console.log(this.response.content)
+                let mod = document.createElement("div");
+                //mod.innerHTML(this.response.content);
+                body.appendChild(mod);
+                mod.insertAdjacentHTML('beforeend', this.response.content);
+                let myModal = Modal.getInstance(document.getElementById('draw_modal'));
                 myModal.show();
-                alert(this.responseText);
             }
             xhr.send();
         });
@@ -119,7 +125,9 @@ export function toggleDraw(smap, status) {
                 if (this.readyState != 4) return;
                 //alert( this.responseText );
                 sourceClear(true);
+                let myModal = Modal.getInstance(document.getElementById('draw_modal'));
                 myModal.hide();
+                form.reset();
             }
             xhr.send(formData);
         })

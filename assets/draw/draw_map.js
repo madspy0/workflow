@@ -24,6 +24,11 @@ import LayerGroup from "ol/layer/Group";
 import {Feature} from "ol";
 import {WKT} from "ol/format";
 import Litepicker from 'litepicker';
+import {Modal} from "bootstrap";
+
+let myModal = new Modal(document.getElementById('draw_modal'), {
+    backdrop: true
+});
 
 let itemStyles = {
     'draft': new Style({

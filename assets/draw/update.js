@@ -1,11 +1,13 @@
-export function update_draw() {
+import {Modal} from "bootstrap";
+
+export function update_draw(id) {
 // Создаём объект класса XMLHttpRequest
     const request = new XMLHttpRequest();
 
     /*  Составляем строку запроса и кладем данные, строка состоит из:
     пути до файла обработчика ? имя в GET запросе где будет лежать значение запроса id_product и
     через & мы передаем количество qty_product. */
-    const url = "/dr_add";
+    const url = "/dr_upd/" + id;
 
     /* Здесь мы указываем параметры соединения с сервером, т.е. мы указываем метод соединения GET,
     а после запятой мы указываем путь к файлу на сервере который будет обрабатывать наш запрос. */
@@ -24,7 +26,13 @@ export function update_draw() {
         if (request.readyState === 4 && request.status === 200) {
 
             // выводим в консоль то что ответил сервер
-            console.log(request.responseText);
+            let obj = JSON.parse(request.responseText);
+            let myModal = Modal.getInstance(document.getElementById('draw_modal'));
+            if(document.getElementById('draw_modal').outerHTML) { //if outerHTML is supported
+                document.getElementById('draw_modal').outerHTML=obj.content; ///it simple replacement of whole element with contents of str var
+            }
+            console.log(obj.content)
+            myModal.show();
         }
     });
 
