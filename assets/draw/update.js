@@ -1,4 +1,5 @@
 import {Modal} from "bootstrap";
+import {sourceClear} from "./draw_map";
 
 export function update_draw(id) {
 // Создаём объект класса XMLHttpRequest
@@ -11,7 +12,7 @@ export function update_draw(id) {
 
     /* Здесь мы указываем параметры соединения с сервером, т.е. мы указываем метод соединения GET,
     а после запятой мы указываем путь к файлу на сервере который будет обрабатывать наш запрос. */
-    request.open('GET', url);
+    request.open('POST', url);
 
 // Указываем заголовки для сервера, говорим что тип данных, - контент который мы хотим получить должен быть не закодирован.
     request.setRequestHeader('Content-Type', 'application/x-www-form-url');
@@ -27,15 +28,33 @@ export function update_draw(id) {
 
             // выводим в консоль то что ответил сервер
             let obj = JSON.parse(request.responseText);
-            let myModal = Modal.getInstance(document.getElementById('draw_modal'));
-            if(document.getElementById('draw_modal').outerHTML) { //if outerHTML is supported
-                document.getElementById('draw_modal').outerHTML=obj.content; ///it simple replacement of whole element with contents of str var
+            if(document.getElementById('draw_modal').innerHTML) { //if outerHTML is supported
+                document.getElementById('draw_modal').innerHTML=obj.content; ///it simple replacement of whole element with contents of str var
             }
-            console.log(obj.content)
+
+            let myModal = Modal.getInstance(document.getElementById('draw_modal'));
             myModal.show();
+            let form = document.forms[0];
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                let xhr = new XMLHttpRequest();
+                let formData = new FormData(form);
+                xhr.open("POST", form.action, true);
+                //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function () {
+                    if (this.readyState != 4) return;
+                    //alert( this.responseText );
+                    sourceClear(true);
+                    let myModal = Modal.getInstance(document.getElementById('draw_modal'));
+                    myModal.hide();
+                    form.reset();
+                }
+                xhr.send(formData);
+            })
         }
     });
 
 // Выполняем запрос
     request.send();
+
 }

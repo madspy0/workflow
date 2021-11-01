@@ -211,6 +211,7 @@ let picker = new Litepicker({
     inlineMode: true,
     lang: "uk-UA",
 });
+
 export function sourceClear(with_plants=false) {
     map.getLayers().forEach(function (el) {
         if ((el.get('name') === 'drawn') || (el.get('name') === 'measure_layer')) {

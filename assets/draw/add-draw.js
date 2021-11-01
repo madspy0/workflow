@@ -103,7 +103,6 @@ export function toggleDraw(smap, status) {
      //           myModal.show();
      //           alert(this.response.content);
                 let body = document.getElementsByTagName('body')[0];
-                console.log(this.response.content)
                 let mod = document.createElement("div");
                 //mod.innerHTML(this.response.content);
                 body.appendChild(mod);
@@ -114,27 +113,27 @@ export function toggleDraw(smap, status) {
             xhr.send();
         });
 
-        let form = document.forms[0];
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-            let xhr = new XMLHttpRequest();
-            let formData = new FormData(form);
-            xhr.open("POST", '/dr_add', true);
-            //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function () {
-                if (this.readyState != 4) return;
-                //alert( this.responseText );
-                sourceClear(true);
-                let myModal = Modal.getInstance(document.getElementById('draw_modal'));
-                myModal.hide();
-                form.reset();
-            }
-            xhr.send(formData);
-        })
         // myModal.addEventListener('show.bs.modal', function (event) {
         //     if (!data) {
         //         return event.preventDefault() // stops modal from being shown
         //     }
         // })
     }
+    let form = document.forms[0];
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        let xhr = new XMLHttpRequest();
+        let formData = new FormData(form);
+        xhr.open("POST", form.action, true);
+        //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function () {
+            if (this.readyState != 4) return;
+            //alert( this.responseText );
+            sourceClear(true);
+            let myModal = Modal.getInstance(document.getElementById('draw_modal'));
+            myModal.hide();
+            form.reset();
+        }
+        xhr.send(formData);
+    })
 }

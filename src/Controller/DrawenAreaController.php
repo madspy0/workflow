@@ -21,7 +21,7 @@ class DrawenAreaController extends AbstractController
      */
     public function drawMap(Request $request): Response
     {
-        $form = $this->createForm(DrawnAreaType::class, new DrawnArea());
+        $form = $this->createForm(DrawnAreaType::class, new DrawnArea(),['action'=>$this->generateUrl('drawen.draw_add')]);
 
         $cc = $request->query->get('cc');
         $temp = explode(',', $cc);
@@ -45,7 +45,7 @@ class DrawenAreaController extends AbstractController
     {
         try {
             $drawnArea = new DrawnArea();
-            $form = $this->createForm(DrawnAreaType::class, $drawnArea);
+            $form = $this->createForm(DrawnAreaType::class, $drawnArea,['action'=>$this->generateUrl('drawen.draw_add')]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $em->persist($drawnArea);
@@ -61,6 +61,30 @@ class DrawenAreaController extends AbstractController
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * @Route("/dr_upd/{id}", name="drawen.draw_upd")
+     */
+    public function upd(Request $request, EntityManagerInterface $em, DrawnArea $drawnArea): Response
+    {
+        try {
+            $form = $this->createForm(DrawnAreaType::class, $drawnArea,['action'=>$this->generateUrl('drawen.draw_upd',['id'=>$drawnArea->getId()])]);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em->persist($drawnArea);
+                $em->flush();
+                return new JsonResponse(['success' => true]);
+            }
+            $content = $this->renderView(
+                'statement/modals/draw_modal_wo_div.html.twig',
+                array('form' => $form->createView())
+            );
+            return new JsonResponse(['content'=> $content]);
+        } catch (Exception $exception) {
+            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     /**
      * @Route("/drawen_geoms", name="drawen.all_geoms")
      */
