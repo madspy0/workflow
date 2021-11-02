@@ -57,8 +57,7 @@ let reload_url = (e) => {
         if (typeof selected.get('nom') !== 'undefined') {
             redirect('/appl/' + selected.get('nom') + '?cc=' + map.getView().getCenter().join() + '&z=' + map.getView().getZoom());
         } else if (typeof selected.get('number') !== 'undefined'){
-            console.log(selected.get('number'))
-            update_draw(selected.get('number'));
+            update_draw(selected, map);
         }
 
     }

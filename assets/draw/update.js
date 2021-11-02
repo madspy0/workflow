@@ -1,8 +1,9 @@
 import {Modal} from "bootstrap";
 import {sourceClear} from "./draw_map";
+import {my_modal} from "../my_modals";
 
-export function update_draw(id) {
-// Создаём объект класса XMLHttpRequest
+export function update_draw(selected, map=null) {
+    let id = selected.get('number');
     const request = new XMLHttpRequest();
 
     /*  Составляем строку запроса и кладем данные, строка состоит из:
@@ -25,32 +26,11 @@ export function update_draw(id) {
         вот то что нам нужно request.status это статус ответа,
         нам нужен код 200 это нормальный ответ сервера, 401 файл не найден, 500 сервер дал ошибку и прочее...   */
         if (request.readyState === 4 && request.status === 200) {
-
-            // выводим в консоль то что ответил сервер
-            let obj = JSON.parse(request.responseText);
-            if(document.getElementById('draw_modal').innerHTML) { //if outerHTML is supported
-                document.getElementById('draw_modal').innerHTML=obj.content; ///it simple replacement of whole element with contents of str var
-            }
-
-            let myModal = Modal.getInstance(document.getElementById('draw_modal'));
-            myModal.show();
-            let form = document.forms[0];
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                let xhr = new XMLHttpRequest();
-                let formData = new FormData(form);
-                xhr.open("POST", form.action, true);
-                //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                xhr.onreadystatechange = function () {
-                    if (this.readyState != 4) return;
-                    //alert( this.responseText );
-                    sourceClear(true);
-                    let myModal = Modal.getInstance(document.getElementById('draw_modal'));
-                    myModal.hide();
-                    form.reset();
+                if(request.responseURL.includes('/login')) {
+                    window.location.href=request.responseURL;
                 }
-                xhr.send(formData);
-            })
+                let obj = JSON.parse(request.responseText);
+                my_modal(obj.content, null, selected, map)
         }
     });
 

@@ -6,6 +6,8 @@ import {Fill, Stroke, Style, Circle} from 'ol/style';
 import {Modal} from "bootstrap";
 import {WKT} from "ol/format";
 import {sourceClear} from "./draw_map";
+import Litepicker from 'litepicker';
+import {my_modal} from "../my_modals";
 
 let map;
 
@@ -91,7 +93,7 @@ export function toggleDraw(smap, status) {
         draw.on('drawend', function (evt) {
             let feature = evt.feature;
             let geom = new WKT().writeGeometry(feature.getGeometry(feature.getGeometry()));
-            document.getElementById('drawn_area_geom').value = geom;
+            //
             //myModal.show();
             let xhr = new XMLHttpRequest();
             xhr.open("POST", '/dr_add', true);
@@ -100,18 +102,13 @@ export function toggleDraw(smap, status) {
             xhr.onreadystatechange = function () {
                 if (this.readyState != 4) return;
                 //myModal.innerHTML(this.response.content);
-     //           myModal.show();
-     //           alert(this.response.content);
-                let body = document.getElementsByTagName('body')[0];
-                let mod = document.createElement("div");
-                //mod.innerHTML(this.response.content);
-                body.appendChild(mod);
-                mod.insertAdjacentHTML('beforeend', this.response.content);
-                let myModal = Modal.getInstance(document.getElementById('draw_modal'));
-                myModal.show();
+                //           myModal.show();
+                //           alert(this.response.content);
+                my_modal(this.response.content, geom);
             }
             xhr.send();
         });
+
 
         // myModal.addEventListener('show.bs.modal', function (event) {
         //     if (!data) {
@@ -119,21 +116,4 @@ export function toggleDraw(smap, status) {
         //     }
         // })
     }
-    let form = document.forms[0];
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        let xhr = new XMLHttpRequest();
-        let formData = new FormData(form);
-        xhr.open("POST", form.action, true);
-        //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.onreadystatechange = function () {
-            if (this.readyState != 4) return;
-            //alert( this.responseText );
-            sourceClear(true);
-            let myModal = Modal.getInstance(document.getElementById('draw_modal'));
-            myModal.hide();
-            form.reset();
-        }
-        xhr.send(formData);
-    })
 }

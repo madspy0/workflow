@@ -23,12 +23,12 @@ import '../portal/app';
 import LayerGroup from "ol/layer/Group";
 import {Feature} from "ol";
 import {WKT} from "ol/format";
-import Litepicker from 'litepicker';
-import {Modal} from "bootstrap";
 
-let myModal = new Modal(document.getElementById('draw_modal'), {
-    backdrop: true
-});
+// import {Modal} from "bootstrap";
+//
+// let myModal = new Modal(document.getElementById('draw_modal'), {
+//     backdrop: true
+// });
 
 let itemStyles = {
     'draft': new Style({
@@ -205,12 +205,6 @@ if (cc.length === 2) {
     let edit_buttons = document.getElementsByClassName('btn-edit');
     edit_buttons[0].dispatchEvent(new Event("click"));
 }
-window.disableLitepickerStyles = true;
-let picker = new Litepicker({
-    element: document.getElementById('drawn_area_solutedAt'),
-    inlineMode: true,
-    lang: "uk-UA",
-});
 
 export function sourceClear(with_plants=false) {
     map.getLayers().forEach(function (el) {

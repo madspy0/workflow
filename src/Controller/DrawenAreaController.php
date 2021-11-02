@@ -53,7 +53,7 @@ class DrawenAreaController extends AbstractController
                 return new JsonResponse(['success' => true]);
             }
             $content = $this->renderView(
-                'statement/modals/draw_modal.html.twig',
+                'statement/modals/add_draw_modal_wo_div.html.twig',
                 array('form' => $form->createView())
             );
             return new JsonResponse(['content'=> $content]);
