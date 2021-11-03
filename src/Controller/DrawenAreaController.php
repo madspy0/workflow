@@ -68,7 +68,10 @@ class DrawenAreaController extends AbstractController
     public function upd(Request $request, EntityManagerInterface $em, DrawnArea $drawnArea): Response
     {
         try {
-            $form = $this->createForm(DrawnAreaType::class, $drawnArea,['action'=>$this->generateUrl('drawen.draw_upd',['id'=>$drawnArea->getId()])]);
+            $form = $this->createForm(DrawnAreaType::class, $drawnArea,[
+                'entity_manager' => $this->getDoctrine()->getManager(),
+                'action'=>$this->generateUrl('drawen.draw_upd',['id'=>$drawnArea->getId()])
+            ]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $em->persist($drawnArea);
@@ -76,7 +79,7 @@ class DrawenAreaController extends AbstractController
                 return new JsonResponse(['success' => true]);
             }
             $content = $this->renderView(
-                'statement/modals/draw_modal_wo_div.html.twig',
+                'statement/modals/draw_toast_wo_div.html.twig',
                 array('form' => $form->createView())
             );
             return new JsonResponse(['content'=> $content]);

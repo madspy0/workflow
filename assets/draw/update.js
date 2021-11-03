@@ -1,6 +1,7 @@
 import {Modal} from "bootstrap";
 import {sourceClear} from "./draw_map";
 import {my_modal} from "../my_modals";
+import {my_toast} from "../my_toasts";
 
 export function update_draw(selected, map=null) {
     let id = selected.get('number');
@@ -30,7 +31,7 @@ export function update_draw(selected, map=null) {
                     window.location.href=request.responseURL;
                 }
                 let obj = JSON.parse(request.responseText);
-                my_modal(obj.content, null, selected, map)
+                my_toast(obj.content, null, selected, map)
         }
     });
 

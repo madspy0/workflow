@@ -3,8 +3,9 @@ import {Modal} from "bootstrap";
 import {sourceClear} from "./draw/draw_map";
 import {Modify, Select} from "ol/interaction";
 import {clickInfo} from "./click-info";
+import {Fill, Stroke, Style} from "ol/style";
 
-export function my_modal(content, geom, selected=null, map = null) {
+export function my_modal(content, geom, selected = null, map = null) {
     let clear = document.getElementById('draw_modal');
     if (clear) {
         clear.remove();
@@ -24,7 +25,7 @@ export function my_modal(content, geom, selected=null, map = null) {
         inlineMode: true,
         lang: "uk-UA",
     });
-    if(geom) {
+    if (geom) {
         document.getElementById('drawn_area_geom').value = geom;
     }
     let myModal = Modal.getOrCreateInstance(document.getElementById('draw_modal'));
@@ -52,21 +53,36 @@ export function my_modal(content, geom, selected=null, map = null) {
             xhr.send(formData);
         })
     }
-    let geom_button = document.getElementById('change_geom');
-    if(geom_button) {
-        geom_button.addEventListener('click', function(e){
-            let select = new Select({
-                //some options
-            });
-            map.addInteraction(select);
-
-            let selected_collection = select.getFeatures();
-            selected_collection.push(selected);
-            const modify = new Modify({
-                features: selected_collection,
-            });
-            map.addInteraction(modify);
-            clickInfo(map, false);
-        })
-    }
+    // let geom_button = document.getElementById('change_geom');
+    // if (geom_button) {
+    //     geom_button.addEventListener('click', function (e) {
+    //         selected.setStyle(new Style({
+    //                 stroke: new Stroke({
+    //                     color: 'rgb(255,0,0,0.2)',
+    //                     width: 2,
+    //                 })
+    //             })
+    //         );
+    //         let select = new Select({
+    //             //some options
+    //         });
+    //         map.addInteraction(select);
+    //         let selected_collection = select.getFeatures();
+    //         selected_collection.push(selected);
+    //         map.removeInteraction(select);
+    //         const modify = new Modify({
+    //             features: selected_collection,
+    //         });
+    //         map.addInteraction(modify);
+    //         clickInfo(map, false);
+    //         modify.on("modifyend", function (e) {
+    //             console.log(e.target)
+    //             let toast = document.createElement("div");
+    //             toast.className = "position-fixed bottom-0 end-0 p-3";
+    //             toast.style = "z-index: 11";
+    //             toast.insertAdjacentHTML('beforeend', "<h1>ура</h1>");
+    //             document.body.appendChild(toast);
+    //         })
+    //     })
+    // }
 }

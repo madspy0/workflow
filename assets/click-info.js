@@ -48,6 +48,8 @@ let tooltip_on_move = (e) => {
 }
 
 let reload_url = (e) => {
+    let toast = document.getElementById('draw_toast');
+    if((toast !== null) && toast.classList.contains('show')) { return; }
     let selected = null;
     map.forEachFeatureAtPixel(e.pixel, function (f) {
         selected = f;

@@ -86,6 +86,15 @@ class DrawnArea
      */
     private $geom;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=UsePlantSubCategory::class)
+     */
+    private $useCategory;
+    /**
+     * @ORM\ManyToOne(targetEntity=UsePlantCategory::class)
+     */
+    private $useSubCategory;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -245,5 +254,29 @@ class DrawnArea
         if ($this->getCreatedAt() === null) {
             $this->setCreatedAt($dateTimeNow);
         }
+    }
+
+    public function getUseSubCategory(): ?UsePlantSubCategory
+    {
+        return $this->useSubCategory;
+    }
+
+    public function setUseSubCategory(?UsePlantSubCategory $useSubCategory): self
+    {
+        $this->useSubCategory = $useSubCategory;
+
+        return $this;
+    }
+
+    public function getUseCategory(): ?UsePlantCategory
+    {
+        return $this->useCategory;
+    }
+
+    public function setUseCategory(?UsePlantCategory $useCategory): self
+    {
+        $this->useCategory = $useCategory;
+
+        return $this;
     }
 }
