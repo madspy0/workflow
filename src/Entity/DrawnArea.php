@@ -55,11 +55,6 @@ class DrawnArea
     private $address;
 
     /**
-     * @ORM\Column(type="string", length=128)
-     */
-    private $use;
-
-    /**
      * @ORM\Column(type="string", length=64)
      */
     private $numberSolution;
@@ -87,11 +82,13 @@ class DrawnArea
     private $geom;
 
     /**
-     * @ORM\ManyToOne(targetEntity=UsePlantSubCategory::class)
+     * @ORM\ManyToOne(targetEntity=UsePlantCategory::class)
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
      */
     private $useCategory;
     /**
-     * @ORM\ManyToOne(targetEntity=UsePlantCategory::class)
+     * @ORM\ManyToOne(targetEntity=UsePlantSubCategory::class)
+     * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id")
      */
     private $useSubCategory;
 
@@ -168,18 +165,6 @@ class DrawnArea
     public function setAddress(string $address): self
     {
         $this->address = $address;
-
-        return $this;
-    }
-
-    public function getUse(): ?string
-    {
-        return $this->use;
-    }
-
-    public function setUse(string $use): self
-    {
-        $this->use = $use;
 
         return $this;
     }

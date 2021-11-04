@@ -15,13 +15,14 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-USE Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class DrawnAreaType extends AbstractType
 {
 
     private $entityManager;
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->entityManager = $options['entity_manager'];
@@ -30,7 +31,7 @@ class DrawnAreaType extends AbstractType
             ->add('firstname')
             ->add('lastname')
             ->add('middlename')
-  //          ->add('createdAt')
+            //          ->add('createdAt')
             ->add('address')
 //            ->add('use', ChoiceType::class, ['label'=>'Вид використання',
 //                'choices' => [
@@ -38,7 +39,7 @@ class DrawnAreaType extends AbstractType
 //                    'second choice' => 'інший choice'
 //                ]])
             ->add('useCategory', EntityType::class, [
-                'label'=>'Вид використання',
+                'label' => 'Вид використання',
                 'class' => UsePlantCategory::class,
                 'choice_label' => 'title',
                 'placeholder' => 'Оберіть категорію',
@@ -48,12 +49,12 @@ class DrawnAreaType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'Дата',
                 'input' => 'datetime_immutable',
-                'html5' => false ])
+                'html5' => false])
 //            ->add('publishedAt')
             ->add('status')
-            ->add('status', ChoiceType::class, ['label'=>'Статус',
+            ->add('status', ChoiceType::class, ['label' => 'Статус',
                 'choices' => [
-                    'Внесено' => 'draft' ,
+                    'Внесено' => 'draft',
                     'Підтверджено' => 'numbered',
                     'Опубліковано' => 'published',
                     'Скасувано' => 'rejected'
@@ -78,11 +79,7 @@ class DrawnAreaType extends AbstractType
     {
         $form = $event->getForm();
         $data = $event->getData();
-        $category = empty($data['category']) ? null : $this->entityManager->getRepository(UsePlantCategory::class)->find($data['category']);
-//        //       $this->addElements($form, $country);
-//        $region = empty($data['region']) ? null : $this->entityManager->getRepository(Region::class)->find($data['region']);
-//        $landCountry = empty($data['landCountry']) ? null : $this->entityManager->getRepository(Country::class)->find($data['landCountry']);
-//        $landRegion = empty($data['landRegion']) ? null : $this->entityManager->getRepository(Region::class)->find($data['landRegion']);
+        $category = empty($data['useCategory']) ? null : $this->entityManager->getRepository(UsePlantCategory::class)->find($data['useCategory']);
         $this->addElements($form, $category);
     }
 
@@ -93,18 +90,17 @@ class DrawnAreaType extends AbstractType
         $this->addElements($form, $data->getUseCategory());
     }
 
-    protected function addElements(FormInterface $form, UsePlantCategory $category = null) {
-        $subcategories = [];
-        if($category) {
-            $subcategories = $category->getUsePlantSubCategories();
-        }
-        dump($category);
+    protected function addElements(FormInterface $form, UsePlantCategory $category = null)
+    {
+        $subcategories = null === $category ? [] : $category->getUsePlantSubCategories();
+
         $form->add('useSubCategory', EntityType::class, array(
             'required' => true,
             'placeholder' => 'Спочатку виберіть категорию ...',
             'class' => UsePlantSubCategory::class,
             'choices' => $subcategories,
-            'label'=>'Субкатегории'
+            'choice_label' => 'title',
+            'label' => 'Субкатегории'
         ));
     }
 }
