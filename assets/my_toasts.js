@@ -6,7 +6,7 @@ import {clickInfo} from "./click-info";
 import {Fill, Stroke, Style} from "ol/style";
 import {WKT} from "ol/format";
 
-export function my_toast(content, geom, selected = null, map = null) {
+export function my_toast(content, geom, selected = null, map = null, action = null) {
     let clear = document.getElementById('draw_toast');
     if (clear) {
         clear.remove();
@@ -72,8 +72,13 @@ export function my_toast(content, geom, selected = null, map = null) {
             }
         });
         let edit_buttons = document.getElementsByClassName('btn-edit');
-        edit_buttons[0].dispatchEvent(new Event("click"));
-        edit_buttons[0].dispatchEvent(new Event("click"));
+        if(action) {
+            edit_buttons[1].dispatchEvent(new Event("click"));
+            edit_buttons[1].dispatchEvent(new Event("click"));
+        } else {
+            edit_buttons[0].dispatchEvent(new Event("click"));
+            edit_buttons[0].dispatchEvent(new Event("click"));
+        }
     })
 
     mod.addEventListener('shown.bs.toast', function () {
