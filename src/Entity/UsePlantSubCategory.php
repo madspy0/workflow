@@ -18,7 +18,7 @@ class UsePlantSubCategory
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=510)
      */
     private $title;
 

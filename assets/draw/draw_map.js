@@ -12,7 +12,7 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import {Fill, Stroke, Style} from 'ol/style';
 
-import {OSM, Vector as VectorSource, TileWMS as TileWMSSource} from 'ol/source';
+import {OSM, Vector as VectorSource, TileWMS as TileWMSSource, XYZ} from 'ol/source';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {fromLonLat} from "ol/proj";
 
@@ -160,6 +160,63 @@ let cadastre = new TileLayer({
     title: 'Кадатр'
 });
 
+let restriction = new TileLayer({
+    source: new TileWMSSource({
+        url: 'https://m1.land.gov.ua/geowebcache/service/wms',
+        params: {
+            'LAYERS': 'restriction',
+            'VERSION': '1.3.0',
+            'TILED': 'true',
+            'FORMAT': 'image/png',
+            'WIDTH': 256,
+            'HEIGHT': 256,
+            'CRS': 'EPSG:900913',
+            'SRS': 'EPSG:900913',
+            serverType: 'geoserver',
+        }
+    }),
+    visible: 0,
+    title: 'Обмеження'
+})
+
+let atu = new TileLayer({
+    source: new TileWMSSource({
+        url: 'https://m1.land.gov.ua/geowebcache/service/wms',
+        params: {
+            'LAYERS': 'atu',
+            'VERSION': '1.3.0',
+            'TILED': 'true',
+            'FORMAT': 'image/png',
+            'WIDTH': 256,
+            'HEIGHT': 256,
+            'CRS': 'EPSG:900913',
+            'SRS': 'EPSG:900913',
+            serverType: 'geoserver',
+        }
+    }),
+    visible: 0,
+    title: 'АТУ'
+})
+
+let pzf = new TileLayer({
+    source: new TileWMSSource({
+        url: 'https://m1.land.gov.ua/geowebcache/service/wms',
+        params: {
+            'LAYERS': 'pcm_pzf',
+            'VERSION': '1.3.0',
+            'TILED': 'true',
+            'FORMAT': 'image/png',
+            'WIDTH': 256,
+            'HEIGHT': 256,
+            'CRS': 'EPSG:900913',
+            'SRS': 'EPSG:900913',
+            serverType: 'geoserver',
+        }
+    }),
+    visible: 0,
+    title: 'ПЗФ'
+})
+
 const osm = new TileLayer({
     title: 'OSM',
     type: 'base',
@@ -167,14 +224,47 @@ const osm = new TileLayer({
     source: new OSM()
 });
 
+let ortoPhoto = new TileLayer({
+    'opacity': 1.000000,
+    source: new XYZ({
+        url: 'https://m2.land.gov.ua/map/ortho10k_all/{z}/{x}/{-y}.jpg' //'http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
+    }),
+    visible: false,
+    title: 'Ортофотоплани',
+    type: 'base'
+});
+
+let clearLayer = new VectorLayer({
+    source: null,
+    visible: false,
+    title: 'Без підложки',
+    type: 'base'
+});
+
+let oglydova = new TileLayer({
+    'opacity': 1.000000,
+    source: new XYZ({
+        url: 'https://m1.land.gov.ua/map/dzk_overview/{z}/{x}/{-y}.png' //'http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
+    }),
+    visible: false,
+    title: 'Оглядова карта',
+    type: 'base'
+});
+
 const baseMaps = new LayerGroup({
     title: 'Base maps',
     layers: [
+        clearLayer,
+        oglydova,
+        ortoPhoto,
         osm,
+        pzf,
+        atu,
+        restriction,
+        cadastre,
         plants,
         vector,
-        cadastre
-    ]
+            ]
 });
 
 const map = new Map({

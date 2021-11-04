@@ -45,7 +45,10 @@ class DrawenAreaController extends AbstractController
     {
         try {
             $drawnArea = new DrawnArea();
-            $form = $this->createForm(DrawnAreaType::class, $drawnArea,['action'=>$this->generateUrl('drawen.draw_add')]);
+            $form = $this->createForm(DrawnAreaType::class, $drawnArea,[
+                'entity_manager' => $this->getDoctrine()->getManager(),
+                'action'=>$this->generateUrl('drawen.draw_add')
+            ]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $em->persist($drawnArea);
@@ -53,7 +56,7 @@ class DrawenAreaController extends AbstractController
                 return new JsonResponse(['success' => true]);
             }
             $content = $this->renderView(
-                'statement/modals/add_draw_modal_wo_div.html.twig',
+                'statement/modals/draw_toast_wo_div.html.twig',
                 array('form' => $form->createView())
             );
             return new JsonResponse(['content'=> $content]);

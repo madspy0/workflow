@@ -77,6 +77,7 @@ export function my_toast(content, geom, selected = null, map = null) {
     })
 
     mod.addEventListener('shown.bs.toast', function () {
+        if(!selected) {return;}
         selected.setStyle(new Style({
                 stroke: new Stroke({
                     color: 'rgb(255,0,0,0.7)',
@@ -107,7 +108,6 @@ export function my_toast(content, geom, selected = null, map = null) {
         })
     })
     document.getElementById('drawn_area_useCategory').addEventListener('change', event => {
-        console.log(document.getElementById(event.target.id).value)
         let Request = new XMLHttpRequest();
         Request.open('get', '/sub?category=' + document.getElementById(event.target.id).value);
         Request.send();

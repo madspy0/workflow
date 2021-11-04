@@ -7,7 +7,7 @@ import {Modal} from "bootstrap";
 import {WKT} from "ol/format";
 import {sourceClear} from "./draw_map";
 import Litepicker from 'litepicker';
-import {my_modal} from "../my_modals";
+import {my_toast} from "../my_toasts";
 
 let map;
 
@@ -104,7 +104,7 @@ export function toggleDraw(smap, status) {
                 //myModal.innerHTML(this.response.content);
                 //           myModal.show();
                 //           alert(this.response.content);
-                my_modal(this.response.content, geom);
+                my_toast(this.response.content, geom, null, map);
             }
             xhr.send();
         });
