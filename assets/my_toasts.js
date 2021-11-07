@@ -5,7 +5,7 @@ import {Modify, Select} from "ol/interaction";
 import {clickInfo} from "./click-info";
 import {Fill, Stroke, Style} from "ol/style";
 import {WKT} from "ol/format";
-
+import {getCenter} from 'ol/extent';
 export function my_toast(content, geom, selected = null, map = null, action = null) {
     let clear = document.getElementById('draw_toast');
     if (clear) {
@@ -96,6 +96,11 @@ export function my_toast(content, geom, selected = null, map = null, action = nu
         map.addInteraction(select);
         let selected_collection = select.getFeatures();
         selected_collection.push(selected);
+
+        let selected_center = getCenter(selected.getGeometry().getExtent());
+        let resolution = map.getView().getResolution();
+console.log(selected_center[0] - 550*resolution, selected_center[1])
+     //   map.getView().setCenter([selected_center[0] - 550*resolution, selected_center[1]])
         map.removeInteraction(select);
         const modify = new Modify({
             features: selected_collection,
