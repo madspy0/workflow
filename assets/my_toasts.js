@@ -97,10 +97,11 @@ export function my_toast(content, geom, selected = null, map = null, action = nu
         let selected_collection = select.getFeatures();
         selected_collection.push(selected);
 
-        let selected_center = getCenter(selected.getGeometry().getExtent());
-        let resolution = map.getView().getResolution();
-console.log(selected_center[0] - 550*resolution, selected_center[1])
-     //   map.getView().setCenter([selected_center[0] - 550*resolution, selected_center[1]])
+//         let selected_center = getCenter(selected.getGeometry().getExtent());
+//         let resolution = map.getView().getResolution();
+// console.log(selected_center[0] - 550*resolution, selected_center[1], resolution)
+    //    map.getView().setCenter([selected_center[0] - 550*resolution, selected_center[1]])
+        map.getView().fit(selected.getGeometry(),  {padding: [10, 550, 10, 10], duration: 500})
         map.removeInteraction(select);
         const modify = new Modify({
             features: selected_collection,

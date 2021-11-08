@@ -104,7 +104,7 @@ export function toggleDraw(smap, status) {
                 //myModal.innerHTML(this.response.content);
                 //           myModal.show();
                 //           alert(this.response.content);
-                my_toast(this.response.content, geom, null, map, 'add');
+                my_toast(this.response.content, geom, feature, map, 'add');
             }
             xhr.send();
         });
