@@ -117,6 +117,8 @@ $modal-fade-transform: scale(.8);
 }
 .toast {
   width: 550px;
+//  height: 100vh;
+  overflow: auto;
 }
 .center {
   display: flex;

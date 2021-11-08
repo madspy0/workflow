@@ -92,6 +92,27 @@ class DrawnArea
      */
     private $useSubCategory;
 
+    /**
+     * @ORM\Column(type="string", length=64, nullable="true")
+     */
+    private $area;
+
+    /**
+     * @return mixed
+     */
+    public function getArea()
+    {
+        return $this->area;
+    }
+
+    /**
+     * @param mixed $area
+     */
+    public function setArea($area): void
+    {
+        $this->area = $area;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

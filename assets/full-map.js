@@ -110,10 +110,10 @@ const vector = new VectorLayer({
         fill: new Fill({
             color: 'rgba(255, 255, 255, 0.2)',
         }),
-        stroke: new Stroke({
-            color: '#ffcc33',
-            width: 2,
-        }),
+        // stroke: new Stroke({
+        //     color: '#ffcc33',
+        //     width: 2,
+        // }),
     }),
 });
 

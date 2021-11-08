@@ -23,6 +23,7 @@ import '../portal/app';
 import LayerGroup from "ol/layer/Group";
 import {Feature} from "ol";
 import {WKT} from "ol/format";
+import {getArea} from "ol/sphere";
 
 // import {Modal} from "bootstrap";
 //
@@ -67,6 +68,29 @@ let itemStyles = {
             width: 2,
         }),
     })
+};
+// a default style is good practice!
+export const defaultStyle = new Style({
+    fill: new Fill({
+        color: 'rgba(255,255,255,0.4)'
+    }),
+    stroke: new Stroke({
+        color: '#3399CC',
+        width: 1.25
+    })
+});
+export const formatArea = function (polygon, html = true) {
+    const area = getArea(polygon);
+    let output;
+    if (area > 10000) {
+        output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км';
+    } else {
+        output = Math.round(area * 100) / 100 + ' ' + 'м';
+    }
+    if(html) {
+        output += '<sup>2</sup>';
+    }
+    return output;
 };
 const source = new VectorSource({
     //format: new GeoJSON(),

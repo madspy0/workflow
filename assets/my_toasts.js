@@ -1,12 +1,12 @@
 import Litepicker from "litepicker";
 import {Toast} from "bootstrap";
-import {sourceClear} from "./draw/draw_map";
+import {defaultStyle, sourceClear} from "./draw/draw_map";
 import {Modify, Select} from "ol/interaction";
 import {clickInfo} from "./click-info";
 import {Fill, Stroke, Style} from "ol/style";
 import {WKT} from "ol/format";
 import {getCenter} from 'ol/extent';
-export function my_toast(content, geom, selected = null, map = null, action = null) {
+export function my_toast(content, selected = null, map = null, action = null) {
     let clear = document.getElementById('draw_toast');
     if (clear) {
         clear.remove();
@@ -14,8 +14,11 @@ export function my_toast(content, geom, selected = null, map = null, action = nu
     let mod = document.createElement("div");
     //mod.innerHTML(this.response.content);
     mod.id = 'draw_toast';
-    mod.className = "toast position-absolute top-0 end-0 text-white bg-primary";
+    mod.className = "toast position-absolute top-0 end-0 text-white bg-primary side-in";
     mod.style.zIndex = "10000";
+//    mod.style.display="flex";
+//    mod.style.flexWrap='wrap';
+//    mod.style.flexDirection = "column";
     mod.setAttribute("role", "dialog");
     mod.setAttribute("aria-live", "assertive");
     mod.setAttribute("aria-atomic", "true");
@@ -28,10 +31,10 @@ export function my_toast(content, geom, selected = null, map = null, action = nu
         inlineMode: true,
         lang: "uk-UA",
     });
-    if (geom) {
-        document.getElementById('drawn_area_geom').value = geom;
+    if (selected && selected.getGeometry()) {
+        document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(selected.getGeometry());
     }
-    let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'));
+    let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'), {delay:500, animation: true});
     myToast.show();
     let form = document.forms[0];
     if (form) {
@@ -39,6 +42,7 @@ export function my_toast(content, geom, selected = null, map = null, action = nu
             e.preventDefault();
             let xhr = new XMLHttpRequest();
             let formData = new FormData(form);
+            formData.append('drawn_area[area]', document.getElementById('drawn_area_area').value);
             xhr.open("POST", form.action, true);
             //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function () {
@@ -66,16 +70,20 @@ export function my_toast(content, geom, selected = null, map = null, action = nu
                 interaction.setActive(false);
             }
         });
-        map.getLayers().forEach(layer => {
-            if (layer.get('name') === 'plants') {
-                layer.getSource().refresh()
-            }
-        });
+        sourceClear(true);
+        // map.getLayers().forEach(layer => {
+        //     if (layer.get('name') === 'plants') {
+        //         layer.getSource().refresh()
+        //     }
+        // });
         let edit_buttons = document.getElementsByClassName('btn-edit');
         if(action) {
+            // если добавление
             edit_buttons[1].dispatchEvent(new Event("click"));
             edit_buttons[1].dispatchEvent(new Event("click"));
+            // edit_buttons[1].classList.add('active')
         } else {
+        //    edit_buttons[0].classList.add('active')
             edit_buttons[0].dispatchEvent(new Event("click"));
             edit_buttons[0].dispatchEvent(new Event("click"));
         }
@@ -83,13 +91,7 @@ export function my_toast(content, geom, selected = null, map = null, action = nu
 
     mod.addEventListener('shown.bs.toast', function () {
         if(!selected) {return;}
-        selected.setStyle(new Style({
-                stroke: new Stroke({
-                    color: 'rgb(255,0,0,0.7)',
-                    width: 2,
-                })
-            })
-        );
+        selected.setStyle(defaultStyle);
         let select = new Select({
             //some options
         });
@@ -101,7 +103,7 @@ export function my_toast(content, geom, selected = null, map = null, action = nu
 //         let resolution = map.getView().getResolution();
 // console.log(selected_center[0] - 550*resolution, selected_center[1], resolution)
     //    map.getView().setCenter([selected_center[0] - 550*resolution, selected_center[1]])
-        map.getView().fit(selected.getGeometry(),  {padding: [10, 550, 10, 10], duration: 500})
+        map.getView().fit(selected.getGeometry(),  {padding: [15, 565, 15, 15], duration: 500})
         map.removeInteraction(select);
         const modify = new Modify({
             features: selected_collection,
@@ -117,6 +119,9 @@ export function my_toast(content, geom, selected = null, map = null, action = nu
             // toast.insertAdjacentHTML('beforeend', "<h1>ура</h1>");
             // document.body.appendChild(toast);
         })
+    })
+    document.getElementById('toast-close').addEventListener('click', () => {
+        sourceClear(true);
     })
     document.getElementById('drawn_area_useCategory').addEventListener('change', event => {
         let Request = new XMLHttpRequest();

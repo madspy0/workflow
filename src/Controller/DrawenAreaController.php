@@ -77,6 +77,10 @@ class DrawenAreaController extends AbstractController
             ]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
+                $this->addFlash(
+                    'success',
+                    ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
+                );
                 $em->persist($drawnArea);
                 $em->flush();
                 return new JsonResponse(['success' => true]);

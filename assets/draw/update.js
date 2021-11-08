@@ -31,7 +31,7 @@ export function update_draw(selected, map=null) {
                     window.location.href=request.responseURL;
                 }
                 let obj = JSON.parse(request.responseText);
-                my_toast(obj.content, null, selected, map)
+                my_toast(obj.content, selected, map)
         }
     });
 

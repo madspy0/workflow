@@ -5,22 +5,13 @@ import {Draw} from 'ol/interaction';
 import {Fill, Stroke, Style, Circle} from 'ol/style';
 import {getArea} from 'ol/sphere';
 import {unByKey} from 'ol/Observable';
-import {sourceClear} from "./draw/draw_map";
+import {sourceClear, formatArea} from "./draw/draw_map";
 /**
  * Format area output.
  * @param {Polygon} polygon The polygon.
  * @return {string} Formatted area.
  */
-const formatArea = function (polygon) {
-    const area = getArea(polygon);
-    let output;
-    if (area > 10000) {
-        output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км<sup>2</sup>';
-    } else {
-        output = Math.round(area * 100) / 100 + ' ' + 'м<sup>2</sup>';
-    }
-    return output;
-};
+
 
 let map;
 

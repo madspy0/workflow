@@ -5,9 +5,11 @@ import {Draw} from 'ol/interaction';
 import {Fill, Stroke, Style, Circle} from 'ol/style';
 import {Modal} from "bootstrap";
 import {WKT} from "ol/format";
-import {sourceClear} from "./draw_map";
+import {sourceClear, formatArea} from "./draw_map";
 import Litepicker from 'litepicker';
 import {my_toast} from "../my_toasts";
+import {defaultStyle} from "./draw_map";
+import {unByKey} from "ol/Observable";
 
 let map;
 
@@ -23,21 +25,7 @@ function addDrawLayer() {
         let layer = new VectorLayer({
             name: 'drawn',
             source: source,
-            style: new Style({
-                fill: new Fill({
-                    color: 'rgba(255, 255, 255, 0.2)',
-                }),
-                stroke: new Stroke({
-                    color: '#ffcc33',
-                    width: 2,
-                }),
-                image: new Circle({
-                    radius: 7,
-                    fill: new Fill({
-                        color: '#ffcc33',
-                    }),
-                }),
-            }),
+            style: defaultStyle,
         });
         map.addLayer(layer);
     }
@@ -89,10 +77,22 @@ export function toggleDraw(smap, status) {
                 }),
             }),
         });
+        // let listener;
+        // let sketch;
         map.addInteraction(draw);
+        // draw.on('drawstart', function(evt){
+        //     sketch = evt.feature;
+        //     // console.log(sketch)
+        //     listener = sketch.getGeometry().on('change', function (evt) {
+        //         const geom = evt.target;
+        //         console.log(formatArea(geom))
+        //         // let area = document.getElementById('drawn_area_area');
+        //        // area.value = "77";//formatArea(geom);
+        //     });
+        // })
         draw.on('drawend', function (evt) {
             let feature = evt.feature;
-            let geom = new WKT().writeGeometry(feature.getGeometry(feature.getGeometry()));
+            //let geom = new WKT().writeGeometry(feature.getGeometry());
             //
             //myModal.show();
             let xhr = new XMLHttpRequest();
@@ -104,9 +104,11 @@ export function toggleDraw(smap, status) {
                 //myModal.innerHTML(this.response.content);
                 //           myModal.show();
                 //           alert(this.response.content);
-                my_toast(this.response.content, geom, feature, map, 'add');
+                my_toast(this.response.content, feature, map, 'add');
+                document.getElementById('drawn_area_area').value = formatArea(feature.getGeometry(), false);
             }
             xhr.send();
+           // unByKey(listener);
         });
 
 

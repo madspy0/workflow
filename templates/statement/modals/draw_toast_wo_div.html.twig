@@ -43,6 +43,9 @@
         <div class="col col-8">
             {{ form_row(form.status) }}
         </div>
+        <div class="col col-4">
+            {{ form_row(form.area) }}
+        </div>
     </div>
     <div class="row">
         <div class="col">
@@ -54,7 +57,7 @@
     </div>
     <div class="row">
         <div class="col center">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="toast">Close</button>
+            <button type="button" class="btn btn-secondary" id="toast-close" data-bs-dismiss="toast">Close</button>
         </div>
         <div class="col center">
         {{ form_row(form.save) }}
