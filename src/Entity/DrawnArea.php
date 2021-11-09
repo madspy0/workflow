@@ -45,6 +45,22 @@ class DrawnArea
     private $middlename;
 
     /**
+     * @return mixed
+     */
+    public function getLink()
+    {
+        return $this->link;
+    }
+
+    /**
+     * @param mixed $link
+     */
+    public function setLink($link): void
+    {
+        $this->link = $link;
+    }
+
+    /**
      * @ORM\Column(type="datetime_immutable")
      */
     private $createdAt;
@@ -53,6 +69,11 @@ class DrawnArea
      * @ORM\Column(type="string", length=255)
      */
     private $address;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $link;
 
     /**
      * @ORM\Column(type="string", length=64)
@@ -93,10 +114,30 @@ class DrawnArea
     private $useSubCategory;
 
     /**
-     * @ORM\Column(type="string", length=64, nullable="true")
+     * @ORM\Column(type="string", length=64)
      */
     private $area;
 
+    /**
+     * @return mixed
+     */
+    public function getDocumentsType()
+    {
+        return $this->documentsType;
+    }
+
+    /**
+     * @param mixed $documentsType
+     */
+    public function setDocumentsType($documentsType): void
+    {
+        $this->documentsType = $documentsType;
+    }
+
+    /**
+     * @ORM\Column(type="string", length=128)
+     */
+    private $documentsType;
     /**
      * @return mixed
      */

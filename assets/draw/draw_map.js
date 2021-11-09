@@ -32,21 +32,12 @@ import {getArea} from "ol/sphere";
 // });
 
 let itemStyles = {
-    'draft': new Style({
+    'created': new Style({
         fill: new Fill({
             color: 'rgba(255, 255, 0, 0.2)',
         }),
         stroke: new Stroke({
             color: 'rgb(255, 255, 0)',
-            width: 2,
-        }),
-    }),
-    'numbered': new Style({
-        fill: new Fill({
-            color: 'rgba(201, 247, 111, 0.2)',
-        }),
-        stroke: new Stroke({
-            color: 'rgb(201, 247, 111)',
             width: 2,
         }),
     }),
@@ -59,7 +50,7 @@ let itemStyles = {
             width: 2,
         }),
     }),
-    'rejected': new Style({
+    'archived': new Style({
         fill: new Fill({
             color: 'rgba(173, 102, 213, 0.2)',
         }),
@@ -79,16 +70,13 @@ export const defaultStyle = new Style({
         width: 1.25
     })
 });
-export const formatArea = function (polygon, html = true) {
+export const formatArea = function (polygon) {
     const area = getArea(polygon);
     let output;
     if (area > 10000) {
-        output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км';
+        output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км \u00B2';
     } else {
-        output = Math.round(area * 100) / 100 + ' ' + 'м';
-    }
-    if(html) {
-        output += '<sup>2</sup>';
+        output = Math.round(area * 100) / 100 + ' ' + 'м \u0000B2';
     }
     return output;
 };
@@ -181,7 +169,8 @@ let cadastreSource = new TileWMSSource({
 let cadastre = new TileLayer({
     source: cadastreSource,
     visible: 0,
-    title: 'Кадатр'
+    title: 'Кадатр',
+    transitionEffect: 'resize'
 });
 
 let restriction = new TileLayer({
@@ -255,7 +244,8 @@ let ortoPhoto = new TileLayer({
     }),
     visible: false,
     title: 'Ортофотоплани',
-    type: 'base'
+    type: 'base',
+    transitionEffect: 'resize'
 });
 
 let clearLayer = new VectorLayer({

@@ -27,38 +27,42 @@ class DrawnAreaType extends AbstractType
     {
         $this->entityManager = $options['entity_manager'];
         $builder
-            ->add('localGoverment')
-            ->add('firstname')
-            ->add('lastname')
-            ->add('middlename')
+            ->add('localGoverment', null, ['label' => 'Орган влади, який прийняв рішення'])
+            ->add('firstname', null, ['label' => false, 'attr' => ['placeholder' => 'Ім\'я']])
+            ->add('lastname', null, ['label' => false, 'attr' => ['placeholder' => 'Призвіще']])
+            ->add('middlename', null, ['label' => false, 'attr' => ['placeholder' => 'По-батькові']])
             //          ->add('createdAt')
-            ->add('address')
+            ->add('documentsType', null, ['label' => 'Назва документа'])
+            ->add('address',null,['label'=>'Орієнтовне місце розташування (адреса)'])
 //            ->add('use', ChoiceType::class, ['label'=>'Вид використання',
 //                'choices' => [
 //                    'First choice' => 'вибір',
 //                    'second choice' => 'інший choice'
 //                ]])
             ->add('useCategory', EntityType::class, [
-                'label' => 'Вид використання',
+                'label' => 'Майбутнє цільове призначення',
                 'class' => UsePlantCategory::class,
                 'choice_label' => 'title',
                 'placeholder' => 'Оберіть категорію',
             ])
-            ->add('numberSolution')
+            ->add('numberSolution', null, ['label'=>'Номер документа'])
             ->add('solutedAt', DateType::class, [
                 'widget' => 'single_text',
-                'label' => 'Дата',
+                'label' => 'Дата документа',
                 'input' => 'datetime_immutable',
+                'input_format' => 'dd-MM-yyyy',
+                'format' => 'dd-MM-yyyy',
                 'html5' => false])
 //            ->add('publishedAt')
-            ->add('area',null, ['label'=>'Площа', 'attr'=>['readonly' => 'true']])
-            ->add('status', ChoiceType::class, ['label' => 'Статус',
-                'choices' => [
-                    'Внесено' => 'draft',
-                    'Підтверджено' => 'numbered',
-                    'Опубліковано' => 'published',
-                    'Скасувано' => 'rejected'
-                ]])
+            ->add('area', null, ['label' => 'Площа', 'attr' => ['readonly' => 'true']])
+            ->add('link', null, ['label' => 'Посилання на сайт'])
+//            ->add('status', ChoiceType::class, ['label' => 'Статус',
+//                'choices' => [
+//                    'Внесено' => 'draft',
+//                    'Підтверджено' => 'numbered',
+//                    'Опубліковано' => 'published',
+//                    'Скасувано' => 'rejected'
+//                ]])
             ->add('geom', HiddenType::class)
             ->add('save', SubmitType::class, [
                 'attr' => ['class' => 'save'],
@@ -100,7 +104,7 @@ class DrawnAreaType extends AbstractType
             'class' => UsePlantSubCategory::class,
             'choices' => $subcategories,
             'choice_label' => 'title',
-            'label' => 'Субкатегории'
+            'label' => '_'
         ));
     }
 }

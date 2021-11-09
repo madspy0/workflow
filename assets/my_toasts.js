@@ -1,6 +1,6 @@
 import Litepicker from "litepicker";
 import {Toast} from "bootstrap";
-import {defaultStyle, sourceClear} from "./draw/draw_map";
+import {defaultStyle, formatArea, sourceClear} from "./draw/draw_map";
 import {Modify, Select} from "ol/interaction";
 import {clickInfo} from "./click-info";
 import {Fill, Stroke, Style} from "ol/style";
@@ -14,8 +14,8 @@ export function my_toast(content, selected = null, map = null, action = null) {
     let mod = document.createElement("div");
     //mod.innerHTML(this.response.content);
     mod.id = 'draw_toast';
-    mod.className = "toast position-absolute top-0 end-0 text-white bg-primary side-in";
-    mod.style.zIndex = "10000";
+    mod.className = "toast position-absolute top-0 end-0 side-in";
+    mod.style.zIndex = "1050";
 //    mod.style.display="flex";
 //    mod.style.flexWrap='wrap';
 //    mod.style.flexDirection = "column";
@@ -26,10 +26,11 @@ export function my_toast(content, selected = null, map = null, action = null) {
     mod.insertAdjacentHTML('beforeend', content);
     document.body.appendChild(mod);
     window.disableLitepickerStyles = true;
-    let picker = new Litepicker({
+    const picker = new Litepicker({
         element: document.getElementById('drawn_area_solutedAt'),
-        inlineMode: true,
+        autoRefresh: true,
         lang: "uk-UA",
+        format: "DD-MM-YYYY"
     });
     if (selected && selected.getGeometry()) {
         document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(selected.getGeometry());
@@ -37,6 +38,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
     let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'), {delay:500, animation: true});
     myToast.show();
     let form = document.forms[0];
+
     if (form) {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -47,7 +49,6 @@ export function my_toast(content, selected = null, map = null, action = null) {
             //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function () {
                 if (this.readyState != 4) return;
-                //alert( this.responseText );
                 if (xhr.status === 200) {
                     sourceClear(true);
                     let myToast = Toast.getInstance(document.getElementById('draw_toast'));
@@ -110,7 +111,16 @@ export function my_toast(content, selected = null, map = null, action = null) {
         });
         map.addInteraction(modify);
         clickInfo(map, false);
+        modify.on('modifystart', function(e) {
+            let sketch = e.features.getArray()[0];
+            let listener = sketch.getGeometry().on('change', function (evt) {
+                const geom = evt.target;
+                let output;
+                document.getElementById('drawn_area_area').value = formatArea(geom);
+            });
+        })
         modify.on("modifyend", function (e) {
+            document.getElementById('drawn_area_area').value = formatArea(e.features.getArray()[0].getGeometry(), false);
             document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(e.features.getArray()[0].getGeometry());
             // console.log(e.target)
             // let toast = document.createElement("div");

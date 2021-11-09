@@ -29,3 +29,24 @@ framework:
                 reopen:
                     from: rejected
                     to: draft
+        drawn_area_flow:
+            type: 'state_machine'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'status'
+            supports:
+                - App\Entity\DrawnArea
+            initial_marking: created
+            places:
+                - created
+                - published
+                - archived
+            transitions:
+                to_publish:
+                    from: created
+                    to: published
+                to_archive:
+                    from: published
+                    to: archived

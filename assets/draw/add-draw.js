@@ -105,7 +105,7 @@ export function toggleDraw(smap, status) {
                 //           myModal.show();
                 //           alert(this.response.content);
                 my_toast(this.response.content, feature, map, 'add');
-                document.getElementById('drawn_area_area').value = formatArea(feature.getGeometry(), false);
+                document.getElementById('drawn_area_area').value = formatArea(feature.getGeometry());
             }
             xhr.send();
            // unByKey(listener);

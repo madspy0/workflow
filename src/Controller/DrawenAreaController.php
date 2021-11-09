@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Workflow\WorkflowInterface;
 
 class DrawenAreaController extends AbstractController
 {
@@ -41,7 +42,7 @@ class DrawenAreaController extends AbstractController
     /**
      * @Route("/dr_add", name="drawen.draw_add")
      */
-    public function add(Request $request, EntityManagerInterface $em): Response
+    public function add(Request $request, WorkflowInterface $drawnAreaFlowStateMachine, EntityManagerInterface $em): Response
     {
         try {
             $drawnArea = new DrawnArea();
@@ -51,6 +52,7 @@ class DrawenAreaController extends AbstractController
             ]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
+                $drawnAreaFlowStateMachine->getMarking($drawnArea);
                 $em->persist($drawnArea);
                 $em->flush();
                 return new JsonResponse(['success' => true]);
@@ -87,7 +89,7 @@ class DrawenAreaController extends AbstractController
             }
             $content = $this->renderView(
                 'statement/modals/draw_toast_wo_div.html.twig',
-                array('form' => $form->createView())
+                array('form' => $form->createView(), 'drawnArea' => $drawnArea)
             );
             return new JsonResponse(['content'=> $content]);
         } catch (Exception $exception) {
