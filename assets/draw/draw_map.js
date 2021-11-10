@@ -24,6 +24,7 @@ import LayerGroup from "ol/layer/Group";
 import {Feature} from "ol";
 import {WKT} from "ol/format";
 import {getArea} from "ol/sphere";
+import * as olControl from 'ol/control';
 
 // import {Modal} from "bootstrap";
 //
@@ -288,12 +289,20 @@ const map = new Map({
         center: fromLonLat([31.182233, 48.382778]),
         zoom: 5,
     }),
+    controls: olControl.defaults({
+        zoom: false
+    }).extend([
+        new olControl.Zoom({
+            className: "draw-zoom"
+        })
+    ])
 });
 
 const layerSwitcher = new LayerSwitcher({
     reverse: true,
     groupSelectStyle: 'group',
-    target: document.getElementsByClassName('edit-buttons')[0]
+    target: document.getElementsByClassName('edit-buttons')[0],
+
 });
 
 map.addControl(new DrawButtonsControl());

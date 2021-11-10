@@ -63,18 +63,25 @@
         </div>
     </div>
     <div class="row border" id="status_row" style="margin-top: 10px;">
-        <div class="col col-6">
-            {{ form_row(form.area) }}
-            Статус: {{ drawnArea.status }}
+        <div class="col">
+            <div>Статус: {{ drawnArea.status }}</div>
+            <div style="display: flex; align-items: center;">Площа:{{ form_widget(form.area) }}</div>
+        </div>
+        <div class="col">
+            Дата створення: {{ drawnArea.createdAt| format_datetime('short','short', locale='uk') }}
+            Дата редагування: {% if(drawnArea.updatedAt) %} {{ drawnArea.updatedAt| format_datetime('short','short', locale='uk') }} {% endif %}
+            Дата публікації: {% if(drawnArea.publishedAt) %} {{ drawnArea.publishedAt| format_datetime('short','short', locale='uk') }} {% endif %}
+            Дата перенесення в архів: {% if(drawnArea.archivedAt) %} {{ drawnArea.archivedAt| format_datetime('short','short', locale='uk') }} {% endif %}
         </div>
     </div>
 
-    <div class="row" style="margin-top: 10px;">
-        <div class="col center">
-            <button type="button" class="btn btn-secondary" id="toast-close" data-bs-dismiss="toast">Close</button>
-        </div>
-        <div class="col center">
-            {{ form_row(form.save) }}
+    <div class="row" style="margin-top: 10px;" id="toast-buttons">
+        <div class="col" style="justify-content: center; align-items: center;">
+            {{ form_widget(form.save) }}
+            <button type="button" class="btn btn-warning">Видалити</button>
+            <button type="button" class="btn btn-success disabled">До ПКК</button>
+            <button type="button" class="btn btn-danger disabled">В аріхв</button>
+            <button type="button" class="btn btn-info" id="toast-close" data-bs-dismiss="toast">Close</button>
         </div>
     </div>
     {{ form_row(form.geom) }}

@@ -64,7 +64,27 @@ class DrawnArea
      * @ORM\Column(type="datetime_immutable")
      */
     private $createdAt;
+    /**
+     * @return DateTime
+     */
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
 
+    /**
+     * @param DateTime $updatedAt
+     */
+    public function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+    /**
+     * @var DateTime $updated
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -91,10 +111,30 @@ class DrawnArea
     private $publishedAt;
 
     /**
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     */
+    private $archivedAt;
+    /**
      * @ORM\Column(type="string", length=64)
      * @Groups({"geoms"})
      */
     private $status;
+
+    /**
+     * @return mixed
+     */
+    public function getArchivedAt()
+    {
+        return $this->archivedAt;
+    }
+
+    /**
+     * @param mixed $archivedAt
+     */
+    public function setArchivedAt($archivedAt): void
+    {
+        $this->archivedAt = $archivedAt;
+    }
 
     /**
      * @ORM\Column(type="geometry")
@@ -293,11 +333,12 @@ class DrawnArea
 
     /**
      * @ORM\PrePersist
+     * @ORM\PreUpdate
      */
     public function updatedTimestamps(): void
     {
         $dateTimeNow = new \DateTimeImmutable('now');
-
+        $this->setUpdatedAt($dateTimeNow);
         if ($this->getCreatedAt() === null) {
             $this->setCreatedAt($dateTimeNow);
         }

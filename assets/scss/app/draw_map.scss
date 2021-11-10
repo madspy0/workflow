@@ -2,24 +2,26 @@
   background: white;
   &.hover,
   &:hover {
-    background:darken($bg,8%);
+    background: darken($bg, 8%);
     transition: all 0.3s ease;
   }
   &.active,
   &:active {
-    background:darken($bg,25%);
+    background: darken($bg, 25%);
   }
   &.visited,
   &:visited {
-    background:white;
+    background: white;
   }
 }
+
 $modal-fade-transform: scale(.8);
 
 .full-map {
   width: 100%;
   height: 100%;
 }
+
 .app-card-body {
   height: calc(100vh - 112px) !important;
 }
@@ -30,6 +32,7 @@ $modal-fade-transform: scale(.8);
   margin-left: 0 !important;
   margin-right: 0 !important;
 }
+
 .edit-buttons {
 
   // //height: 80px;
@@ -39,7 +42,7 @@ $modal-fade-transform: scale(.8);
   //// background-color: #298eb3;
   // box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.24), 0 0 2px 0 rgba(0, 0, 0, 0.12);
   // color: rgba(0, 0, 0, 0.54);
-  right: .5em;
+  left: .5em;
   top: .5em;
   position: absolute;
   padding: 2px;
@@ -49,16 +52,20 @@ $modal-fade-transform: scale(.8);
     width: 38px;
     height: 38px;
   }
+
   .btn:focus, .btn:active:focus, .btn.active:focus {
     outline: 0 none;
   }
+
   .btn-edit {
     color: #158da2;
     background: white;
   }
-   .btn-edit:focus, .btn-edit:active, .btn-edit.active, .open > .dropdown-toggle.btn-primary {
+
+  .btn-edit:focus, .btn-edit:active, .btn-edit.active, .open > .dropdown-toggle.btn-primary {
     background: white;
   }
+
   .btn-edit:hover, .btn-edit:active, .btn-edit.active {
     background: #ecfafd;
     box-shadow: none;
@@ -66,7 +73,9 @@ $modal-fade-transform: scale(.8);
 }
 
 .layer-switcher {
-  top: calc(.5em + 118px) !important;
+  right: initial;
+  top: calc(.5em + 118px);
+  left: .5em;
 }
 
 //.btn-edits:hover, .btn-edits:focus, .btn-edits:active, .btn-edits.active, .open>.dropdown-toggle.btn-edits {
@@ -86,15 +95,18 @@ $modal-fade-transform: scale(.8);
   cursor: default;
   user-select: none;
 }
+
 .ol-tooltip-measure {
   opacity: 1;
   font-weight: bold;
 }
+
 .ol-tooltip-static {
   background-color: #ffcc33;
   color: black;
   border: 1px solid white;
 }
+
 .ol-tooltip-measure:before,
 .ol-tooltip-static:before {
   border-top: 6px solid rgba(0, 0, 0, 0.5);
@@ -106,9 +118,11 @@ $modal-fade-transform: scale(.8);
   margin-left: -7px;
   left: 50%;
 }
+
 .ol-tooltip-static:before {
   border-top-color: #ffcc33;
 }
+
 //#drawn_area_solutedAt {
 //  height: 1px !important;
 //  padding: 0;
@@ -117,22 +131,57 @@ $modal-fade-transform: scale(.8);
 //}
 .toast {
   width: 550px;
-//  height: 100vh;
+  max-height: 100vh;
   overflow: auto;
   background-color: white !important;
   padding: 5px;
 }
+
 .toast-header {
-  background-color: rgb(223,240,216) !important;
+  background-color: rgb(223, 240, 216) !important;
 }
+
 .center {
   display: flex;
   justify-content: center;
 }
+
 #fio_row, #status_row {
-  background-color: rgb(248,248,248);
+  background-color: rgb(248, 248, 248);
   padding: 5px;
+
   .mb-3 {
     margin-bottom: 0 !important;
   }
 }
+#drawn_area_area {
+  background-color: #f8f8f8;
+  border: none;
+  font-weight: 600;
+}
+#drawn_area_save {
+  background-color: rgb(51, 122, 183) !important;
+}
+
+#toast-buttons .btn {
+  color: white !important;
+  float: left;
+  margin-right: 5px;
+}
+.draw-zoom {
+  bottom: .5em;
+  left: .5em;
+
+  button {
+    color: #158da2;
+    background-color: white;
+    width: 34px;
+    height: 34px;
+  }
+
+  button:hover, button:focus, button:active, button.active {
+    background: #ecfafd;
+    color: white;
+  }
+}
+

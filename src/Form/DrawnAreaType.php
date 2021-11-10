@@ -65,6 +65,7 @@ class DrawnAreaType extends AbstractType
 //                ]])
             ->add('geom', HiddenType::class)
             ->add('save', SubmitType::class, [
+                'label' => 'Зберегти',
                 'attr' => ['class' => 'save'],
             ]);
         $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));

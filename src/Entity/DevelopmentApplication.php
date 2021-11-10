@@ -261,6 +261,28 @@ class DevelopmentApplication
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
      */
     private $createdAt;
+
+    /**
+     * @return DateTime
+     */
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param DateTime $updatedAt
+     */
+    public function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+    /**
+     * @var DateTime $updated
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
     /**
      * @ORM\OneToMany(targetEntity=DevelopmentSolution::class, mappedBy="developmentApplication", orphanRemoval=true)
      */
@@ -561,7 +583,7 @@ class DevelopmentApplication
     public function updatedTimestamps(): void
     {
         $dateTimeNow = new DateTime('now');
-
+        $this->setUpdatedAt($dateTimeNow);
         if ($this->getCreatedAt() === null) {
             $this->setCreatedAt($dateTimeNow);
         }
