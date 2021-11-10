@@ -11,22 +11,22 @@
     {# <div class="row gx-5 gy-3"> #}
     {# <div class="col-12 col-lg-9"> #}
 
-    <div class="row align-items-center" id="fio_row">
-        <div class="col-5">
+    <div class="row justify-content-between mt-3 p-2" id="fio_row">
+        <div class="col gx-1">
             <strong>Вповноважена особа (ПIБ)</strong>
         </div>
-        <div class="col">
+        <div class="col gx-1">
             {{ form_row(form.lastname) }}
         </div>
-        <div class="col">
+        <div class="col gx-1">
             {{ form_row(form.firstname) }}
         </div>
-        <div class="col">
+        <div class="col gx-1">
             {{ form_row(form.middlename) }}
         </div>
     </div>
 
-    <div class="row border border-bottom-0" style="margin-top: 10px;">
+    <div class="row border border-bottom-0 mt-3">
         <div class="col">
             {{ form_row(form.localGoverment) }}
         </div>
@@ -49,7 +49,7 @@
             {{ form_row(form.link) }}
         </div>
     </div>
-    <div class="row border border-bottom-0" style="margin-top: 10px;">
+    <div class="row border border-bottom-0 mt-3">
         <div class="col">
             {{ form_row(form.address) }}
         </div>
@@ -62,27 +62,52 @@
             {{ form_row(form.useSubCategory) }}
         </div>
     </div>
-    <div class="row border" id="status_row" style="margin-top: 10px;">
+    <div class="row border mt-3" id="status_row">
         <div class="col">
             <div>Статус: {{ drawnArea.status }}</div>
-            <div style="display: flex; align-items: center;">Площа:{{ form_widget(form.area) }}</div>
+            <div class="d-flex align-items-center">Площа:{{ form_widget(form.area) }}</div>
         </div>
         <div class="col">
-            Дата створення: {{ drawnArea.createdAt| format_datetime('short','short', locale='uk') }}
-            Дата редагування: {% if(drawnArea.updatedAt) %} {{ drawnArea.updatedAt| format_datetime('short','short', locale='uk') }} {% endif %}
-            Дата публікації: {% if(drawnArea.publishedAt) %} {{ drawnArea.publishedAt| format_datetime('short','short', locale='uk') }} {% endif %}
-            Дата перенесення в архів: {% if(drawnArea.archivedAt) %} {{ drawnArea.archivedAt| format_datetime('short','short', locale='uk') }} {% endif %}
+            <div>Дата створення: {{ drawnArea.createdAt| format_datetime('short','short', locale='uk') }}</div>
+            <div>Дата
+                редагування: {% if(drawnArea.updatedAt) %} {{ drawnArea.updatedAt| format_datetime('short','short', locale='uk') }} {% endif %}</div>
+            <div>Дата
+                публікації: {% if(drawnArea.publishedAt) %} {{ drawnArea.publishedAt| format_datetime('short','short', locale='uk') }} {% endif %}</div>
+            <div>Дата перенесення в
+                архів: {% if(drawnArea.archivedAt) %} {{ drawnArea.archivedAt| format_datetime('short','short', locale='uk') }} {% endif %}</div>
         </div>
     </div>
 
-    <div class="row" style="margin-top: 10px;" id="toast-buttons">
-        <div class="col" style="justify-content: center; align-items: center;">
-            {{ form_widget(form.save) }}
-            <button type="button" class="btn btn-warning">Видалити</button>
-            <button type="button" class="btn btn-success disabled">До ПКК</button>
-            <button type="button" class="btn btn-danger disabled">В аріхв</button>
-            <button type="button" class="btn btn-info" id="toast-close" data-bs-dismiss="toast">Close</button>
-        </div>
+    <div id="toast-buttons">
+        {% if workflow_can(drawnArea, 'to_archive') %}
+            {{ form_widget(form.save,{'attr':{'class':'disabled'}}) }}
+        {% else %}
+        {{ form_widget(form.save) }}
+        {% endif %}
+        <button type="button"
+                id="dr_drop" value="{{ drawnArea.id }}"
+                class="btn btn-warning
+            {% if ((drawnArea.id is null) or (workflow_can(drawnArea, 'to_archive'))) %}
+            disabled
+            {% endif %}
+        ">Видалити
+        </button>
+        <button type="button" class="btn btn-success
+            {% if ((drawnArea.id is null) or (not workflow_can(drawnArea, 'to_publish'))) %}
+            disabled
+            {% endif %}
+            "
+            id="dr_publ" value="{{ drawnArea.id }}"
+            >До ПКК
+        </button>
+        <button type="button" class="btn btn-danger
+         {% if not workflow_can(drawnArea, 'to_archive') %}
+         disabled
+        {% endif %}
+        ">В архів
+        </button>
+
+        <button type="button" class="btn btn-info" id="toast-close" data-bs-dismiss="toast">Close</button>
     </div>
     {{ form_row(form.geom) }}
 </div>

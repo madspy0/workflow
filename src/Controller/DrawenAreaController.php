@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
+use DateTimeImmutable;
 
 class DrawenAreaController extends AbstractController
 {
@@ -59,7 +60,7 @@ class DrawenAreaController extends AbstractController
             }
             $content = $this->renderView(
                 'statement/modals/draw_toast_wo_div.html.twig',
-                array('form' => $form->createView())
+                array('form' => $form->createView(), 'drawnArea'=>$drawnArea)
             );
             return new JsonResponse(['content'=> $content]);
         } catch (Exception $exception) {
@@ -97,6 +98,42 @@ class DrawenAreaController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/dr_publ/{drawnArea}", name="drawen.draw_publ", methods={"GET"}, options={"expose"=true})
+     */
+    public function publ(DrawnArea $drawnArea, EntityManagerInterface $em, WorkflowInterface $drawnAreaFlowStateMachine): Response
+    {
+        try {
+                $this->addFlash(
+                    'success',
+                    ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
+                );
+                $drawnAreaFlowStateMachine->apply($drawnArea, 'to_archive');
+                $drawnArea->setPublishedAt(new DateTimeImmutable('now'));
+                $em->persist($drawnArea);
+                $em->flush();
+                return new JsonResponse(['success' => true]);
+        } catch (Exception $exception) {
+            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    /**
+     * @Route("/dr_drop/{drawnArea}", name="drawen.draw_drop", methods={"GET"}, options={"expose"=true})
+     */
+    public function drop(DrawnArea $drawnArea, EntityManagerInterface $em): Response
+    {
+        try {
+            $this->addFlash(
+                'success',
+                ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
+            );
+            $em->remove($drawnArea);
+            $em->flush();
+            return new JsonResponse(['success' => true]);
+        } catch (Exception $exception) {
+            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
     /**
      * @Route("/drawen_geoms", name="drawen.all_geoms")
      */

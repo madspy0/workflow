@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\DrawnAreaRepository;
 use Doctrine\ORM\Mapping as ORM;
-use DateTime;
+use DateTimeImmutable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -65,24 +65,24 @@ class DrawnArea
      */
     private $createdAt;
     /**
-     * @return DateTime
+     * @return DateTimeImmutable
      */
-    public function getUpdatedAt(): ?DateTime
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
     /**
-     * @param DateTime $updatedAt
+     * @param DateTimeImmutable $updatedAt
      */
-    public function setUpdatedAt(DateTime $updatedAt): void
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
     /**
      * @var DateTime $updated
      *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @ORM\Column(name="updated_at", type="datetime_immutable", nullable=true)
      */
     private $updatedAt;
     /**
@@ -247,12 +247,12 @@ class DrawnArea
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -337,7 +337,7 @@ class DrawnArea
      */
     public function updatedTimestamps(): void
     {
-        $dateTimeNow = new \DateTimeImmutable('now');
+        $dateTimeNow = new DateTimeImmutable('now');
         $this->setUpdatedAt($dateTimeNow);
         if ($this->getCreatedAt() === null) {
             $this->setCreatedAt($dateTimeNow);

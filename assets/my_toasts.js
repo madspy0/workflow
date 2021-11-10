@@ -133,6 +133,34 @@ export function my_toast(content, selected = null, map = null, action = null) {
     document.getElementById('toast-close').addEventListener('click', () => {
         sourceClear(true);
     })
+    document.getElementById('dr_publ').addEventListener('click', (e) => {
+        let Request = new XMLHttpRequest();
+        Request.open('get', '/dr_publ/' + e.target.value);
+        Request.send();
+        Request.onreadystatechange = function () {
+            document.body.style.cursor = "progress";
+            if (Request.readyState == 3) {
+                // загрузка
+            }
+            if (Request.readyState == 4) {
+                // запрос завершён
+            }
+        }
+    })
+    document.getElementById('dr_drop').addEventListener('click', (e) => {
+        let Request = new XMLHttpRequest();
+        Request.open('get', '/dr_drop/' + e.target.value);
+        Request.send();
+        Request.onreadystatechange = function () {
+            document.body.style.cursor = "progress";
+            if (Request.readyState == 3) {
+                // загрузка
+            }
+            if (Request.readyState == 4) {
+                // запрос завершён
+            }
+        }
+    })
     document.getElementById('drawn_area_useCategory').addEventListener('change', event => {
         let Request = new XMLHttpRequest();
         Request.open('get', '/sub?category=' + document.getElementById(event.target.id).value);
