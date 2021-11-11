@@ -62,6 +62,8 @@ class DrawButtonsControl extends Control {
     }
 
     handleArea(evt) {
+        let toast = document.getElementById('draw_toast');
+        if((toast !== null) && toast.classList.contains('show')) {  return; }
         evt.preventDefault();
         this.toggleButtons(evt.currentTarget);
         let map = this.getMap();
@@ -71,6 +73,8 @@ class DrawButtonsControl extends Control {
     }
 
     handleInfo(evt) {
+        let toast = document.getElementById('draw_toast');
+        if((toast !== null) && toast.classList.contains('show')) {  return; }
         evt.preventDefault();
         this.toggleButtons(evt.currentTarget);
         let map = this.getMap();
@@ -80,6 +84,8 @@ class DrawButtonsControl extends Control {
     }
 
     handleDraw(evt) {
+        let toast = document.getElementById('draw_toast');
+        if((toast !== null) && toast.classList.contains('show')) {  return; }
         evt.preventDefault();
         this.toggleButtons(evt.currentTarget);
         let map = this.getMap();

@@ -108,7 +108,7 @@ class DrawenAreaController extends AbstractController
                     'success',
                     ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
                 );
-                $drawnAreaFlowStateMachine->apply($drawnArea, 'to_archive');
+                $drawnAreaFlowStateMachine->apply($drawnArea, 'to_publish');
                 $drawnArea->setPublishedAt(new DateTimeImmutable('now'));
                 $em->persist($drawnArea);
                 $em->flush();
