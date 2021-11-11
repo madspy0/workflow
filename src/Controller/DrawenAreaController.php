@@ -8,6 +8,7 @@ use App\Repository\DrawnAreaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,6 +55,7 @@ class DrawenAreaController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $drawnAreaFlowStateMachine->getMarking($drawnArea);
+                $drawnArea->setAuthor($this->getUser());
                 $em->persist($drawnArea);
                 $em->flush();
                 return new JsonResponse(['success' => true]);
@@ -74,6 +76,9 @@ class DrawenAreaController extends AbstractController
     public function upd(Request $request, EntityManagerInterface $em, DrawnArea $drawnArea): Response
     {
         try {
+            if($drawnArea->getAuthor() !== $this->getUser()) {
+                throw new AccessDeniedException('Немає доступу до об\'єкту');
+            }
             $form = $this->createForm(DrawnAreaType::class, $drawnArea,[
                 'entity_manager' => $this->getDoctrine()->getManager(),
                 'action'=>$this->generateUrl('drawen.draw_upd',['id'=>$drawnArea->getId()])
@@ -104,6 +109,9 @@ class DrawenAreaController extends AbstractController
     public function publ(DrawnArea $drawnArea, EntityManagerInterface $em, WorkflowInterface $drawnAreaFlowStateMachine): Response
     {
         try {
+            if($drawnArea->getAuthor() !== $this->getUser()) {
+                throw new AccessDeniedException('Немає доступу до об\'єкту');
+            }
                 $this->addFlash(
                     'success',
                     ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
@@ -123,6 +131,9 @@ class DrawenAreaController extends AbstractController
     public function drop(DrawnArea $drawnArea, EntityManagerInterface $em): Response
     {
         try {
+            if($drawnArea->getAuthor() !== $this->getUser()) {
+                throw new AccessDeniedException('Немає доступу до об\'єкту');
+            }
             $this->addFlash(
                 'success',
                 ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]

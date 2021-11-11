@@ -178,6 +178,11 @@ class DrawnArea
      * @ORM\Column(type="string", length=128)
      */
     private $documentsType;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $author;
     /**
      * @return mixed
      */
@@ -364,6 +369,18 @@ class DrawnArea
     public function setUseCategory(?UsePlantCategory $useCategory): self
     {
         $this->useCategory = $useCategory;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

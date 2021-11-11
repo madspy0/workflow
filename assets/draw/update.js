@@ -2,6 +2,7 @@ import {Modal} from "bootstrap";
 import {sourceClear} from "./draw_map";
 import {my_modal} from "../my_modals";
 import {my_toast} from "../my_toasts";
+import swal from "sweetalert";
 
 export function update_draw(selected, map=null) {
     let id = selected.get('number');
@@ -26,12 +27,13 @@ export function update_draw(selected, map=null) {
         бывает 4 состояния 4-е состояние запроса - операция полностью завершена, пришел ответ от сервера,
         вот то что нам нужно request.status это статус ответа,
         нам нужен код 200 это нормальный ответ сервера, 401 файл не найден, 500 сервер дал ошибку и прочее...   */
-        if (request.readyState === 4 && request.status === 200) {
-                if(request.responseURL.includes('/login')) {
-                    window.location.href=request.responseURL;
-                }
+        if (request.readyState === 4) {
+            if(request.status === 200) {
                 let obj = JSON.parse(request.responseText);
                 my_toast(obj.content, selected, map)
+            } else {
+                swal("Операцію з об'єктом заблоковано");
+            }
         }
     });
 

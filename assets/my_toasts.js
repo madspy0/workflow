@@ -7,6 +7,7 @@ import {Fill, Stroke, Style} from "ol/style";
 import {WKT} from "ol/format";
 import swal from "sweetalert";
 import {getCenter} from 'ol/extent';
+import {getArea} from 'ol/sphere';
 
 export function my_toast(content, selected = null, map = null, action = null) {
     let clear = document.getElementById('draw_toast');
@@ -46,14 +47,14 @@ export function my_toast(content, selected = null, map = null, action = null) {
             e.preventDefault();
             let xhr = new XMLHttpRequest();
             let formData = new FormData(form);
-            formData.append('drawn_area[area]', document.getElementById('drawn_area_area').value);
+            formData.set('drawn_area[area]', getArea(selected.getGeometry()));
             xhr.open("POST", form.action, true);
             //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function () {
                 if (this.readyState != 4) return;
                 if (xhr.status === 200) {
-                    sourceClear(true);
-                    let myToast = Toast.getInstance(document.getElementById('draw_toast'));
+ //                   sourceClear(true);
+ //                   let myToast = Toast.getInstance(document.getElementById('draw_toast'));
                     myToast.hide();
                     form.reset();
                 } else {

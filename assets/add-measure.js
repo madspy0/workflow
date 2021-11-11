@@ -3,7 +3,6 @@ import {Vector as VectorLayer} from 'ol/layer';
 import Overlay from 'ol/Overlay';
 import {Draw} from 'ol/interaction';
 import {Fill, Stroke, Style, Circle} from 'ol/style';
-import {getArea} from 'ol/sphere';
 import {unByKey} from 'ol/Observable';
 import {sourceClear, formatArea} from "./draw/draw_map";
 /**

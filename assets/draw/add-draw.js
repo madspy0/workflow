@@ -10,7 +10,6 @@ import Litepicker from 'litepicker';
 import {my_toast} from "../my_toasts";
 import {defaultStyle} from "./draw_map";
 import {unByKey} from "ol/Observable";
-
 let map;
 
 function addDrawLayer() {

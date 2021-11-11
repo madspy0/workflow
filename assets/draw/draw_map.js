@@ -25,6 +25,7 @@ import {Feature} from "ol";
 import {WKT} from "ol/format";
 import {getArea} from "ol/sphere";
 import * as olControl from 'ol/control';
+import {listener} from "../listener";
 
 // import {Modal} from "bootstrap";
 //
@@ -102,7 +103,7 @@ const source = new VectorSource({
                 geoms.forEach(function (item, index) {
                     let feature = new Feature({
                         geometry: new WKT().readGeometry(item.geom),
-                        appl: '<div>' + item.lastname + ' ' + item.firstname  + '</div>',
+                        appl: '<div>' + item.lastname + ' ' + item.firstname + '</div>',
                         number: item.id,
                         status: item.status,
                     });
@@ -136,6 +137,25 @@ const plants = new VectorLayer({
     //     }),
     // }),
 });
+const allPlants = new TileLayer({
+    name: 'allPlants',
+    title: 'Всi дiлянкi',
+    visible: false,
+    source: new TileWMSSource({
+        url: 'http://192.168.33.17:8080/geoserver/dd/wms',
+        params: {
+            'LAYERS': 'ddraw_parcel_all',
+            'VERSION': '1.1.1',
+            'TILED': 'true',
+            'FORMAT': 'image/png',
+            'WIDTH': 683,
+            'HEIGHT': 768,
+            'CRS': 'EPSG:900913',
+            serverType: 'geoserver',
+        }
+    })
+});
+
 
 const vector = new VectorLayer({
     source: new VectorSource(),
@@ -170,7 +190,7 @@ let cadastreSource = new TileWMSSource({
 let cadastre = new TileLayer({
     source: cadastreSource,
     visible: 0,
-    title: 'Кадатр',
+    title: 'Кадастровий поділ',
     transitionEffect: 'resize'
 });
 
@@ -190,7 +210,7 @@ let restriction = new TileLayer({
         }
     }),
     visible: 0,
-    title: 'Обмеження'
+    title: 'Обмеження у використаннi земель'
 })
 
 let atu = new TileLayer({
@@ -228,11 +248,11 @@ let pzf = new TileLayer({
         }
     }),
     visible: 0,
-    title: 'ПЗФ'
+    title: 'Природно-заповiдний фонд'
 })
 
 const osm = new TileLayer({
-    title: 'OSM',
+    title: 'Openstreetmap',
     type: 'base',
     visible: true,
     source: new OSM()
@@ -259,7 +279,7 @@ let clearLayer = new VectorLayer({
 let oglydova = new TileLayer({
     'opacity': 1.000000,
     source: new XYZ({
-        url: 'https://m1.land.gov.ua/map/dzk_overview/{z}/{x}/{-y}.png' //'http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
+        url: 'https://m1.land.gov.ua/map/topo_map/{z}/{x}/{y}.png' //'http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
     }),
     visible: false,
     title: 'Оглядова карта',
@@ -269,17 +289,18 @@ let oglydova = new TileLayer({
 const baseMaps = new LayerGroup({
     title: 'Base maps',
     layers: [
-        clearLayer,
-        oglydova,
-        ortoPhoto,
-        osm,
+        plants,
+        allPlants,
+        vector,
         pzf,
         atu,
         restriction,
         cadastre,
-        plants,
-        vector,
-            ]
+        clearLayer,
+        osm,
+        ortoPhoto,
+        oglydova,
+    ]
 });
 
 const map = new Map({
@@ -309,6 +330,8 @@ map.addControl(new DrawButtonsControl());
 //document.getElementsByClassName('edit-buttons')[0].append(layerSwitcher);
 map.addControl(layerSwitcher);
 
+listener();
+
 let elem_coords = document.getElementById('coord');
 let cc = elem_coords.dataset.cc.split(',');
 if (cc.length === 2) {
@@ -319,12 +342,12 @@ if (cc.length === 2) {
     edit_buttons[0].dispatchEvent(new Event("click"));
 }
 
-export function sourceClear(with_plants=false) {
+export function sourceClear(with_plants = false) {
     map.getLayers().forEach(function (el) {
         if ((el.get('name') === 'drawn') || (el.get('name') === 'measure_layer')) {
             el.getSource().clear();
         }
-        if((el.get('name')==='plants') && with_plants) {
+        if ((el.get('name') === 'plants') && with_plants) {
             el.getSource().refresh();
         }
     })

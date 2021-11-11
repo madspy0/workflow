@@ -33,7 +33,7 @@ class DrawnAreaType extends AbstractType
             ->add('middlename', null, ['label' => false, 'attr' => ['placeholder' => 'По-батькові']])
             //          ->add('createdAt')
             ->add('documentsType', null, ['label' => 'Назва документа'])
-            ->add('address',null,['label'=>'Орієнтовне місце розташування (адреса)'])
+            ->add('address', null, ['label' => 'Орієнтовне місце розташування (адреса)'])
 //            ->add('use', ChoiceType::class, ['label'=>'Вид використання',
 //                'choices' => [
 //                    'First choice' => 'вибір',
@@ -45,7 +45,7 @@ class DrawnAreaType extends AbstractType
                 'choice_label' => 'title',
                 'placeholder' => 'Оберіть категорію',
             ])
-            ->add('numberSolution', null, ['label'=>'Номер документа'])
+            ->add('numberSolution', null, ['label' => 'Номер документа'])
             ->add('solutedAt', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Дата документа',
@@ -92,6 +92,7 @@ class DrawnAreaType extends AbstractType
     {
         $form = $event->getForm();
         $data = $event->getData();
+        $data->setArea($this->formatArea($data->getArea()));
         $this->addElements($form, $data->getUseCategory());
     }
 
@@ -107,5 +108,16 @@ class DrawnAreaType extends AbstractType
             'choice_label' => 'title',
             'label' => '_'
         ));
+    }
+
+    protected function formatArea($area)
+    {
+        $pf = mb_convert_encoding('&#x00B2;', 'UTF-8', 'HTML-ENTITIES');
+        if ($area > 10000) {
+            $output = round(($area / 1000000) * 100) / 100 . ' км ' . $pf;
+        } else {
+            $output = round($area * 100) / 100 . ' м ' . $pf;
+        }
+        return $output;
     }
 }
