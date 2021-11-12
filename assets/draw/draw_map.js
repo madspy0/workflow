@@ -357,17 +357,25 @@ if (cc.length === 2) {
     edit_buttons[0].dispatchEvent(new Event("click"));
 }
 
+let checkLayer = function(layer) {
+    console.log(layer.get('name'));
+}
 export function sourceClear(with_plants = false) {
+    // console.log(map.getLayers().getArray())
     map.getLayers().forEach(function (el) {
         if (el instanceof LayerGroup) {
-            el.getLayers().forEach(function (groupLayer) {
-                if ((groupLayer.get('name') === 'drawn') || (groupLayer.get('name') === 'measure_layer')) {
-                    groupLayer.getSource().clear();
-                }
-                if ((groupLayer.get('name') === 'plants') && with_plants) {
-                    groupLayer.getSource().refresh();
-                }
-            })
+            el.getLayers().forEach(checkLayer);
+            // (function (groupLayer) {
+            //     console.log(groupLayer.get('name'))
+            //     if (groupLayer.get('name') === 'measure_layer') {
+            //         groupLayer.getSource().clear();
+            //     }
+            //     if ((groupLayer.get('name') === 'plants') && with_plants) {
+            //         groupLayer.getSource().refresh();
+            //     }
+            // })
+        } else {
+            checkLayer(el)
         }
     })
 }

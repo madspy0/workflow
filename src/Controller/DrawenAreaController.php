@@ -46,6 +46,7 @@ class DrawenAreaController extends AbstractController
      */
     public function add(Request $request, WorkflowInterface $drawnAreaFlowStateMachine, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         try {
             $drawnArea = new DrawnArea();
             $form = $this->createForm(DrawnAreaType::class, $drawnArea,[
@@ -152,7 +153,7 @@ class DrawenAreaController extends AbstractController
     function allGeoms(DrawnAreaRepository $repository, SerializerInterface $serializer): Response
     {
         try {
-            $geoms = $serializer->serialize($repository->findAll(), 'json', ['groups' => 'geoms']);
+            $geoms = $serializer->serialize($repository->findBy(['author'=>$this->getUser()]), 'json', ['groups' => 'geoms']);
             return new Response($geoms);//$this->json($geoms, Response::HTTP_OK);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);

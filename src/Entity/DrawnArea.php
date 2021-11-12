@@ -6,6 +6,7 @@ use App\Repository\DrawnAreaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\User as PortalUser;
 
 /**
  * @ORM\Entity(repositoryClass=DrawnAreaRepository::class)
@@ -378,7 +379,7 @@ class DrawnArea
         return $this->author;
     }
 
-    public function setAuthor(?User $author): self
+    public function setAuthor(?PortalUser $author): self
     {
         $this->author = $author;
 

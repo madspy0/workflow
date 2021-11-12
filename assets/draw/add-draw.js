@@ -10,13 +10,19 @@ import Litepicker from 'litepicker';
 import {my_toast} from "../my_toasts";
 import {defaultStyle} from "./draw_map";
 import {unByKey} from "ol/Observable";
+import LayerGroup from "ol/layer/Group";
 let map;
 
 function addDrawLayer() {
     let source;
     map.getLayers().forEach(function (el) {
-        if (el.get('name') === 'drawn') {
-            source = el.getSource();
+        if (el instanceof LayerGroup) {
+            el.getLayers().forEach(function (groupLayer) {
+            if (groupLayer.get('name') === 'drawn') {
+                source = el.getSource();
+                console.log('already')
+            }
+        })
         }
     })
     if (!source) {
