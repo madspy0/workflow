@@ -1,7 +1,7 @@
 import Litepicker from "litepicker";
 import {Toast} from "bootstrap";
 import {defaultStyle, formatArea, sourceClear} from "./draw/draw_map";
-import {Modify, Select} from "ol/interaction";
+import {Draw, Modify, Select} from "ol/interaction";
 import {clickInfo} from "./click-info";
 import {Fill, Stroke, Style} from "ol/style";
 import {WKT} from "ol/format";
@@ -70,7 +70,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
 
     mod.addEventListener('hidden.bs.toast', function () {
         map.getInteractions().forEach((interaction) => {
-            if ((interaction instanceof Select) || (interaction instanceof Modify)) {
+            if ((interaction instanceof Select) || (interaction instanceof Modify) || (interaction instanceof Draw)) {
                 interaction.setActive(false);
             }
         });

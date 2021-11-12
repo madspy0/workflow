@@ -9,7 +9,6 @@ export function listener() {
             if(pointer.readyState != 4){
                 return;
             }
-            console.log( pointer.responseText );
             if(pointer.responseURL.includes('/login')) {
                 window.location.href=pointer.responseURL;
             }

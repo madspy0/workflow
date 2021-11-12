@@ -13,10 +13,11 @@ import View from 'ol/View';
 import {Fill, Stroke, Style} from 'ol/style';
 
 import {OSM, Vector as VectorSource, TileWMS as TileWMSSource, XYZ} from 'ol/source';
-import {Group, Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
+import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {fromLonLat} from "ol/proj";
 
 import LayerSwitcher from 'ol-layerswitcher';
+
 import DrawButtonsControl from './draw_buttons_control';
 
 import '../portal/app';
@@ -288,42 +289,37 @@ let oglydova = new TileLayer({
 });
 
 const baseMaps = new LayerGroup({
-    title: 'Base maps',
+    title: 'Базові шари',
+    fold: 'open',
     layers: [
-        new Group({
-            title: 'Базові шари',
-            fold: 'open',
-            layers: [
-                oglydova,
-                ortoPhoto,
-                osm,
-                clearLayer,
-            ]
-        }),
-        new Group({
-            title: 'Шари кадастру',
-            fold: 'open',
-            layers: [
-                cadastre,
-                restriction,
-                atu,
-                pzf,
-                vector,
-                allPlants,
-            ]
-        }),
-        new Group({
-            title: 'Мої ділянки',
-            fold: 'open',
-            layers: [
-                plants,
-            ]
-        }),
+        oglydova,
+        ortoPhoto,
+        osm,
+        clearLayer,
+    ]
+});
+const cadastreMaps = new LayerGroup({
+    title: 'Шари кадастру',
+    fold: 'open',
+    layers: [
+        cadastre,
+        restriction,
+        atu,
+        pzf,
+        vector,
+        allPlants,
+    ]
+});
+const myMaps = new LayerGroup({
+    title: 'Мої ділянки',
+    fold: 'open',
+    layers: [
+        plants,
     ]
 });
 
 const map = new Map({
-    layers: baseMaps,
+    layers: [baseMaps, cadastreMaps, myMaps],
     target: 'full-map',
     view: new View({
         center: fromLonLat([31.182233, 48.382778]),
@@ -363,11 +359,15 @@ if (cc.length === 2) {
 
 export function sourceClear(with_plants = false) {
     map.getLayers().forEach(function (el) {
-        if ((el.get('name') === 'drawn') || (el.get('name') === 'measure_layer')) {
-            el.getSource().clear();
-        }
-        if ((el.get('name') === 'plants') && with_plants) {
-            el.getSource().refresh();
+        if (el instanceof LayerGroup) {
+            el.getLayers().forEach(function (groupLayer) {
+                if ((groupLayer.get('name') === 'drawn') || (groupLayer.get('name') === 'measure_layer')) {
+                    groupLayer.getSource().clear();
+                }
+                if ((groupLayer.get('name') === 'plants') && with_plants) {
+                    groupLayer.getSource().refresh();
+                }
+            })
         }
     })
 }
