@@ -13,7 +13,7 @@ import View from 'ol/View';
 import {Fill, Stroke, Style} from 'ol/style';
 
 import {OSM, Vector as VectorSource, TileWMS as TileWMSSource, XYZ} from 'ol/source';
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
+import {Group, Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {fromLonLat} from "ol/proj";
 
 import LayerSwitcher from 'ol-layerswitcher';
@@ -139,7 +139,7 @@ const plants = new VectorLayer({
 });
 const allPlants = new TileLayer({
     name: 'allPlants',
-    title: 'Всi дiлянкi',
+    title: 'Дiлянкi с дозволом на розробку ТД',
     visible: false,
     source: new TileWMSSource({
         url: 'http://192.168.33.17:8080/geoserver/dd/wms',
@@ -283,23 +283,42 @@ let oglydova = new TileLayer({
     }),
     visible: false,
     title: 'Оглядова карта',
-    type: 'base'
+    type: 'base',
+    maxZoom: 16
 });
 
 const baseMaps = new LayerGroup({
     title: 'Base maps',
     layers: [
-        plants,
-        allPlants,
-        vector,
-        pzf,
-        atu,
-        restriction,
-        cadastre,
-        clearLayer,
-        osm,
-        ortoPhoto,
-        oglydova,
+        new Group({
+            title: 'Базові шари',
+            fold: 'open',
+            layers: [
+                oglydova,
+                ortoPhoto,
+                osm,
+                clearLayer,
+            ]
+        }),
+        new Group({
+            title: 'Шари кадастру',
+            fold: 'open',
+            layers: [
+                cadastre,
+                restriction,
+                atu,
+                pzf,
+                vector,
+                allPlants,
+            ]
+        }),
+        new Group({
+            title: 'Мої ділянки',
+            fold: 'open',
+            layers: [
+                plants,
+            ]
+        }),
     ]
 });
 
@@ -320,7 +339,7 @@ const map = new Map({
 });
 
 const layerSwitcher = new LayerSwitcher({
-    reverse: true,
+    reverse: false,
     groupSelectStyle: 'group',
     target: document.getElementsByClassName('edit-buttons')[0],
 
