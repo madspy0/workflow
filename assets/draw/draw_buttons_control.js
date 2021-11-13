@@ -2,6 +2,7 @@ import {Control} from 'ol/control';
 import {toggleMeasure} from "../add-measure";
 import {clickInfo} from "../click-info";
 import {toggleDraw} from "./add-draw";
+import {sourceClear} from "./draw_map";
 
 class DrawButtonsControl extends Control {
     constructor(opt_options) {
@@ -47,51 +48,57 @@ class DrawButtonsControl extends Control {
 
         infoButton.addEventListener('click', this.handleInfo.bind(this), false);
         areaButton.addEventListener('click', this.handleArea.bind(this), false);
-        drawButton.addEventListener('click',this.handleDraw.bind(this), false);
+        drawButton.addEventListener('click', this.handleDraw.bind(this), false);
 
 
     }
 
     toggleButtons(elem) {
         let buttons = document.getElementsByClassName("btn-edit");
-        for(let b of buttons) {
-            if(elem !== b) {
+        for (let b of buttons) {
+            if (elem !== b) {
                 b.classList.remove("active");
             }
         }
     }
 
     handleArea(evt) {
-        let toast = document.getElementById('draw_toast');
-        if((toast !== null) && toast.classList.contains('show')) {  return; }
         evt.preventDefault();
+        let toast = document.getElementById('draw_toast');
+        if ((toast !== null) && toast.classList.contains('show')) {
+            return;
+        }
         this.toggleButtons(evt.currentTarget);
-        let map = this.getMap();
-        toggleDraw(map, false);
-        clickInfo(map, false);
-        toggleMeasure(map, evt.currentTarget.classList.contains('active'));
+        sourceClear();
+        if (evt.currentTarget.classList.contains('active')) {
+            toggleMeasure(this.getMap());
+        }
     }
 
     handleInfo(evt) {
-        let toast = document.getElementById('draw_toast');
-        if((toast !== null) && toast.classList.contains('show')) {  return; }
         evt.preventDefault();
+        let toast = document.getElementById('draw_toast');
+        if ((toast !== null) && toast.classList.contains('show')) {
+            return;
+        }
         this.toggleButtons(evt.currentTarget);
-        let map = this.getMap();
-        toggleDraw(map, false);
-        toggleMeasure(map, false);
-        clickInfo(map, evt.currentTarget.classList.contains('active'));
+        sourceClear();
+        if (evt.currentTarget.classList.contains('active')) {
+            clickInfo(this.getMap());
+        }
     }
 
     handleDraw(evt) {
-        let toast = document.getElementById('draw_toast');
-        if((toast !== null) && toast.classList.contains('show')) {  return; }
         evt.preventDefault();
+        let toast = document.getElementById('draw_toast');
+        if ((toast !== null) && toast.classList.contains('show')) {
+            return;
+        }
         this.toggleButtons(evt.currentTarget);
-        let map = this.getMap();
-        toggleMeasure(map, false);
-        clickInfo(map, false);
-        toggleDraw(map, evt.currentTarget.classList.contains('active'));
+        sourceClear();
+        if (evt.currentTarget.classList.contains('active')) {
+            toggleDraw(this.getMap());
+        }
     }
 
 }

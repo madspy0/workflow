@@ -27,6 +27,7 @@ import {WKT} from "ol/format";
 import {getArea} from "ol/sphere";
 import * as olControl from 'ol/control';
 import {listener} from "../listener";
+import {Draw, Modify, Select} from "ol/interaction";
 
 // import {Modal} from "bootstrap";
 //
@@ -158,7 +159,7 @@ const allPlants = new TileLayer({
 });
 
 
-const vector = new VectorLayer({
+const measureLayer = new VectorLayer({
     source: new VectorSource(),
     name: 'measure_layer',
     style: new Style({
@@ -306,7 +307,6 @@ const cadastreMaps = new LayerGroup({
         restriction,
         atu,
         pzf,
-        vector,
         allPlants,
     ]
 });
@@ -319,7 +319,12 @@ const myMaps = new LayerGroup({
 });
 
 const map = new Map({
-    layers: [baseMaps, cadastreMaps, myMaps],
+    layers: [
+        baseMaps,
+        cadastreMaps,
+        myMaps,
+        measureLayer
+    ],
     target: 'full-map',
     view: new View({
         center: fromLonLat([31.182233, 48.382778]),
@@ -357,25 +362,36 @@ if (cc.length === 2) {
     edit_buttons[0].dispatchEvent(new Event("click"));
 }
 
-let checkLayer = function(layer) {
-    console.log(layer.get('name'));
+let clearVectorLayer = (layer, plants) => {
+    if (layer instanceof VectorLayer) {
+        if (layer.getSource()) {
+            if(layer.get('name')==='plants') {
+                if(plants) {layer.getSource().refresh();}
+            } else {
+                layer.getSource().refresh();
+            }
+        }
+    }
 }
-export function sourceClear(with_plants = false) {
-    // console.log(map.getLayers().getArray())
+
+let rmInteractionsOverlays = () => {
+    map.getOverlays().getArray().slice(0).forEach(function (overlay) {
+        map.removeOverlay(overlay);
+    });
+    map.getInteractions().forEach(function(interaction) {
+        if ((interaction instanceof Draw) || (interaction instanceof Select) || (interaction instanceof Modify)) {
+            interaction.setActive(false);
+        }
+    }, this);
+}
+
+export function sourceClear(plants=false) {
+    rmInteractionsOverlays();
     map.getLayers().forEach(function (el) {
         if (el instanceof LayerGroup) {
-            el.getLayers().forEach(checkLayer);
-            // (function (groupLayer) {
-            //     console.log(groupLayer.get('name'))
-            //     if (groupLayer.get('name') === 'measure_layer') {
-            //         groupLayer.getSource().clear();
-            //     }
-            //     if ((groupLayer.get('name') === 'plants') && with_plants) {
-            //         groupLayer.getSource().refresh();
-            //     }
-            // })
+            el.getLayers().forEach(function(i) {clearVectorLayer(i, plants)});
         } else {
-            checkLayer(el)
+            clearVectorLayer(el, plants)
         }
     })
 }

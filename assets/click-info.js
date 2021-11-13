@@ -1,9 +1,12 @@
 import Overlay from 'ol/Overlay';
+import {Select} from "ol/interaction";
 import {redirect} from "./redirect";
 import {update_draw} from "./draw/update";
+
 let map;
 let infoTooltip;
 let infoTooltipElement;
+import {click, pointerMove} from 'ol/events/condition';
 
 /**
  * Creates a new info tooltip
@@ -27,52 +30,68 @@ function createInfoTooltip() {
     map.addOverlay(infoTooltip);
 }
 
-let tooltip_on_move = (e) => {
-    let selected = null;
-    map.forEachFeatureAtPixel(e.pixel, function (f) {
-        selected = f;
-        return true;
-    });
-    if (selected != null) {
-        document.body.style.cursor = 'pointer';
-        let name = selected.get('appl');
-        let geom = selected.get('geometry');
-        let tooltipCoord = geom.getInteriorPoint().getCoordinates();
-        let status = selected.get('status');
-        infoTooltipElement.innerHTML = name + " " + status;
-        infoTooltip.setPosition(tooltipCoord);
-    } else {
-        document.body.style.cursor = 'default';
-        createInfoTooltip();
-    }
-}
-
-let reload_url = (e) => {
-    let toast = document.getElementById('draw_toast');
-    if((toast !== null) && toast.classList.contains('show')) { return; }
-    let selected = null;
-    map.forEachFeatureAtPixel(e.pixel, function (f) {
-        selected = f;
-        return true;
-    });
-    if (selected != null) {
-        if (typeof selected.get('nom') !== 'undefined') {
-            redirect('/appl/' + selected.get('nom') + '?cc=' + map.getView().getCenter().join() + '&z=' + map.getView().getZoom());
-        } else if (typeof selected.get('number') !== 'undefined'){
-            update_draw(selected, map);
-        }
-
-    }
-}
-
-export function clickInfo(smap, status) {
+export function clickInfo(smap) {
     map = smap;
     createInfoTooltip();
-    if (status) {
-        map.on('pointermove', tooltip_on_move);
-        map.on('click', reload_url);
-    } else {
-        map.un('pointermove', tooltip_on_move);
-        map.un('click', reload_url);
-    }
+    const selectClick = new Select({
+        condition: click,
+        // filter: function (feature, layer) {
+        //     if (layer.get('name') === 'plants') {
+        //         return true;
+        //     }
+        // }
+    });
+
+    const selectMove = new Select({
+        condition: pointerMove,
+        // filter: function (feature, layer) {
+        //     if (layer.get('name') && (layer.get('name') === 'plants')) {
+        //         return true;
+        //     }
+        //},
+    });
+
+    map.getInteractions().extend([selectClick, selectMove]);
+
+    selectClick.on('select', function (e) {
+        let toast = document.getElementById('draw_toast');
+        if ((toast !== null) && toast.classList.contains('show')) {
+            return;
+        }
+
+        let selected = selectClick.getFeatures().getArray()[0];
+        if (selected != null) {
+            if (typeof selected.get('nom') !== 'undefined') {
+                redirect('/appl/' + selected.get('nom') + '?cc=' + map.getView().getCenter().join() + '&z=' + map.getView().getZoom());
+            } else if (typeof selected.get('number') !== 'undefined') {
+                update_draw(selected, map);
+            }
+        }
+    });
+    selectMove.on('select', function (e) {
+        let toast = document.getElementById('draw_toast');
+        if (!((toast !== null) && toast.classList.contains('show'))) {
+
+            let selected = selectMove.getFeatures().getArray()[0];
+            if (selected != null) {
+                document.body.style.cursor = 'pointer';
+                let name = selected.get('appl');
+                let geom = selected.get('geometry');
+                if (geom) {
+                    let tooltipCoord = geom.getInteriorPoint().getCoordinates();
+                    let status = selected.get('status');
+                    infoTooltipElement.innerHTML = name + " " + status;
+                    infoTooltip.setPosition(tooltipCoord);
+                } else {
+                    document.body.style.cursor = 'default';
+                    createInfoTooltip();
+                }
+            } else {
+                document.body.style.cursor = 'default';
+                createInfoTooltip();
+            }
+
+        }
+
+    })
 }

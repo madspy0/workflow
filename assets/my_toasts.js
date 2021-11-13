@@ -69,11 +69,6 @@ export function my_toast(content, selected = null, map = null, action = null) {
     //     geom_button.addEventListener('click', function (e) {
 
     mod.addEventListener('hidden.bs.toast', function () {
-        map.getInteractions().forEach((interaction) => {
-            if ((interaction instanceof Select) || (interaction instanceof Modify) || (interaction instanceof Draw)) {
-                interaction.setActive(false);
-            }
-        });
         sourceClear(true);
         // map.getLayers().forEach(layer => {
         //     if (layer.get('name') === 'plants') {
@@ -81,6 +76,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
         //     }
         // });
         let edit_buttons = document.getElementsByClassName('btn-edit');
+        edit_buttons.forEach(function(item) {item.removeAttribute('disabled')})
         if (action) {
             // если добавление
             edit_buttons[1].dispatchEvent(new Event("click"));
@@ -97,13 +93,15 @@ export function my_toast(content, selected = null, map = null, action = null) {
         if (!selected) {
             return;
         }
+        let edit_buttons = document.getElementsByClassName('btn-edit');
+        edit_buttons.forEach(function(item) {item.disabled = true})
         selected.setStyle(defaultStyle);
         let select = new Select({
             //some options
         });
         map.addInteraction(select);
-        let selected_collection = select.getFeatures();
-        selected_collection.push(selected);
+         let selected_collection = select.getFeatures();
+         selected_collection.push(selected);
 
 //         let selected_center = getCenter(selected.getGeometry().getExtent());
 //         let resolution = map.getView().getResolution();
@@ -113,9 +111,10 @@ export function my_toast(content, selected = null, map = null, action = null) {
         map.removeInteraction(select);
         const modify = new Modify({
             features: selected_collection,
+        //   source: selected_interaction
         });
         map.addInteraction(modify);
-        clickInfo(map, false);
+        clickInfo(map);
         modify.on('modifystart', function (e) {
             let sketch = e.features.getArray()[0];
             let listener = sketch.getGeometry().on('change', function (evt) {
@@ -127,19 +126,14 @@ export function my_toast(content, selected = null, map = null, action = null) {
         modify.on("modifyend", function (e) {
             document.getElementById('drawn_area_area').value = formatArea(e.features.getArray()[0].getGeometry(), false);
             document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(e.features.getArray()[0].getGeometry());
-            // console.log(e.target)
-            // let toast = document.createElement("div");
-            // toast.className = "position-fixed bottom-0 end-0 p-3";
-            // toast.style = "z-index: 11";
-            // toast.insertAdjacentHTML('beforeend', "<h1>ура</h1>");
-            // document.body.appendChild(toast);
         })
     })
-    document.getElementById('toast-close').addEventListener('click', () => {
-        sourceClear(true);
-    })
+    // document.getElementById('toast-close').addEventListener('click', (e) => {
+    //     e.preventDefault();
+    //     sourceClear();
+    // })
     document.getElementById('dr_publ').addEventListener('click', (e) => {
-
+        e.preventDefault();
         let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'), {delay: 500, animation: true});
         myToast.hide();
         swal({
@@ -174,6 +168,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
             })
     })
     document.getElementById('dr_drop').addEventListener('click', (e) => {
+        e.preventDefault();
         let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'), {delay: 500, animation: true});
         myToast.hide();
         swal({
