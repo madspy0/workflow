@@ -52,7 +52,8 @@ class DrawnAreaType extends AbstractType
                 'input' => 'datetime_immutable',
                 'input_format' => 'dd-MM-yyyy',
                 'format' => 'dd-MM-yyyy',
-                'html5' => false])
+                'html5' => false,
+                'attr'=>['autocomplete'=>'off']])
 //            ->add('publishedAt')
             ->add('area', null, ['label' => 'Площа', 'attr' => ['readonly' => 'true']])
             ->add('link', null, ['label' => 'Посилання на сайт'])

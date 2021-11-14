@@ -124,10 +124,12 @@ const source = new VectorSource({
 //    strategy: bbox
 });
 
-const plants = new VectorLayer({
+export const plants = new VectorLayer({
     source: source,
     name: 'plants',
     title: 'Ділянки',
+    maxZoom: 18,
+    transitionEffect: 'resize',
     visible: true,
     // style: new Style({
     //     fill: new Fill({
@@ -143,6 +145,8 @@ const allPlants = new TileLayer({
     name: 'allPlants',
     title: 'Дiлянкi с дозволом на розробку ТД',
     visible: false,
+    maxZoom: 18,
+    transitionEffect: 'resize',
     source: new TileWMSSource({
         url: 'http://192.168.33.17:8080/geoserver/dd/wms',
         params: {
@@ -193,7 +197,8 @@ let cadastre = new TileLayer({
     source: cadastreSource,
     visible: 0,
     title: 'Кадастровий поділ',
-    transitionEffect: 'resize'
+    maxZoom: 18,
+    transitionEffect: 'resize',
 });
 
 let restriction = new TileLayer({
@@ -212,6 +217,8 @@ let restriction = new TileLayer({
         }
     }),
     visible: 0,
+    maxZoom: 18,
+    transitionEffect: 'resize',
     title: 'Обмеження у використаннi земель'
 })
 
@@ -231,6 +238,8 @@ let atu = new TileLayer({
         }
     }),
     visible: 0,
+    maxZoom: 18,
+    transitionEffect: 'resize',
     title: 'АТУ'
 })
 
@@ -250,6 +259,8 @@ let pzf = new TileLayer({
         }
     }),
     visible: 0,
+    maxZoom: 18,
+    transitionEffect: 'resize',
     title: 'Природно-заповiдний фонд'
 })
 
@@ -268,7 +279,8 @@ let ortoPhoto = new TileLayer({
     visible: false,
     title: 'Ортофотоплани',
     type: 'base',
-    transitionEffect: 'resize'
+    maxZoom: 18,
+    transitionEffect: 'resize',
 });
 
 let clearLayer = new VectorLayer({
@@ -329,9 +341,10 @@ const map = new Map({
     view: new View({
         center: fromLonLat([31.182233, 48.382778]),
         zoom: 5,
+        maxZoom: 18,
     }),
     controls: olControl.defaults({
-        zoom: false
+        zoom: false,
     }).extend([
         new olControl.Zoom({
             className: "draw-zoom"

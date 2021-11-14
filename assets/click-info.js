@@ -6,7 +6,9 @@ import {update_draw} from "./draw/update";
 let map;
 let infoTooltip;
 let infoTooltipElement;
-import {click, pointerMove} from 'ol/events/condition';
+import {click, pointerMove, never} from 'ol/events/condition';
+import {plants} from "./draw/draw_map";
+
 
 /**
  * Creates a new info tooltip
@@ -33,22 +35,29 @@ function createInfoTooltip() {
 export function clickInfo(smap) {
     map = smap;
     createInfoTooltip();
+
     const selectClick = new Select({
-        condition: click,
-        // filter: function (feature, layer) {
-        //     if (layer.get('name') === 'plants') {
-        //         return true;
-        //     }
-        // }
+        toggleCondition: function () {
+            let toast = document.getElementById('draw_toast');
+            return toast && toast.classList.contains('show');
+
+        },
+        layers: [plants],
+        filter: function () {
+            let toast = document.getElementById('draw_toast');
+            return !(toast && toast.classList.contains('show'));
+
+        }
     });
 
     const selectMove = new Select({
         condition: pointerMove,
-        // filter: function (feature, layer) {
-        //     if (layer.get('name') && (layer.get('name') === 'plants')) {
-        //         return true;
-        //     }
-        //},
+        layers: [plants],
+        filter: function () {
+            let toast = document.getElementById('draw_toast');
+            return !(toast && toast.classList.contains('show'));
+
+        }
     });
 
     map.getInteractions().extend([selectClick, selectMove]);
@@ -71,7 +80,6 @@ export function clickInfo(smap) {
     selectMove.on('select', function (e) {
         let toast = document.getElementById('draw_toast');
         if (!((toast !== null) && toast.classList.contains('show'))) {
-
             let selected = selectMove.getFeatures().getArray()[0];
             if (selected != null) {
                 document.body.style.cursor = 'pointer';

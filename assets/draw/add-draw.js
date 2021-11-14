@@ -1,15 +1,10 @@
 import {Vector as VectorSource} from 'ol/source';
 import {Vector as VectorLayer} from 'ol/layer';
-import Overlay from 'ol/Overlay';
 import {Draw} from 'ol/interaction';
 import {Fill, Stroke, Style, Circle} from 'ol/style';
-import {Modal} from "bootstrap";
-import {WKT} from "ol/format";
-import {sourceClear, formatArea} from "./draw_map";
-import Litepicker from 'litepicker';
+import {formatArea} from "./draw_map";
 import {my_toast} from "../my_toasts";
 import {defaultStyle} from "./draw_map";
-import {unByKey} from "ol/Observable";
 import LayerGroup from "ol/layer/Group";
 
 let map;

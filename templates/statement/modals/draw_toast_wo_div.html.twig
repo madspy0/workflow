@@ -79,35 +79,38 @@
     </div>
 
     <div id="toast-buttons">
-        {% if workflow_can(drawnArea, 'to_archive') %}
-            {{ form_widget(form.save,{'attr':{'class':'disabled'}}) }}
+        {% if not workflow_can(drawnArea, 'to_archive') %}
+            {{ form_widget(form.save,{'attr':{'class':'btn-primary'}}) }}
         {% else %}
-        {{ form_widget(form.save) }}
+            {{ form_widget(form.save,{'attr':{'class':'d-none'}}) }}
         {% endif %}
+
         <button type="button"
                 id="dr_drop" value="{{ drawnArea.id }}"
                 class="btn btn-warning
-            {% if ((drawnArea.id is null) or (workflow_can(drawnArea, 'to_archive'))) %}
-            disabled
-            {% endif %}
-        ">Видалити
+                {% if not ((drawnArea.id is null) and (workflow_can(drawnArea, 'to_archive'))) %}
+                d-none
+                {% endif %}
+                ">Видалити
         </button>
+
         <button type="button" class="btn btn-success
-            {% if ((drawnArea.id is null) or (not workflow_can(drawnArea, 'to_publish'))) %}
-            disabled
-            {% endif %}
-            "
-            id="dr_publ" value="{{ drawnArea.id }}"
-            >До ПКК
+                {% if not (drawnArea.id  and workflow_can(drawnArea, 'to_publish')) %}
+                d-none
+                {% endif %}
+            " id="dr_publ" value="{{ drawnArea.id }}"
+        >До ПКК
         </button>
+
+
         <button type="button" class="btn btn-danger
-         {% if not workflow_can(drawnArea, 'to_archive') %}
-         disabled
-        {% endif %}
+                {% if workflow_can(drawnArea, 'to_publish') %}
+                 d-none
+                {% endif %}
         ">В архів
         </button>
 
-        <button type="button" class="btn btn-info" id="toast-close" data-bs-dismiss="toast">Close</button>
+        <button type="button" class="btn btn-info" id="toast-close" data-bs-dismiss="toast">Відмінити</button>
     </div>
     {{ form_row(form.geom) }}
 </div>
