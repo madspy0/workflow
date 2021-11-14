@@ -79,23 +79,23 @@
     </div>
 
     <div id="toast-buttons">
-        {% if not workflow_can(drawnArea, 'to_archive') %}
-            {{ form_widget(form.save,{'attr':{'class':'btn-primary'}}) }}
-        {% else %}
+        {% if workflow_can(drawnArea, 'to_archive') %}
             {{ form_widget(form.save,{'attr':{'class':'d-none'}}) }}
+        {% else %}
+            {{ form_widget(form.save,{'attr':{'class':'btn-primary'}}) }}
         {% endif %}
 
         <button type="button"
                 id="dr_drop" value="{{ drawnArea.id }}"
                 class="btn btn-warning
-                {% if not ((drawnArea.id is null) and (workflow_can(drawnArea, 'to_archive'))) %}
+                {% if ((drawnArea.id is null) or (workflow_can(drawnArea, 'to_archive'))) %}
                 d-none
                 {% endif %}
                 ">Видалити
         </button>
 
         <button type="button" class="btn btn-success
-                {% if not (drawnArea.id  and workflow_can(drawnArea, 'to_publish')) %}
+                {% if (drawnArea.id is null) or workflow_can(drawnArea, 'to_archive') %}
                 d-none
                 {% endif %}
             " id="dr_publ" value="{{ drawnArea.id }}"

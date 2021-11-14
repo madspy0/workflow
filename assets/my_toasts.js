@@ -4,7 +4,7 @@ import {defaultStyle, formatArea, plants, sourceClear} from "./draw/draw_map";
 import {Modify, Select} from "ol/interaction";
 import {clickInfo} from "./click-info";
 import {WKT} from "ol/format";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import {getArea} from 'ol/sphere';
 
 export function my_toast(content, selected = null, map = null, action = null) {
@@ -51,8 +51,8 @@ export function my_toast(content, selected = null, map = null, action = null) {
             xhr.onreadystatechange = function () {
                 if (this.readyState != 4) return;
                 if (xhr.status === 200) {
- //                   sourceClear(true);
- //                   let myToast = Toast.getInstance(document.getElementById('draw_toast'));
+                    //                   sourceClear(true);
+                    //                   let myToast = Toast.getInstance(document.getElementById('draw_toast'));
                     myToast.hide();
                     form.reset();
                 } else {
@@ -74,7 +74,9 @@ export function my_toast(content, selected = null, map = null, action = null) {
         //     }
         // });
         let edit_buttons = document.getElementsByClassName('btn-edit');
-        edit_buttons.forEach(function(item) {item.removeAttribute('disabled')})
+        edit_buttons.forEach(function (item) {
+            item.removeAttribute('disabled')
+        })
         if (action) {
             // если добавление
             edit_buttons[1].dispatchEvent(new Event("click"));
@@ -92,14 +94,16 @@ export function my_toast(content, selected = null, map = null, action = null) {
             return;
         }
         let edit_buttons = document.getElementsByClassName('btn-edit');
-        edit_buttons.forEach(function(item) {item.disabled = true})
+        edit_buttons.forEach(function (item) {
+            item.disabled = true
+        })
         selected.setStyle(defaultStyle);
         let select = new Select({
             //some options
         });
         map.addInteraction(select);
-         let selected_collection = select.getFeatures();
-         selected_collection.push(selected);
+        let selected_collection = select.getFeatures();
+        selected_collection.push(selected);
 
 //         let selected_center = getCenter(selected.getGeometry().getExtent());
 //         let resolution = map.getView().getResolution();
@@ -109,16 +113,14 @@ export function my_toast(content, selected = null, map = null, action = null) {
         map.removeInteraction(select);
         const modify = new Modify({
             features: selected_collection,
-        //   source: plants.getSource()
+            //   source: plants.getSource()
         });
         map.addInteraction(modify);
         clickInfo(map);
         modify.on('modifystart', function (e) {
             let sketch = e.features.getArray()[0];
-            let listener = sketch.getGeometry().on('change', function (evt) {
-                const geom = evt.target;
-                let output;
-                document.getElementById('drawn_area_area').value = formatArea(geom);
+            sketch.getGeometry().on('change', function (evt) {
+                document.getElementById('drawn_area_area').value = formatArea(evt.target);
             });
         })
         modify.on("modifyend", function (e) {
@@ -130,83 +132,84 @@ export function my_toast(content, selected = null, map = null, action = null) {
     //     e.preventDefault();
     //     sourceClear();
     // })
-        document.getElementById('dr_publ').addEventListener('click', (e) => {
-            e.preventDefault();
-            let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'), {
-                delay: 500,
-                animation: true
-            });
-            myToast.hide();
-            swal({
-                title: "Ви впевнені?",
-                text: "Після публікації ви не зможете змінити дані",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-                .then((willPublic) => {
-                    if (willPublic) {
-                        let Request = new XMLHttpRequest();
-                        Request.open('get', '/dr_publ/' + e.target.value);
-                        Request.send();
-                        Request.onreadystatechange = function () {
-                            document.body.style.cursor = "progress";
-                            if (Request.readyState == 3) {
-                                // загрузка
-                            }
-                            if (Request.readyState == 4) {
-                                // запрос завершён
-                                document.body.style.cursor = "default";
-                                sourceClear(true);
-                                swal("Дані опубліковані", {
-                                    icon: "success",
-                                });
-                            }
-                        }
-                    } else {
-                        swal("Стан не змінено");
-                    }
-                })
+    document.getElementById('dr_publ').addEventListener('click', (e) => {
+        e.preventDefault();
+        let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'), {
+            delay: 500,
+            animation: true
+        });
+        myToast.hide();
+        Swal.fire({
+            title: "Ви впевнені?",
+            text: "Після публікації ви не зможете змінити дані",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: 'Опублікувати',
         })
+            .then((willPublic) => {
+                if (willPublic.isConfirmed) {
+                    let Request = new XMLHttpRequest();
+                    Request.open('get', '/dr_publ/' + e.target.value);
+                    Request.send();
+                    Request.onreadystatechange = function () {
+                        document.body.style.cursor = "progress";
+                        if (Request.readyState == 3) {
+                            // загрузка
+                        }
+                        if (Request.readyState == 4) {
+                            // запрос завершён
+                            document.body.style.cursor = "default";
+                            sourceClear(true);
+                            Swal.fire( {
+                                text: "Дані опубліковані",
+                                icon: "success",
+                            });
+                        }
+                    }
+                } else {
+                    Swal.fire("Стан не змінено");
+                }
+            })
+    })
 
-        document.getElementById('dr_drop').addEventListener('click', (e) => {
-            e.preventDefault();
-            let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'), {
-                delay: 500,
-                animation: true
-            });
-            myToast.hide();
-            swal({
-                title: "Ви впевнені?",
-                text: "Після видалення ви не зможете відновити дані на цю ділянку",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        let Request = new XMLHttpRequest();
-                        Request.open('get', '/dr_drop/' + e.target.value);
-                        Request.send();
-                        Request.onreadystatechange = function () {
-                            document.body.style.cursor = "progress";
-                            if (Request.readyState == 3) {
-                                // загрузка
-                            }
-                            if (Request.readyState == 4) {
-                                // запрос завершён
-                                document.body.style.cursor = "default";
-                                sourceClear(true);
-                                swal("Дані видалені", {
-                                    icon: "success",
-                                });
-                            }
-                        }
-                    } else {
-                        swal("Дані не змінені");
-                    }
-                });
+    document.getElementById('dr_drop').addEventListener('click', (e) => {
+        e.preventDefault();
+        let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'), {
+            delay: 500,
+            animation: true
+        });
+        myToast.hide();
+        Swal.fire({
+            title: "Ви впевнені?",
+            text: "Після видалення ви не зможете відновити дані на цю ділянку",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: 'Видалити',
         })
+            .then((willDelete) => {
+                if (willDelete.isConfirmed) {
+                    let Request = new XMLHttpRequest();
+                    Request.open('get', '/dr_drop/' + e.target.value);
+                    Request.send();
+                    Request.onreadystatechange = function () {
+                        document.body.style.cursor = "progress";
+                        if (Request.readyState == 3) {
+                            // загрузка
+                        }
+                        if (Request.readyState == 4) {
+                            // запрос завершён
+                            document.body.style.cursor = "default";
+                            sourceClear(true);
+                            Swal.fire("Дані видалені", {
+                                icon: "success",
+                            });
+                        }
+                    }
+                } else {
+                    Swal.fire("Дані не змінені");
+                }
+            });
+    })
 
     document.getElementById('drawn_area_useCategory').addEventListener('change', event => {
         let Request = new XMLHttpRequest();
