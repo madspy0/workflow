@@ -68,12 +68,14 @@ export function my_toast(content, selected = null, map = null, action = null) {
     //     geom_button.addEventListener('click', function (e) {
 
     let closeButtons = document.getElementsByClassName('mytoast-close');
-    closeButtons.forEach(function(element) {
-        element.addEventListener('click', function(e) {
+    for (let element of closeButtons) {
+        element.addEventListener('click', function (e) {
             e.preventDefault();
             plants.getSource().refresh();
         })
-    })
+    }
+
+
     mod.addEventListener('hidden.bs.toast', function () {
         //sourceClear(true);
         // map.getLayers().forEach(layer => {
@@ -83,9 +85,9 @@ export function my_toast(content, selected = null, map = null, action = null) {
         // });
         // plants.getSource().refresh();
         let edit_buttons = document.getElementsByClassName('btn-edit');
-        edit_buttons.forEach(function (item) {
-            item.removeAttribute('disabled')
-        })
+        for (let element of edit_buttons) {
+            element.removeAttribute('disabled')
+        }
         if (action) {
             // если добавление
             edit_buttons[1].dispatchEvent(new Event("click"));
@@ -103,9 +105,9 @@ export function my_toast(content, selected = null, map = null, action = null) {
             return;
         }
         let edit_buttons = document.getElementsByClassName('btn-edit');
-        edit_buttons.forEach(function (item) {
-            item.disabled = true
-        })
+        for (let element of closeButtons)  {
+            element.disabled = true
+        }
         selected.setStyle(defaultStyle);
         let select = new Select({
             //some options
@@ -169,8 +171,8 @@ export function my_toast(content, selected = null, map = null, action = null) {
                         if (Request.readyState == 4) {
                             // запрос завершён
                             document.body.style.cursor = "default";
-                        //    sourceClear(true);
-                            Swal.fire( {
+                            //    sourceClear(true);
+                            Swal.fire({
                                 text: "Дані опубліковані",
                                 icon: "success",
                             });
@@ -209,7 +211,8 @@ export function my_toast(content, selected = null, map = null, action = null) {
                         if (Request.readyState == 4) {
                             // запрос завершён
                             document.body.style.cursor = "default";
-                            Swal.fire({ text: "Дані видалені",
+                            Swal.fire({
+                                text: "Дані видалені",
                                 icon: "success",
                             });
                         }
