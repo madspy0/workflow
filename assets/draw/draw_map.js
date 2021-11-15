@@ -163,7 +163,7 @@ const allPlants = new TileLayer({
 });
 
 
-const measureLayer = new VectorLayer({
+export const measureLayer = new VectorLayer({
     source: new VectorSource(),
     name: 'measure_layer',
     style: new Style({
@@ -176,7 +176,11 @@ const measureLayer = new VectorLayer({
         }),
     }),
 });
-
+export const drawLayer = new VectorLayer({
+    name: 'drawn',
+    source: new VectorSource(),
+    style: defaultStyle,
+});
 let cadastreSource = new TileWMSSource({
     url: 'http://map.land.gov.ua/geowebcache/service/wms',
     params: {
@@ -335,7 +339,8 @@ const map = new Map({
         baseMaps,
         cadastreMaps,
         myMaps,
-        measureLayer
+        measureLayer,
+        drawLayer
     ],
     target: 'full-map',
     view: new View({

@@ -4,7 +4,7 @@ import Overlay from 'ol/Overlay';
 import {Draw} from 'ol/interaction';
 import {Fill, Stroke, Style, Circle} from 'ol/style';
 import {unByKey} from 'ol/Observable';
-import {sourceClear, formatArea} from "./draw/draw_map";
+import {sourceClear, formatArea, measureLayer} from "./draw/draw_map";
 
 /**
  * Format area output.
@@ -14,39 +14,6 @@ import {sourceClear, formatArea} from "./draw/draw_map";
 
 
 let map;
-
-function addMeasureLayer() {
-    let source;
-    map.getLayers().forEach(function (el) {
-        if (el.get('name') === 'measure_layer') {
-            source = el.getSource();
-        }
-    })
-    // if (!source) {
-    //     source = new VectorSource();
-    //     let layer = new VectorLayer({
-    //         name: 'measure_layer',
-    //         source: source,
-    //         style: new Style({
-    //             fill: new Fill({
-    //                 color: 'rgba(255, 255, 255, 0.2)',
-    //             }),
-    //             stroke: new Stroke({
-    //                 color: '#ffcc33',
-    //                 width: 2,
-    //             }),
-    //             image: new Circle({
-    //                 radius: 7,
-    //                 fill: new Fill({
-    //                     color: '#ffcc33',
-    //                 }),
-    //             }),
-    //         }),
-    //     });
-    //     map.addLayer(layer);
-    // }
-    return source;
-}
 
 let measureTooltip;
 let measureTooltipElement;
@@ -73,7 +40,7 @@ function createMeasureTooltip() {
 export function toggleMeasure(smap) {
     map = smap;
     const type = 'Polygon';
-    let source = addMeasureLayer();
+    let source = measureLayer.getSource();
     let draw = new Draw({
         source: source,
         type: type,

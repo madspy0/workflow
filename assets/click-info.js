@@ -45,7 +45,7 @@ export function clickInfo(smap) {
         layers: [plants],
         filter: function () {
             let toast = document.getElementById('draw_toast');
-            return !(toast && toast.classList.contains('show'));
+            return (!toast || toast.classList.contains('hide'));
 
         }
     });
@@ -55,7 +55,7 @@ export function clickInfo(smap) {
         layers: [plants],
         filter: function () {
             let toast = document.getElementById('draw_toast');
-            return !(toast && toast.classList.contains('show'));
+            return (!toast || toast.classList.contains('hide'));
 
         }
     });

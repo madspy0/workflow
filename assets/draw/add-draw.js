@@ -4,39 +4,15 @@ import {Draw} from 'ol/interaction';
 import {Fill, Stroke, Style, Circle} from 'ol/style';
 import {formatArea} from "./draw_map";
 import {my_toast} from "../my_toasts";
-import {defaultStyle} from "./draw_map";
+import {defaultStyle, drawLayer} from "./draw_map";
 import LayerGroup from "ol/layer/Group";
 
 let map;
 
-function addDrawLayer() {
-    let source;
-    map.getLayers().forEach(function (el) {
-        if (el instanceof LayerGroup) {
-            el.getLayers().forEach(function (groupLayer) {
-                if (groupLayer.get('name') === 'drawn') {
-                    source = el.getSource();
-                    console.log('already')
-                }
-            })
-        }
-    })
-    if (!source) {
-        source = new VectorSource();
-        let layer = new VectorLayer({
-            name: 'drawn',
-            source: source,
-            style: defaultStyle,
-        });
-        map.addLayer(layer);
-    }
-    return source;
-}
-
 export function toggleDraw(smap, status) {
     map = smap;
     const type = 'Polygon';
-    let source = addDrawLayer();
+    let source = drawLayer.getSource();
     let draw = new Draw({
         source: source,
         type: type,

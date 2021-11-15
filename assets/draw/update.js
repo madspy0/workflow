@@ -2,7 +2,7 @@ import {Modal} from "bootstrap";
 import {sourceClear} from "./draw_map";
 import {my_modal} from "../my_modals";
 import {my_toast} from "../my_toasts";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 export function update_draw(selected, map=null) {
     let id = selected.get('number');
@@ -19,7 +19,9 @@ export function update_draw(selected, map=null) {
                 let obj = JSON.parse(request.responseText);
                 my_toast(obj.content, selected, map)
             } else {
-                swal("Операцію з об'єктом заблоковано");
+                Swal.fire({
+                    text: "Операцію з об'єктом заблоковано"
+                });
             }
         }
     });

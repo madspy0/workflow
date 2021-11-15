@@ -53,6 +53,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
                 if (xhr.status === 200) {
                     //                   sourceClear(true);
                     //                   let myToast = Toast.getInstance(document.getElementById('draw_toast'));
+                    plants.getSource().refresh();
                     myToast.hide();
                     form.reset();
                 } else {
@@ -66,13 +67,21 @@ export function my_toast(content, selected = null, map = null, action = null) {
     // if (geom_button) {
     //     geom_button.addEventListener('click', function (e) {
 
+    let closeButtons = document.getElementsByClassName('mytoast-close');
+    closeButtons.forEach(function(element) {
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            plants.getSource().refresh();
+        })
+    })
     mod.addEventListener('hidden.bs.toast', function () {
-        sourceClear(true);
+        //sourceClear(true);
         // map.getLayers().forEach(layer => {
         //     if (layer.get('name') === 'plants') {
         //         layer.getSource().refresh()
         //     }
         // });
+        // plants.getSource().refresh();
         let edit_buttons = document.getElementsByClassName('btn-edit');
         edit_buttons.forEach(function (item) {
             item.removeAttribute('disabled')
@@ -145,6 +154,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: 'Опублікувати',
+            cancelButtonText: 'Скасувати'
         })
             .then((willPublic) => {
                 if (willPublic.isConfirmed) {
@@ -159,16 +169,15 @@ export function my_toast(content, selected = null, map = null, action = null) {
                         if (Request.readyState == 4) {
                             // запрос завершён
                             document.body.style.cursor = "default";
-                            sourceClear(true);
+                        //    sourceClear(true);
                             Swal.fire( {
                                 text: "Дані опубліковані",
                                 icon: "success",
                             });
                         }
                     }
-                } else {
-                    Swal.fire("Стан не змінено");
                 }
+                plants.getSource().refresh();
             })
     })
 
@@ -185,6 +194,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: 'Видалити',
+            cancelButtonText: 'Скасувати'
         })
             .then((willDelete) => {
                 if (willDelete.isConfirmed) {
@@ -199,8 +209,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
                         if (Request.readyState == 4) {
                             // запрос завершён
                             document.body.style.cursor = "default";
-                            sourceClear(true);
-                            Swal.fire("Дані видалені", {
+                            Swal.fire({ text: "Дані видалені",
                                 icon: "success",
                             });
                         }
@@ -208,7 +217,9 @@ export function my_toast(content, selected = null, map = null, action = null) {
                 } else {
                     Swal.fire("Дані не змінені");
                 }
+                plants.getSource().refresh();
             });
+
     })
 
     document.getElementById('drawn_area_useCategory').addEventListener('change', event => {
