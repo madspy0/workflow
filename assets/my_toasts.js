@@ -67,13 +67,14 @@ export function my_toast(content, selected = null, map = null, action = null) {
     // if (geom_button) {
     //     geom_button.addEventListener('click', function (e) {
 
-    let closeButtons = document.getElementsByClassName('mytoast-close');
-    for (let element of closeButtons) {
-        element.addEventListener('click', function (e) {
-            e.preventDefault();
-            plants.getSource().refresh();
-        })
-    }
+    // let closeButtons = document.getElementsByClassName('mytoast-hide');
+    // for (let element of closeButtons) {
+    //     element.addEventListener('click', function (e) {
+    //         e.preventDefault();
+    //         myToast.hide();
+    //         plants.getSource().refresh();
+    //     })
+    // }
 
 
     mod.addEventListener('hidden.bs.toast', function () {
@@ -83,7 +84,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
         //         layer.getSource().refresh()
         //     }
         // });
-        // plants.getSource().refresh();
+        plants.getSource().refresh();
         let edit_buttons = document.getElementsByClassName('btn-edit');
         for (let element of edit_buttons) {
             element.removeAttribute('disabled')
@@ -105,7 +106,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
             return;
         }
         let edit_buttons = document.getElementsByClassName('btn-edit');
-        for (let element of closeButtons)  {
+        for (let element of edit_buttons)  {
             element.disabled = true
         }
         selected.setStyle(defaultStyle);
@@ -176,10 +177,10 @@ export function my_toast(content, selected = null, map = null, action = null) {
                                 text: "Дані опубліковані",
                                 icon: "success",
                             });
+                            plants.getSource().refresh();
                         }
                     }
                 }
-                plants.getSource().refresh();
             })
     })
 
@@ -215,14 +216,11 @@ export function my_toast(content, selected = null, map = null, action = null) {
                                 text: "Дані видалені",
                                 icon: "success",
                             });
+                            plants.getSource().refresh();
                         }
                     }
-                } else {
-                    Swal.fire("Дані не змінені");
                 }
-                plants.getSource().refresh();
             });
-
     })
 
     document.getElementById('drawn_area_useCategory').addEventListener('change', event => {
