@@ -79,10 +79,7 @@
     </div>
 
     <div id="toast-buttons">
-        {% if  workflow_has_marked_place(drawnArea, 'archived') %}
-            {{ form_widget(form.save,{'attr':{'class':'d-none'}}) }}
-            {% else %}
-        {% if workflow_can(drawnArea, 'to_archive') %}
+        {% if workflow_has_marked_place(drawnArea, 'published') or workflow_has_marked_place(drawnArea, 'archived') %}
             {{ form_widget(form.save,{'attr':{'class':'d-none'}}) }}
         {% else %}
             {{ form_widget(form.save,{'attr':{'class':'btn-primary'}}) }}
@@ -91,14 +88,14 @@
         <button type="button"
                 id="dr_drop" value="{{ drawnArea.id }}"
                 class="btn btn-warning
-                {% if ((drawnArea.id is null) or (workflow_can(drawnArea, 'to_archive'))) %}
+                {% if ((drawnArea.id is null) or (workflow_can(drawnArea, 'to_archive')) or workflow_has_marked_place(drawnArea, 'archived')) %}
                 d-none
                 {% endif %}
                 ">Видалити
         </button>
 
         <button type="button" class="btn btn-success
-                {% if (drawnArea.id is null) or workflow_can(drawnArea, 'to_archive') %}
+                {% if (drawnArea.id is null) or workflow_can(drawnArea, 'to_archive') or workflow_has_marked_place(drawnArea, 'archived') %}
                 d-none
                 {% endif %}
             " id="dr_publ" value="{{ drawnArea.id }}"
@@ -107,13 +104,12 @@
 
 
         <button type="button" class="btn btn-danger
-                {% if workflow_can(drawnArea, 'to_publish') %}
+                {% if not workflow_has_marked_place(drawnArea, 'published') %}
                  d-none
                 {% endif %}
                 " id="dr_arch" value="{{ drawnArea.id }}"
         >В архів
         </button>
-{% endif %}
         <button type="button" class="btn btn-info mytoast-hide"  data-bs-dismiss="toast">Відмінити</button>
     </div>
     {{ form_row(form.geom) }}
