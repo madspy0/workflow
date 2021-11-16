@@ -137,7 +137,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
         });
         map.addInteraction(select);
         let selected_collection = select.getFeatures();
-        if (selected.get('status') !== 'published' || selected.get('archived')) {
+        if ((selected.get('status') !== 'published') && (selected.get('status') !== 'archived')) {
             selected_collection.push(selected);
         }
 
