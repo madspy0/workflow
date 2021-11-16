@@ -129,12 +129,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
+    /**
+     * @see UserInterface
+     */
     public function getProfile(): ?Profile
     {
         return $this->profile;
     }
-
+    /**
+     * @see UserInterface
+     */
     public function setProfile(Profile $profile): self
     {
         // set the owning side of the relation if necessary

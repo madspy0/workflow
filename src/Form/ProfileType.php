@@ -32,8 +32,7 @@ class ProfileType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Profile::class,
-            'entity_manager' => null,
+            'data_class' => Profile::class
         ]);
     }
 }

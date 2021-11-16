@@ -1,6 +1,3 @@
-import {Modal} from "bootstrap";
-import {sourceClear} from "./draw_map";
-import {my_modal} from "../my_modals";
 import {my_toast} from "../my_toasts";
 import Swal from "sweetalert2";
 

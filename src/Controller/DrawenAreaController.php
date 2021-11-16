@@ -15,9 +15,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
 use DateTimeImmutable;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class DrawenAreaController extends AbstractController
 {
@@ -27,8 +29,6 @@ class DrawenAreaController extends AbstractController
     public function drawMap(Request $request): Response
     {
         $form = $this->createForm(DrawnAreaType::class, new DrawnArea(),['action'=>$this->generateUrl('drawen.draw_add')]);
-        $profile = $this->getUser()->getProfile() ? $this->getUser()->getProfile() : new Profile();
-        $profileForm = $this->createForm(ProfileType::class, $profile);
         $cc = $request->query->get('cc');
         $temp = explode(',', $cc);
         if (count($temp) == 2) {
@@ -42,30 +42,33 @@ class DrawenAreaController extends AbstractController
             $z = null;
         }
         return $this->render('statement/draw_map.html.twig', ['form' => $form->createView(),
-            'profileForm' => $profileForm->createView(),
             'cc' => $cc, 'z' => $z]);
     }
 
     /**
      * @Route("/dr_profile", name="drawen.draw_profile")
      */
-    public function profile(Request $request, EntityManagerInterface $em): Response
+    public function profile(Request $request, EntityManagerInterface $em, TokenStorageInterface $tokenStorage): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        try {
 
-            $profile = $this->getUser()->getProfile() ? $this->getUser()->getProfile() : new Profile();
-            $form = $this->createForm(ProfileType::class, $profile,[
-                'entity_manager' => $this->getDoctrine()->getManager(),
-            ]);
+        try {
+            $user = $tokenStorage->getToken()->getUser();
+            $cond = (array)$user->getProfile();
+            $profile = $cond ? $user->getProfile() : new Profile();
+            $form = $this->createForm(ProfileType::class, $profile);
+
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $profile->setUsers($this->getUser());
+
+                $user->setProfile($profile);
+              //  $profile->setUsers($user);
                 $em->persist($profile);
                 $em->flush();
                 return new JsonResponse(['success' => true]);
             }
-            return new JsonResponse(['success'=>false]);
+
+            return new JsonResponse(['content'=>$this->render('statement/modals/draw_modal_wo_div.html.twig',['profileForm'=>$form->createView()])]);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -90,6 +93,15 @@ class DrawenAreaController extends AbstractController
                 $em->persist($drawnArea);
                 $em->flush();
                 return new JsonResponse(['success' => true, 'id' => $drawnArea->getId()]);
+            }
+            $profile = $this->getUser()->getProfile();
+            if($profile) {
+                $form->get('firstname')->setData($profile->getFirstname());
+                $form->get('lastname')->setData($profile->getLastname());
+                $form->get('middlename')->setData($profile->getMiddlename());
+                $form->get('localGoverment')->setData($profile->getLocalGoverment());
+                $form->get('address')->setData($profile->getAddress());
+                $form->get('link')->setData($profile->getLink());
             }
             $content = $this->renderView(
                 'statement/modals/draw_toast_wo_div.html.twig',
@@ -200,10 +212,12 @@ class DrawenAreaController extends AbstractController
         }
     }
     /**
-     * @Route("/drawen_geoms", name="drawen.all_geoms")
+     * @Route("/drawen_geoms", name="drawen.all_geoms", methods={"GET"})
      */
+
+    // , condition="request.isXmlHttpRequest()"
     public
-    function allGeoms(DrawnAreaRepository $repository, SerializerInterface $serializer): Response
+    function allGeoms(DrawnAreaRepository $repository, SerializerInterface $serializer, Request $request): Response
     {
         try {
             $geoms = $serializer->serialize($repository->findBy(['author'=>$this->getUser()]), 'json', ['groups' => 'geoms']);
