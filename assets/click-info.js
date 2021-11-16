@@ -68,7 +68,7 @@ export function clickInfo(smap) {
             return;
         }
 
-        let selected = selectClick.getFeatures().getArray()[0];
+        let selected = e.target.getFeatures().getArray()[0];
         if (selected != null) {
             if (typeof selected.get('nom') !== 'undefined') {
                 redirect('/appl/' + selected.get('nom') + '?cc=' + map.getView().getCenter().join() + '&z=' + map.getView().getZoom());

@@ -28,14 +28,15 @@ import {getArea} from "ol/sphere";
 import * as olControl from 'ol/control';
 import {listener} from "../listener";
 import {Draw, Modify, Select} from "ol/interaction";
-
+import Swal from "sweetalert2";
+import {my_toast} from "../my_toasts";
 // import {Modal} from "bootstrap";
 //
 // let myModal = new Modal(document.getElementById('draw_modal'), {
 //     backdrop: true
 // });
 
-let itemStyles = {
+export const itemStyles = {
     'created': new Style({
         fill: new Fill({
             color: 'rgba(255, 255, 0, 0.2)',
@@ -109,7 +110,7 @@ const source = new VectorSource({
                         number: item.id,
                         status: item.status,
                     });
-                    feature.setStyle(itemStyles[item.status]);
+              //      feature.setStyle(itemStyles[item.status]);
                     source.addFeature(feature);
                 });
                 // let features = source.getFormat().readFeatures(xhr.responseText);
@@ -131,6 +132,9 @@ export const plants = new VectorLayer({
     maxZoom: 18,
     transitionEffect: 'resize',
     visible: true,
+    style: function(feature, resolution) {
+        return ([itemStyles[feature.get('status')]])
+    }
     // style: new Style({
     //     fill: new Fill({
     //         color: 'rgb(216,0,254,0.2)',
@@ -380,36 +384,102 @@ if (cc.length === 2) {
     edit_buttons[0].dispatchEvent(new Event("click"));
 }
 
-let clearVectorLayer = (layer, plants) => {
-    if (layer instanceof VectorLayer) {
-        if (layer.getSource()) {
-            if(layer.get('name')==='plants') {
-                if(plants) {layer.getSource().refresh();}
-            } else {
-                layer.getSource().refresh();
-            }
-        }
-    }
-}
+// let clearVectorLayer = (layer, plants) => {
+//     if (layer instanceof VectorLayer) {
+//         if (layer.getSource()) {
+//             if (layer.get('name') === 'plants') {
+//                 if (plants) {
+//                     layer.getSource().refresh();
+//                 }
+//             } else {
+//                 layer.getSource().refresh();
+//             }
+//         }
+//     }
+// }
 
 let rmInteractionsOverlays = () => {
     map.getOverlays().getArray().slice(0).forEach(function (overlay) {
         map.removeOverlay(overlay);
     });
-    map.getInteractions().forEach(function(interaction) {
+    map.getInteractions().forEach(function (interaction) {
         if ((interaction instanceof Draw) || (interaction instanceof Select) || (interaction instanceof Modify)) {
             interaction.setActive(false);
         }
     }, this);
 }
 
-export function sourceClear(plants=false) {
+export function sourceClear(plants = false) {
     rmInteractionsOverlays();
     map.getLayers().forEach(function (el) {
         if (el instanceof LayerGroup) {
-            el.getLayers().forEach(function(i) {clearVectorLayer(i, plants)});
+            el.getLayers().forEach(function (i) {
+              //  clearVectorLayer(i, plants)
+            });
         } else {
-            clearVectorLayer(el, plants)
+            // clearVectorLayer(el, plants)
         }
     })
 }
+
+function processForm(e) {
+    e.preventDefault();
+    let xhr = new XMLHttpRequest();
+    let data = document.getElementById('form_person_edit');
+    let formData = new FormData(data);
+    xhr.open("POST", '/dr_profile', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function () {
+        if (XMLHttpRequest.DONE && xhr.status === 200) {
+            console.log('ok')
+        }
+    }
+    xhr.send(formData);
+    return false;
+}
+
+document.getElementById('personal-data').addEventListener('click', function (e) {
+    e.preventDefault();
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", '/dr_profile', true);
+    xhr.responseType = 'json';
+    //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function () {
+        if (this.readyState != 4) return;
+        //myModal.innerHTML(this.response.content);
+        //           myModal.show();
+        //           alert(this.response.content);
+
+        Swal.fire({
+            html: this.response.content,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                let form = document.getElementById('form_person_edit');
+                if (form.attachEvent) {
+                    form.attachEvent("submit", processForm);
+                } else {
+                    form.addEventListener("submit", processForm);
+                }
+                form.submit();
+                return false;
+            }
+        });
+        // let formPersonData = document.getElementById('form_person_edit');
+        // formPersonData.addEventListener('submit', function (e){
+        //     e.preventDefault();
+        //     let xhr1 = new XMLHttpRequest();
+        //     let formData = new FormData(formPersonData);
+        //     xhr1.open("POST", '/dr_profile', true);
+        //     xhr1.onreadystatechange = function () {
+        //         if (this.readyState != 4) return;
+        //         if (xhr1.status === 200) {
+        //             console.log('ok')
+        //         } else {
+        //             console.log('error')
+        //         }
+        //     }
+        //     xhr1.send(formData);
+        // } )
+    }
+    xhr.send();
+})

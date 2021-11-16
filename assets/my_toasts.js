@@ -1,11 +1,12 @@
 import Litepicker from "litepicker";
 import {Toast} from "bootstrap";
-import {defaultStyle, formatArea, plants, sourceClear} from "./draw/draw_map";
-import {Modify, Select} from "ol/interaction";
+import {defaultStyle, formatArea, plants, sourceClear, itemStyles, drawLayer} from "./draw/draw_map";
+import {Draw, Modify, Select} from "ol/interaction";
 import {clickInfo} from "./click-info";
 import {WKT} from "ol/format";
 import Swal from "sweetalert2";
 import {getArea} from 'ol/sphere';
+import {Fill, Stroke, Style} from "ol/style";
 
 export function my_toast(content, selected = null, map = null, action = null) {
     let clear = document.getElementById('draw_toast');
@@ -38,7 +39,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
     }
     let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'), {delay: 500, animation: true});
     myToast.show();
-    let form = document.forms[0];
+    let form = document.drawn_area;
 
     if (form) {
         form.addEventListener('submit', function (e) {
@@ -51,9 +52,22 @@ export function my_toast(content, selected = null, map = null, action = null) {
             xhr.onreadystatechange = function () {
                 if (this.readyState != 4) return;
                 if (xhr.status === 200) {
+                    if(action) {
+                        // let rr = JSON.parse(xhr.response);
+                        // selected.set('status','created');
+                        // selected.set('number', rr['id'])
+                        // selected.set('appl', document.getElementById('drawn_area_lastname').value +
+                        // ' ' + document.getElementById('drawn_area_firstname').value);
+                        // selected.setStyle(itemStyles[selected.get('status')]);
+                        // plants.getSource().addFeature(selected);
+                        // // plants.changed();
+                        // // selected.changed()
+                        plants.getSource().refresh();
+
+                    }
                     //                   sourceClear(true);
                     //                   let myToast = Toast.getInstance(document.getElementById('draw_toast'));
-                    plants.getSource().refresh();
+                    //plants.getSource().refresh();
                     myToast.hide();
                     form.reset();
                 } else {
@@ -84,7 +98,15 @@ export function my_toast(content, selected = null, map = null, action = null) {
         //         layer.getSource().refresh()
         //     }
         // });
-        plants.getSource().refresh();
+        //plants.getSource().refresh();
+        map.getInteractions().forEach(function (interaction) {
+            if (interaction instanceof Select) {
+                interaction.getFeatures().clear();
+            }
+            if (interaction instanceof Draw) {
+                drawLayer.getSource().clear();
+            }
+        }, this);
         let edit_buttons = document.getElementsByClassName('btn-edit');
         for (let element of edit_buttons) {
             element.removeAttribute('disabled')
@@ -106,7 +128,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
             return;
         }
         let edit_buttons = document.getElementsByClassName('btn-edit');
-        for (let element of edit_buttons)  {
+        for (let element of edit_buttons) {
             element.disabled = true
         }
         selected.setStyle(defaultStyle);
@@ -115,7 +137,9 @@ export function my_toast(content, selected = null, map = null, action = null) {
         });
         map.addInteraction(select);
         let selected_collection = select.getFeatures();
-        selected_collection.push(selected);
+        if (selected.get('status') !== 'published' || selected.get('archived')) {
+            selected_collection.push(selected);
+        }
 
 //         let selected_center = getCenter(selected.getGeometry().getExtent());
 //         let resolution = map.getView().getResolution();
@@ -125,6 +149,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
         map.removeInteraction(select);
         const modify = new Modify({
             features: selected_collection,
+
             //   source: plants.getSource()
         });
         map.addInteraction(modify);
@@ -146,11 +171,12 @@ export function my_toast(content, selected = null, map = null, action = null) {
     // })
     document.getElementById('dr_publ').addEventListener('click', (e) => {
         e.preventDefault();
+
         let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'), {
             delay: 500,
             animation: true
         });
-        myToast.hide();
+        // myToast.hide();
         Swal.fire({
             title: "Ви впевнені?",
             text: "Після публікації ви не зможете змінити дані",
@@ -172,18 +198,69 @@ export function my_toast(content, selected = null, map = null, action = null) {
                         if (Request.readyState == 4) {
                             // запрос завершён
                             document.body.style.cursor = "default";
-                            //    sourceClear(true);
+                            //   sourceClear(true);
+
+                            selected.set('status','published');
+//                            plants.getSource().changed();
+                            selected.setStyle(itemStyles['published'])
+
+                            myToast.hide();
                             Swal.fire({
                                 text: "Дані опубліковані",
                                 icon: "success",
                             });
-                            plants.getSource().refresh();
+
                         }
                     }
                 }
             })
     })
+    document.getElementById('dr_arch').addEventListener('click', (e) => {
+        e.preventDefault();
 
+        let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'), {
+            delay: 500,
+            animation: true
+        });
+        // myToast.hide();
+        Swal.fire({
+            title: "Ви впевнені?",
+            text: "Після внесення до архіву ви не зможете змінити дані",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: 'Архівувати',
+            cancelButtonText: 'Скасувати'
+        })
+            .then((willPublic) => {
+                if (willPublic.isConfirmed) {
+                    let Request = new XMLHttpRequest();
+                    Request.open('get', '/dr_arch/' + e.target.value);
+                    Request.send();
+                    Request.onreadystatechange = function () {
+                        document.body.style.cursor = "progress";
+                        if (Request.readyState == 3) {
+                            // загрузка
+                        }
+                        if (Request.readyState == 4) {
+                            // запрос завершён
+                            document.body.style.cursor = "default";
+                            //   sourceClear(true);
+
+                            selected.set('status','archived');
+//                            plants.getSource().changed();
+                            selected.setStyle(itemStyles['archived'])
+
+                            myToast.hide();
+                            Swal.fire({
+                                text: "Дані архівовані",
+                                icon: "success",
+                            });
+
+                        }
+                    }
+                }
+            })
+    })
     document.getElementById('dr_drop').addEventListener('click', (e) => {
         e.preventDefault();
         let myToast = Toast.getOrCreateInstance(document.getElementById('draw_toast'), {
@@ -207,7 +284,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
                     Request.onreadystatechange = function () {
                         document.body.style.cursor = "progress";
                         if (Request.readyState == 3) {
-                            // загрузка
+                            plants.getSource().removeFeature(selected);
                         }
                         if (Request.readyState == 4) {
                             // запрос завершён
@@ -216,7 +293,11 @@ export function my_toast(content, selected = null, map = null, action = null) {
                                 text: "Дані видалені",
                                 icon: "success",
                             });
-                            plants.getSource().refresh();
+                            map.getInteractions().forEach(function (interaction) {
+                                if (interaction instanceof Select) {
+                                    interaction.getFeatures().clear();
+                                }
+                            }, this);
                         }
                     }
                 }

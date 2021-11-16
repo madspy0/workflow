@@ -79,6 +79,9 @@
     </div>
 
     <div id="toast-buttons">
+        {% if  workflow_has_marked_place(drawnArea, 'archived') %}
+            {{ form_widget(form.save,{'attr':{'class':'d-none'}}) }}
+            {% else %}
         {% if workflow_can(drawnArea, 'to_archive') %}
             {{ form_widget(form.save,{'attr':{'class':'d-none'}}) }}
         {% else %}
@@ -107,9 +110,10 @@
                 {% if workflow_can(drawnArea, 'to_publish') %}
                  d-none
                 {% endif %}
-        ">В архів
+                " id="dr_arch" value="{{ drawnArea.id }}"
+        >В архів
         </button>
-
+{% endif %}
         <button type="button" class="btn btn-info mytoast-hide"  data-bs-dismiss="toast">Відмінити</button>
     </div>
     {{ form_row(form.geom) }}

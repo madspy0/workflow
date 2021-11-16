@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\DrawnArea;
+use App\Entity\Profile;
 use App\Form\DrawnAreaType;
+use App\Form\ProfileType;
 use App\Repository\DrawnAreaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -25,7 +27,6 @@ class DrawenAreaController extends AbstractController
     public function drawMap(Request $request): Response
     {
         $form = $this->createForm(DrawnAreaType::class, new DrawnArea(),['action'=>$this->generateUrl('drawen.draw_add')]);
-
         $cc = $request->query->get('cc');
         $temp = explode(',', $cc);
         if (count($temp) == 2) {
@@ -38,7 +39,38 @@ class DrawenAreaController extends AbstractController
             $cc = null;
             $z = null;
         }
-        return $this->render('statement/draw_map.html.twig', ['form' => $form->createView(), 'cc' => $cc, 'z' => $z]);
+        return $this->render('statement/draw_map.html.twig', ['form' => $form->createView(),'cc' => $cc, 'z' => $z]);
+    }
+
+    /**
+     * @Route("/dr_profile", name="drawen.draw_profile")
+     */
+    public function profile(Request $request, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        try {
+            $profile = $this->getUser()->getProfile();
+            if(!$profile) {
+                $profile = $this->getUser()->getProfile() ? $this->getUser()->getProfile() : new Profile();
+            }
+            $form = $this->createForm(ProfileType::class, $profile,[
+                'entity_manager' => $this->getDoctrine()->getManager(),
+            ]);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $profile->setUsers($this->getUser());
+                $em->persist($profile);
+                $em->flush();
+                return new JsonResponse(['success' => true]);
+            }
+            $content = $this->renderView(
+                'statement/modals/profile.html.twig',
+                array('form' => $form->createView())
+            );
+            return new JsonResponse(['content'=> $content]);
+        } catch (Exception $exception) {
+            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -59,7 +91,7 @@ class DrawenAreaController extends AbstractController
                 $drawnArea->setAuthor($this->getUser());
                 $em->persist($drawnArea);
                 $em->flush();
-                return new JsonResponse(['success' => true]);
+                return new JsonResponse(['success' => true, 'id' => $drawnArea->getId()]);
             }
             $content = $this->renderView(
                 'statement/modals/draw_toast_wo_div.html.twig',
@@ -122,6 +154,29 @@ class DrawenAreaController extends AbstractController
                 $em->persist($drawnArea);
                 $em->flush();
                 return new JsonResponse(['success' => true]);
+        } catch (Exception $exception) {
+            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @Route("/dr_arch/{drawnArea}", name="drawen.draw_arch", methods={"GET"}, options={"expose"=true})
+     */
+    public function arch(DrawnArea $drawnArea, EntityManagerInterface $em, WorkflowInterface $drawnAreaFlowStateMachine): Response
+    {
+        try {
+            if($drawnArea->getAuthor() !== $this->getUser()) {
+                throw new AccessDeniedException('Немає доступу до об\'єкту');
+            }
+            $this->addFlash(
+                'success',
+                ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
+            );
+            $drawnAreaFlowStateMachine->apply($drawnArea, 'to_archive');
+            $drawnArea->setArchivedAt(new DateTimeImmutable('now'));
+            $em->persist($drawnArea);
+            $em->flush();
+            return new JsonResponse(['success' => true]);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
