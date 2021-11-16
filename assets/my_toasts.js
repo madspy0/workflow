@@ -329,7 +329,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
                     opt.innerHTML = item.name;
                     document.getElementById('drawn_area_useSubCategory').appendChild(opt);
                 })
-                //    console.log(Request.responseText);
+                //    console.log(Request.responseText);;
             }
         }
     })
