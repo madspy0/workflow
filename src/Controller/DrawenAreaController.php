@@ -27,6 +27,8 @@ class DrawenAreaController extends AbstractController
     public function drawMap(Request $request): Response
     {
         $form = $this->createForm(DrawnAreaType::class, new DrawnArea(),['action'=>$this->generateUrl('drawen.draw_add')]);
+        $profile = $this->getUser()->getProfile() ? $this->getUser()->getProfile() : new Profile();
+        $profileForm = $this->createForm(ProfileType::class, $profile);
         $cc = $request->query->get('cc');
         $temp = explode(',', $cc);
         if (count($temp) == 2) {
@@ -39,7 +41,9 @@ class DrawenAreaController extends AbstractController
             $cc = null;
             $z = null;
         }
-        return $this->render('statement/draw_map.html.twig', ['form' => $form->createView(),'cc' => $cc, 'z' => $z]);
+        return $this->render('statement/draw_map.html.twig', ['form' => $form->createView(),
+            'profileForm' => $profileForm->createView(),
+            'cc' => $cc, 'z' => $z]);
     }
 
     /**
@@ -49,10 +53,8 @@ class DrawenAreaController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         try {
-            $profile = $this->getUser()->getProfile();
-            if(!$profile) {
-                $profile = $this->getUser()->getProfile() ? $this->getUser()->getProfile() : new Profile();
-            }
+
+            $profile = $this->getUser()->getProfile() ? $this->getUser()->getProfile() : new Profile();
             $form = $this->createForm(ProfileType::class, $profile,[
                 'entity_manager' => $this->getDoctrine()->getManager(),
             ]);
@@ -63,11 +65,7 @@ class DrawenAreaController extends AbstractController
                 $em->flush();
                 return new JsonResponse(['success' => true]);
             }
-            $content = $this->renderView(
-                'statement/modals/profile.html.twig',
-                array('form' => $form->createView())
-            );
-            return new JsonResponse(['content'=> $content]);
+            return new JsonResponse(['success'=>false]);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

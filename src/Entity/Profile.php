@@ -38,6 +38,26 @@ class Profile
      */
     private $users;
 
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $localGoverment;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $address;
+
+    /**
+     * @ORM\Column(type="string", length=13)
+     */
+    private $phone;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $link;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +107,54 @@ class Profile
     public function setUsers(User $users): self
     {
         $this->users = $users;
+
+        return $this;
+    }
+
+    public function getLocalGoverment(): ?string
+    {
+        return $this->localGoverment;
+    }
+
+    public function setLocalGoverment(string $localGoverment): self
+    {
+        $this->localGoverment = $localGoverment;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getLink(): ?string
+    {
+        return $this->link;
+    }
+
+    public function setLink(string $link): self
+    {
+        $this->link = $link;
 
         return $this;
     }
