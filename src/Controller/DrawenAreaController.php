@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\ArchiveGround;
 use App\Entity\DrawnArea;
 use App\Entity\Profile;
+use App\Form\ArchiveGroundType;
 use App\Form\DrawnAreaType;
 use App\Form\ProfileType;
 use App\Repository\DrawnAreaRepository;
@@ -28,7 +30,7 @@ class DrawenAreaController extends AbstractController
      */
     public function drawMap(Request $request): Response
     {
-        $form = $this->createForm(DrawnAreaType::class, new DrawnArea(),['action'=>$this->generateUrl('drawen.draw_add')]);
+        $form = $this->createForm(DrawnAreaType::class, new DrawnArea(), ['action' => $this->generateUrl('drawen.draw_add')]);
         $cc = $request->query->get('cc');
         $temp = explode(',', $cc);
         if (count($temp) == 2) {
@@ -67,9 +69,8 @@ class DrawenAreaController extends AbstractController
                     return new JsonResponse(['success' => true]);
                 }
 
-                return new JsonResponse(['content'=>$this->render('statement/modals/draw_modal_wo_div.html.twig',['profileForm'=>$form->createView()])->getContent()]);
-            }
-            catch (Exception $exception) {
+                return new JsonResponse(['content' => $this->render('statement/modals/draw_modal_wo_div.html.twig', ['profileForm' => $form->createView()])->getContent()]);
+            } catch (Exception $exception) {
                 return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
@@ -83,9 +84,9 @@ class DrawenAreaController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         try {
             $drawnArea = new DrawnArea();
-            $form = $this->createForm(DrawnAreaType::class, $drawnArea,[
+            $form = $this->createForm(DrawnAreaType::class, $drawnArea, [
                 'entity_manager' => $this->getDoctrine()->getManager(),
-                'action'=>$this->generateUrl('drawen.draw_add')
+                'action' => $this->generateUrl('drawen.draw_add')
             ]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -96,7 +97,7 @@ class DrawenAreaController extends AbstractController
                 return new JsonResponse(['success' => true, 'id' => $drawnArea->getId()]);
             }
             $profile = $this->getUser()->getProfile();
-            if($profile) {
+            if ($profile) {
                 $form->get('firstname')->setData($profile->getFirstname());
                 $form->get('lastname')->setData($profile->getLastname());
                 $form->get('middlename')->setData($profile->getMiddlename());
@@ -106,9 +107,9 @@ class DrawenAreaController extends AbstractController
             }
             $content = $this->renderView(
                 'statement/modals/draw_toast_wo_div.html.twig',
-                array('form' => $form->createView(), 'drawnArea'=>$drawnArea)
+                array('form' => $form->createView(), 'drawnArea' => $drawnArea)
             );
-            return new JsonResponse(['content'=> $content]);
+            return new JsonResponse(['content' => $content]);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -120,12 +121,12 @@ class DrawenAreaController extends AbstractController
     public function upd(Request $request, EntityManagerInterface $em, DrawnArea $drawnArea): Response
     {
         try {
-            if($drawnArea->getAuthor() !== $this->getUser()) {
+            if ($drawnArea->getAuthor() !== $this->getUser()) {
                 throw new AccessDeniedException('Немає доступу до об\'єкту');
             }
-            $form = $this->createForm(DrawnAreaType::class, $drawnArea,[
+            $form = $this->createForm(DrawnAreaType::class, $drawnArea, [
                 'entity_manager' => $this->getDoctrine()->getManager(),
-                'action'=>$this->generateUrl('drawen.draw_upd',['id'=>$drawnArea->getId()])
+                'action' => $this->generateUrl('drawen.draw_upd', ['id' => $drawnArea->getId()])
             ]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -141,7 +142,7 @@ class DrawenAreaController extends AbstractController
                 'statement/modals/draw_toast_wo_div.html.twig',
                 array('form' => $form->createView(), 'drawnArea' => $drawnArea)
             );
-            return new JsonResponse(['content'=> $content]);
+            return new JsonResponse(['content' => $content]);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -153,18 +154,18 @@ class DrawenAreaController extends AbstractController
     public function publ(DrawnArea $drawnArea, EntityManagerInterface $em, WorkflowInterface $drawnAreaFlowStateMachine): Response
     {
         try {
-            if($drawnArea->getAuthor() !== $this->getUser()) {
+            if ($drawnArea->getAuthor() !== $this->getUser()) {
                 throw new AccessDeniedException('Немає доступу до об\'єкту');
             }
-                $this->addFlash(
-                    'success',
-                    ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
-                );
-                $drawnAreaFlowStateMachine->apply($drawnArea, 'to_publish');
-                $drawnArea->setPublishedAt(new DateTimeImmutable('now'));
-                $em->persist($drawnArea);
-                $em->flush();
-                return new JsonResponse(['success' => true]);
+            $this->addFlash(
+                'success',
+                ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
+            );
+            $drawnAreaFlowStateMachine->apply($drawnArea, 'to_publish');
+            $drawnArea->setPublishedAt(new DateTimeImmutable('now'));
+            $em->persist($drawnArea);
+            $em->flush();
+            return new JsonResponse(['success' => true]);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -176,7 +177,7 @@ class DrawenAreaController extends AbstractController
     public function arch(DrawnArea $drawnArea, EntityManagerInterface $em, WorkflowInterface $drawnAreaFlowStateMachine): Response
     {
         try {
-            if($drawnArea->getAuthor() !== $this->getUser()) {
+            if ($drawnArea->getAuthor() !== $this->getUser()) {
                 throw new AccessDeniedException('Немає доступу до об\'єкту');
             }
             $this->addFlash(
@@ -192,13 +193,14 @@ class DrawenAreaController extends AbstractController
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
     /**
      * @Route("/dr_drop/{drawnArea}", name="drawen.draw_drop", methods={"GET"}, options={"expose"=true})
      */
     public function drop(DrawnArea $drawnArea, EntityManagerInterface $em): Response
     {
         try {
-            if($drawnArea->getAuthor() !== $this->getUser()) {
+            if ($drawnArea->getAuthor() !== $this->getUser()) {
                 throw new AccessDeniedException('Немає доступу до об\'єкту');
             }
             $this->addFlash(
@@ -221,8 +223,32 @@ class DrawenAreaController extends AbstractController
     function allGeoms(DrawnAreaRepository $repository, SerializerInterface $serializer, Request $request): Response
     {
         try {
-            $geoms = $serializer->serialize($repository->findBy(['author'=>$this->getUser()]), 'json', ['groups' => 'geoms']);
+            $geoms = $serializer->serialize($repository->findBy(['author' => $this->getUser()]), 'json', ['groups' => 'geoms']);
             return new Response($geoms);//$this->json($geoms, Response::HTTP_OK);
+        } catch (Exception $exception) {
+            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @Route("/dr_archground/{drawnArea}", name="drawen.arch.ground", methods={"GET", "POST"}, options={"expose"=true})
+     */
+    public function archGroundForm(DrawnArea $drawnArea, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        try {
+            $archiveGround = new ArchiveGround();
+            $archiveGround->setDrawnArea($drawnArea);
+            $form = $this->createForm(ArchiveGroundType::class, $archiveGround);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em->persist($archiveGround);
+                $em->flush();
+                return new JsonResponse(['yes'=>'ok']);
+            }
+            $content = $this->renderView(
+                'statement/modals/arch_ground_form.html.twig',
+                ['form' => $form->createView()]);
+            return new JsonResponse(['content' => $content]);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

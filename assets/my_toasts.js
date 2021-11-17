@@ -52,7 +52,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
             xhr.onreadystatechange = function () {
                 if (this.readyState != 4) return;
                 if (xhr.status === 200) {
-                    if(action) {
+                    if (action) {
                         // let rr = JSON.parse(xhr.response);
                         // selected.set('status','created');
                         // selected.set('number', rr['id'])
@@ -200,7 +200,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
                             document.body.style.cursor = "default";
                             //   sourceClear(true);
 
-                            selected.set('status','published');
+                            selected.set('status', 'published');
 //                            plants.getSource().changed();
                             selected.setStyle(itemStyles['published'])
 
@@ -223,42 +223,70 @@ export function my_toast(content, selected = null, map = null, action = null) {
             animation: true
         });
         // myToast.hide();
-        Swal.fire({
-            title: "Ви впевнені?",
-            text: "Після внесення до архіву ви не зможете змінити дані",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: 'Архівувати',
-            cancelButtonText: 'Скасувати'
-        })
-            .then((willPublic) => {
-                if (willPublic.isConfirmed) {
-                    let Request = new XMLHttpRequest();
-                    Request.open('get', '/dr_arch/' + e.target.value);
-                    Request.send();
-                    Request.onreadystatechange = function () {
-                        document.body.style.cursor = "progress";
-                        if (Request.readyState == 3) {
-                            // загрузка
-                        }
-                        if (Request.readyState == 4) {
-                            // запрос завершён
-                            document.body.style.cursor = "default";
-                            //   sourceClear(true);
 
-                            selected.set('status','archived');
+        fetch('/dr_archground/' + e.target.value).then(
+            response => {
+                return response.json()
+            })
+            .then((data) => {
+                Swal.fire({
+                    title: "Ви впевнені?",
+                    text: "Після внесення до архіву ви не зможете змінити дані",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: 'Архівувати',
+                    cancelButtonText: 'Скасувати',
+                    html: data.content,
+                    showLoaderOnConfirm: true,
+                    preConfirm: () => {
+                        let form = document.forms.archive_ground;
+                        let formData = new FormData(form);
+                        fetch('/dr_archground/' + e.target.value, {
+                            method: 'post',
+                            body: formData
+                        })
+
+                            .then((response) => { let rr = response.json(); return rr })
+                            .catch((error) =>  new Error(error.statusText))
+                         //   .then((json)=>{let i = json; console.log(i); return i})
+                            ;
+
+                        // return fetch('/dr_archground/' +  e.target.value).then(
+                        //     response =>  { console.log(response.json()); return response.json(); }
+                        // )
+                        //return false
+                    },
+                 //   allowOutsideClick: () => { !Swal.isLoading() }
+                }).then((willPublic) => {
+                    console.log(willPublic)
+                    if (willPublic.isConfirmed) {
+                        let Request = new XMLHttpRequest();
+                        Request.open('get', '/dr_arch/' + e.target.value);
+                        Request.send();
+                        Request.onreadystatechange = function () {
+                            document.body.style.cursor = "progress";
+                            if (Request.readyState == 3) {
+                                // загрузка
+                            }
+                            if (Request.readyState == 4) {
+                                // запрос завершён
+                                document.body.style.cursor = "default";
+                                //   sourceClear(true);
+
+                                selected.set('status', 'archived');
 //                            plants.getSource().changed();
-                            selected.setStyle(itemStyles['archived'])
+                                selected.setStyle(itemStyles['archived'])
 
-                            myToast.hide();
-                            Swal.fire({
-                                text: "Дані архівовані",
-                                icon: "success",
-                            });
+                                myToast.hide();
+                                Swal.fire({
+                                    text: "Дані архівовані",
+                                    icon: "success",
+                                });
 
+                            }
                         }
                     }
-                }
+                })
             })
     })
     document.getElementById('dr_drop').addEventListener('click', (e) => {

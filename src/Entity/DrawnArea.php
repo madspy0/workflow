@@ -184,6 +184,11 @@ class DrawnArea
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $author;
+
+    /**
+     * @ORM\OneToOne(targetEntity=ArchiveGround::class, mappedBy="drawnArea", cascade={"persist", "remove"})
+     */
+    private $archiveGround;
     /**
      * @return mixed
      */
@@ -382,6 +387,28 @@ class DrawnArea
     public function setAuthor(?PortalUser $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getArchiveGround(): ?ArchiveGround
+    {
+        return $this->archiveGround;
+    }
+
+    public function setArchiveGround(?ArchiveGround $archiveGround): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($archiveGround === null && $this->archiveGround !== null) {
+            $this->archiveGround->setDrawnArea(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($archiveGround !== null && $archiveGround->getDrawnArea() !== $this) {
+            $archiveGround->setDrawnArea($this);
+        }
+
+        $this->archiveGround = $archiveGround;
 
         return $this;
     }
