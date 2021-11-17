@@ -224,10 +224,8 @@ export function my_toast(content, selected = null, map = null, action = null) {
         });
         // myToast.hide();
 
-        fetch('/dr_archground/' + e.target.value).then(
-            response => {
-                return response.json()
-            })
+        fetch('/dr_archground/' + e.target.value)
+            .then(response =>  response.json())
             .then((data) => {
                 Swal.fire({
                     title: "Ви впевнені?",
@@ -241,52 +239,61 @@ export function my_toast(content, selected = null, map = null, action = null) {
                     preConfirm: () => {
                         let form = document.forms.archive_ground;
                         let formData = new FormData(form);
-                        fetch('/dr_archground/' + e.target.value, {
+                        return fetch('/dr_archground/' + e.target.value, {
                             method: 'post',
                             body: formData
                         })
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error(response.statusText)
+                                }
+                                return response.json();
+                            })
+                            .then((resp) => {
+                                return resp
+                            }).catch(error => {
+                                Swal.showValidationMessage(
+                                    `Request failed: ${error}`
+                                )
+                            })
 
-                            .then((response) => { let rr = response.json(); return rr })
-                            .catch((error) =>  new Error(error.statusText))
-                         //   .then((json)=>{let i = json; console.log(i); return i})
-                            ;
-
-                        // return fetch('/dr_archground/' +  e.target.value).then(
-                        //     response =>  { console.log(response.json()); return response.json(); }
-                        // )
-                        //return false
-                    },
-                 //   allowOutsideClick: () => { !Swal.isLoading() }
-                }).then((willPublic) => {
-                    console.log(willPublic)
-                    if (willPublic.isConfirmed) {
-                        let Request = new XMLHttpRequest();
-                        Request.open('get', '/dr_arch/' + e.target.value);
-                        Request.send();
-                        Request.onreadystatechange = function () {
-                            document.body.style.cursor = "progress";
-                            if (Request.readyState == 3) {
-                                // загрузка
-                            }
-                            if (Request.readyState == 4) {
-                                // запрос завершён
-                                document.body.style.cursor = "default";
-                                //   sourceClear(true);
-
-                                selected.set('status', 'archived');
-//                            plants.getSource().changed();
-                                selected.setStyle(itemStyles['archived'])
-
-                                myToast.hide();
-                                Swal.fire({
-                                    text: "Дані архівовані",
-                                    icon: "success",
-                                });
-
-                            }
-                        }
+                        // return new Promise((resolve) => {
+                        //     setTimeout(() => {
+                        //         resolve(false)
+                        //     }, 3000)
+                        // })
                     }
                 })
+                    //   allowOutsideClick: () => { !Swal.isLoading() }
+                    .then((willPublic) => {
+                        if (willPublic.isConfirmed) {
+                            let Request = new XMLHttpRequest();
+                            Request.open('get', '/dr_arch/' + e.target.value);
+                            Request.send();
+                            Request.onreadystatechange = function () {
+                                document.body.style.cursor = "progress";
+                                if (Request.readyState == 3) {
+                                    // загрузка
+                                }
+                                if (Request.readyState == 4) {
+                                    // запрос завершён
+                                    document.body.style.cursor = "default";
+                                    //   sourceClear(true);
+
+                                    selected.set('status', 'archived');
+//                            plants.getSource().changed();
+                                    selected.setStyle(itemStyles['archived'])
+
+                                    myToast.hide();
+                                    Swal.fire({
+                                        text: "Дані архівовані",
+                                        icon: "success",
+                                    });
+
+                                }
+                            }
+                        }
+                    })
             })
     })
     document.getElementById('dr_drop').addEventListener('click', (e) => {
