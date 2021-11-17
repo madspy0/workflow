@@ -32,6 +32,7 @@ import Swal from "sweetalert2";
 import {my_toast} from "../my_toasts";
 import {my_modal} from "../my_modals";
 import {Modal} from "bootstrap";
+import {swal_person} from "./swal_person";
 // import {Modal} from "bootstrap";
 //
 // let myModal = new Modal(document.getElementById('draw_modal'), {
@@ -443,6 +444,7 @@ function processForm(e) {
 if(!!document.getElementById('profile_flag'))
 {
     my_modal(true);
+    swal_person()
 }
 document.getElementById('profile_button').addEventListener('click', function(e) {
     e.preventDefault()
