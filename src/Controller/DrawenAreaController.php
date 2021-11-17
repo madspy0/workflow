@@ -50,27 +50,28 @@ class DrawenAreaController extends AbstractController
      */
     public function profile(Request $request, EntityManagerInterface $em, TokenStorageInterface $tokenStorage): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        {
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        try {
-            $user = $tokenStorage->getToken()->getUser();
-            $cond = (array)$user->getProfile();
-            $profile = $cond ? $user->getProfile() : new Profile();
-            $form = $this->createForm(ProfileType::class, $profile);
+            try {
+                $user = $tokenStorage->getToken()->getUser();
+                $cond = (array)$user->getProfile();
+                $profile = $cond ? $user->getProfile() : new Profile();
+                $form = $this->createForm(ProfileType::class, $profile);
+                $form->handleRequest($request);
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $user->setProfile($profile);
+                    //  $profile->setUsers($user);
+                    $em->persist($profile);
+                    $em->flush();
+                    return new JsonResponse(['success' => true]);
+                }
 
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-
-                $user->setProfile($profile);
-              //  $profile->setUsers($user);
-                $em->persist($profile);
-                $em->flush();
-                return new JsonResponse(['success' => true]);
+                return new JsonResponse(['content'=>$this->render('statement/modals/draw_modal_wo_div.html.twig',['profileForm'=>$form->createView()])->getContent()]);
             }
-
-            return new JsonResponse(['content'=>$this->render('statement/modals/draw_modal_wo_div.html.twig',['profileForm'=>$form->createView()])]);
-        } catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            catch (Exception $exception) {
+                return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
         }
     }
 

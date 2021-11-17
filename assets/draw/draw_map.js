@@ -440,9 +440,11 @@ function processForm(e) {
     return false;
 
 }
-my_modal();
-if(!!document.getElementById('profile_flag')) {
-
-    let myModal = Modal.getOrCreateInstance(document.getElementById('drawmodal'));
-    myModal.show()
+if(!!document.getElementById('profile_flag'))
+{
+    my_modal(true);
 }
+document.getElementById('profile_button').addEventListener('click', function(e) {
+    e.preventDefault()
+    my_modal(true)
+})
