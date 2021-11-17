@@ -96,7 +96,7 @@ const source = new VectorSource({
         //     'outputFormat=application/json&srsname=' + proj + '&' +
         //     'bbox=' + extent.join(',') + ',' + proj;
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', '/drawen_geoms');
+        xhr.open( "GET",'/drawen_geoms');
         let onError = function () {
             source.removeLoadedExtent(extent);
             failure();
@@ -438,69 +438,11 @@ function processForm(e) {
     }
     xhr.send(formData);
     return false;
-}
 
-let profileForm = document.profile
-profileForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    let xhr = new XMLHttpRequest();
-    let formData = new FormData(profileForm);
-    xhr.open("POST", '/dr_profile', true);
-    //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function () {
-        if (this.readyState != 4) return;
-        if (xhr.status === 200) {
-            let myModal = Modal.getOrCreateInstance(document.getElementById('drawmodal'));
-            myModal.hide()
-        }
-    }
-    xhr.send(formData);
-})
-// document.getElementById('personal-data').addEventListener('click', function (e) {
-//     e.preventDefault();
-//     let xhr = new XMLHttpRequest();
-//     xhr.open("POST", '/dr_profile', true);
-//     xhr.responseType = 'json';
-//     //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-//     xhr.onreadystatechange = function () {
-//         if (this.readyState != 4) return;
-//         if (xhr.status === 200) {
-//             my_modal(this.response.content)
-//         }
-//         // myModal.innerHTML(this.response.content);
-//         //           myModal.show();
-//         //           alert(this.response.content);
-//
-//         // Swal.fire({
-//         //     html: this.response.content,
-//         //     showLoaderOnConfirm: true,
-//         //     preConfirm: () => {
-//         //         let form = document.getElementById('form_person_edit');
-//         //         if (form.attachEvent) {
-//         //             form.attachEvent("submit", processForm);
-//         //         } else {
-//         //             form.addEventListener("submit", processForm);
-//         //         }
-//         //         form.submit();
-//         //         return false;
-//         //     }
-//         // });
-//         // let formPersonData = document.getElementById('form_person_edit');
-//         // formPersonData.addEventListener('submit', function (e){
-//         //     e.preventDefault();
-//         //     let xhr1 = new XMLHttpRequest();
-//         //     let formData = new FormData(formPersonData);
-//         //     xhr1.open("POST", '/dr_profile', true);
-//         //     xhr1.onreadystatechange = function () {
-//         //         if (this.readyState != 4) return;
-//         //         if (xhr1.status === 200) {
-//         //             console.log('ok')
-//         //         } else {
-//         //             console.log('error')
-//         //         }
-//         //     }
-//         //     xhr1.send(formData);
-//         // } )
-//     }
-//     xhr.send();
-// })
+}
+my_modal();
+if(!!document.getElementById('profile_flag')) {
+
+    let myModal = Modal.getOrCreateInstance(document.getElementById('drawmodal'));
+    myModal.show()
+}

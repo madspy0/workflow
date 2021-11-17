@@ -27,17 +27,19 @@ export function my_modal() {
     xhr.onreadystatechange = function () {
         if (this.readyState != 4) return;
         if (xhr.status === 200) {
+            let resp = JSON.parse(xhr.response)
+
             let mod = document.createElement("div");
             mod.id = 'drawmodal';
             mod.className = "modal fade";
             mod.setAttribute("role", "dialog");
             mod.setAttribute("tabindex", "-1");
             mod.setAttribute("data-backdrop", "static");
-            mod.insertAdjacentHTML('beforeend', xhr.response.content);
+            mod.insertAdjacentHTML('beforeend', resp.content);
             document.body.appendChild(mod);
             let profileForm = document.getElementById('form_person_edit');
             profileForm.addEventListener('submit', listener )
         }
     }
-    xhr.send(null);
+    xhr.send();
 }
