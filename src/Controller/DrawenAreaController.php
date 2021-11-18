@@ -69,7 +69,7 @@ class DrawenAreaController extends AbstractController
                     return new JsonResponse(['success' => true]);
                 }
 
-                return new JsonResponse(['content' => $this->render('statement/modals/draw_modal_wo_div.html.twig', ['profileForm' => $form->createView()])->getContent()]);
+                return new JsonResponse(['content' => $this->render('statement/modals/swal_person.html.twig', ['profileForm' => $form->createView()])->getContent()]);
             } catch (Exception $exception) {
                 return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
@@ -103,7 +103,7 @@ class DrawenAreaController extends AbstractController
                 $form->get('middlename')->setData($profile->getMiddlename());
                 $form->get('localGoverment')->setData($profile->getLocalGoverment());
                 $form->get('address')->setData($profile->getAddress());
-                $form->get('link')->setData($profile->getLink());
+                $form->get('link')->setData($profile->getUrl());
             }
             $content = $this->renderView(
                 'statement/modals/draw_toast_wo_div.html.twig',
@@ -139,7 +139,7 @@ class DrawenAreaController extends AbstractController
                 return new JsonResponse(['success' => true]);
             }
             $content = $this->renderView(
-                'statement/modals/draw_toast_wo_div.html.twig',
+                'statement/modals/swal_area.html.twig',
                 array('form' => $form->createView(), 'drawnArea' => $drawnArea)
             );
             return new JsonResponse(['content' => $content]);

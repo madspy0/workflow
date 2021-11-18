@@ -29,7 +29,7 @@ class DrawnAreaType extends AbstractType
         $builder
             ->add('localGoverment', null, ['label' => 'Орган влади, який прийняв рішення'])
             ->add('firstname', null, ['label' => false, 'attr' => ['placeholder' => 'Ім\'я']])
-            ->add('lastname', null, ['label' => false, 'attr' => ['placeholder' => 'Призвіще']])
+            ->add('lastname', null, ['label' => false, 'attr' => ['placeholder' => 'Прізвище']])
             ->add('middlename', null, ['label' => false, 'attr' => ['placeholder' => 'По-батькові']])
             //          ->add('createdAt')
             ->add('documentsType', null, ['label' => 'Назва документа'])

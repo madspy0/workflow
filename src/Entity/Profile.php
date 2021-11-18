@@ -56,7 +56,7 @@ class Profile
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $link;
+    private $url;
 
     public function getId(): ?int
     {
@@ -147,14 +147,14 @@ class Profile
         return $this;
     }
 
-    public function getLink(): ?string
+    public function getUrl(): ?string
     {
-        return $this->link;
+        return $this->url;
     }
 
-    public function setLink(string $link): self
+    public function setUrl(string $url): self
     {
-        $this->link = $link;
+        $this->url = $url;
 
         return $this;
     }

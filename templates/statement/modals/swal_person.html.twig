@@ -1,0 +1,36 @@
+<div class="container">
+    {{ form_start(profileForm,{'attr': {'id': 'form_person_edit'}}) }}
+    <div class="row">
+        <div class="col">
+            {{ form_row(profileForm.lastname) }}
+
+            {{ form_row(profileForm.firstname) }}
+
+            {{ form_row(profileForm.middlename) }}
+        </div>
+        <div class="col">
+            Статистичнi данi
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ form_row(profileForm.localGoverment) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ form_row(profileForm.address) }}
+        </div>
+        <div class="col">
+            {{ form_row(profileForm.phone) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ form_row(profileForm.url) }}
+        </div>
+    </div>
+</div>
+{{ form_end(profileForm) }}
+</div>
+

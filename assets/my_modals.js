@@ -17,7 +17,7 @@ let listener = (e) => {
     }
     xhr.send(formData);
 }
-export function my_modal(show=false) {
+function my_modal(show=false) {
     if (!!document.getElementById('drawmodal')) {
         document.getElementById('drawmodal').parentNode.removeChild(document.getElementById('drawmodal'));
     }
