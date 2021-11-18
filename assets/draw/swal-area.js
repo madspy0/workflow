@@ -8,8 +8,9 @@ export async function swalArea(content) {
         showClass: {
             popup: `
       animate__animated
-      animate__fadeInRight
-      animate__faster
+      animate__lightSpeedInRight
+      // animate__fadeInRight
+      // animate__faster
     `
         },
         hideClass: {
@@ -22,6 +23,7 @@ export async function swalArea(content) {
         grow: 'column',
         width: 550,
         showConfirmButton: false,
-        showCloseButton: true
+        showCloseButton: true,
+        toast: true
     })
 }

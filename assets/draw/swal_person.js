@@ -22,7 +22,7 @@ export let swal_person = () => {
                                 } catch (ev) {
                                     if (ev instanceof TypeError) {
 
-                                        throw new Error('Введіть правильне посилання на сайт');
+                                        throw new Error('Введіть посилання на сайт');
                                     }
                                 }
                             }
@@ -56,7 +56,7 @@ export let swal_person = () => {
                             )
                         })
                 },
-                allowOutsideClick: () => !Swal.isLoading()
+            //    allowOutsideClick: () => !Swal.isLoading()
             })
             //     .then((result) => {
             //     if (result.isConfirmed) {

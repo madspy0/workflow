@@ -1,4 +1,3 @@
-import {my_toast} from "../my_toasts";
 import Swal from "sweetalert2";
 import {swalArea} from "./swal-area";
 
