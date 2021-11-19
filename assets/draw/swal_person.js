@@ -35,7 +35,6 @@ export let swal_person = () => {
                         Swal.showValidationMessage(
                             '<i class="fa fa-info-circle"></i>  ' + e.message
                         )
-                        return false;
                     }
                     return fetch(`/dr_profile`, {
                         method: 'POST',

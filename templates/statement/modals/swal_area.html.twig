@@ -1,9 +1,9 @@
-{{ form_start(form) }}
-
 <div class="container">
-    <div class="row ">
+    {{ form_start(form) }}
+
+    <div class="row gx-2">
         <div class="col">
-            <strong>Вповноважена особа (ПIБ)</strong>
+            <p class="fw-bold fs-6">Вповноважена особа (ПIБ)</p>
         </div>
         <div class="col">
             {{ form_row(form.lastname) }}
@@ -69,12 +69,16 @@
     </div>
 
     <div class="row">
-        <div class="col">
-            {% if workflow_has_marked_place(drawnArea, 'published') or workflow_has_marked_place(drawnArea, 'archived') %}
-                {{ form_widget(form.save,{'attr':{'class':'d-none'}}) }}
-            {% else %}
-                {{ form_widget(form.save,{'attr':{'class':'btn-primary'}}) }}
-            {% endif %}
+        <div class="col area-buttons">
+
+            <button type="button"
+                    id="dr_save" value="{{ drawnArea.id }}"
+                    class="btn btn-primary
+               {% if workflow_has_marked_place(drawnArea, 'published') or workflow_has_marked_place(drawnArea, 'archived') %}
+                d-none
+                {% endif %}
+                ">Зберегти
+            </button>
 
             <button type="button"
                     id="dr_drop" value="{{ drawnArea.id }}"
@@ -101,9 +105,12 @@
                 " id="dr_arch" value="{{ drawnArea.id }}"
             >В архів
             </button>
-            <button type="button" class="btn btn-info mytoast-hide" data-bs-dismiss="toast">Відмінити</button>
+
+            <button type="button" class="btn btn-info">Відмінити</button>
+
         </div>
     </div>
+
+    {{ form_row(form.geom) }}
+    {{ form_end(form) }}
 </div>
-{{ form_row(form.geom) }}
-{{ form_end(form) }}

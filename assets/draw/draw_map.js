@@ -30,7 +30,7 @@ import {listener} from "../listener";
 import {Draw, Modify, Select} from "ol/interaction";
 
 import {swal_person} from "./swal_person";
-
+import {areaButtonsControl} from "./area-buttons-control";
 
 export const itemStyles = {
     'created': new Style({
@@ -77,7 +77,7 @@ export const formatArea = function (polygon) {
     if (area > 10000) {
         output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км \u00B2';
     } else {
-        output = Math.round(area * 100) / 100 + ' ' + 'м \u0000B2';
+        output = Math.round(area * 100) / 100 + ' ' + 'м \u00B2';
     }
     return output;
 };
@@ -90,7 +90,7 @@ const source = new VectorSource({
         //     'outputFormat=application/json&srsname=' + proj + '&' +
         //     'bbox=' + extent.join(',') + ',' + proj;
         let xhr = new XMLHttpRequest();
-        xhr.open( "GET",'/drawen_geoms');
+        xhr.open("GET", '/drawen_geoms');
         let onError = function () {
             source.removeLoadedExtent(extent);
             failure();
@@ -434,13 +434,24 @@ function processForm(e) {
     return false;
 
 }
-if(!!document.getElementById('profile_flag'))
-{
+
+if (!!document.getElementById('profile_flag')) {
     // my_modal(true);
-    swal_person()
+    setTimeout(() => {
+        swal_person()
+    }, 1000)
 }
-document.getElementById('profile_button').addEventListener('click', function(e) {
+document.getElementById('profile_button').addEventListener('click', function (e) {
     e.preventDefault()
-  //  my_modal(true)
+    //  my_modal(true)
     swal_person()
+})
+
+document.querySelector('body').addEventListener('click', event => {
+
+    // This version checks the current element for a match, as well as it's parents.
+    // If none is found, it returns null
+    if (event.target.matches('.area-buttons') || event.target.closest('.area-buttons')) {
+        areaButtonsControl(event)
+    }
 })

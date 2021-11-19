@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
 use DateTimeImmutable;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Doctrine\ORM\ORMException;
 class DrawenAreaController extends AbstractController
 {
     /**
@@ -143,7 +143,11 @@ class DrawenAreaController extends AbstractController
                 array('form' => $form->createView(), 'drawnArea' => $drawnArea)
             );
             return new JsonResponse(['content' => $content]);
-        } catch (Exception $exception) {
+        }
+        catch(ORMException $exception){
+            return $this->json(['error' => $exception->getMessage()]);
+        }
+        catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

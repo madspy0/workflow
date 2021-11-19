@@ -15,7 +15,7 @@ export function update_draw(selected, map=null) {
             if(request.status === 200) {
                 let obj = JSON.parse(request.responseText);
          //       my_toast(obj.content, selected, map);
-                swalArea(obj.content);
+                swalArea(obj.content, selected.getGeometry().getArea());
             } else {
                 Swal.fire({
                     text: "Операцію з об'єктом заблоковано"
