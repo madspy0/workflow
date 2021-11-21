@@ -1,5 +1,3 @@
-import {Vector as VectorSource} from 'ol/source';
-import {Vector as VectorLayer} from 'ol/layer';
 import {Draw, Select} from 'ol/interaction';
 import {Fill, Stroke, Style, Circle} from 'ol/style';
 import {map, plants} from "./draw_map";
@@ -9,7 +7,7 @@ import {Collection} from "ol";
 import {swalArea} from "./swal-area";
 import Swal from "sweetalert2";
 
-export function toggleDraw() {
+ function toggleDraw() {
 
     const type = 'Polygon';
     if(Swal.isVisible()) {Swal.close()}

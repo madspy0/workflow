@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
-import {Modify} from "ol/interaction";
-import {drawLayer, formatArea, itemStyles, map} from "./draw_map";
+import {Modify, Select} from "ol/interaction";
+import {formatArea, itemStyles, map} from "./draw_map";
 import {WKT} from "ol/format";
 import {categoryForm} from "./category-form";
 import {getArea} from "ol/sphere";
@@ -8,8 +8,8 @@ import Litepicker from "litepicker";
 import {toggle_form} from "./toggle-form";
 import {Collection} from "ol";
 
-export async function swalArea(selectClick, selectMove) {
-    let feature = selectClick.getFeatures().getArray()[0];
+export async function swalArea(feature) {
+    //let feature = selectClick.getFeatures().getArray()[0];
     let featureModify = new Collection();
     if (feature.get('status') === "created") {
         featureModify.push(feature)
@@ -27,7 +27,6 @@ export async function swalArea(selectClick, selectMove) {
         // }
     });
     modify.on('modifystart', function (e) {
-        selectMove.setActive(false)
         let sketch = e.features.getArray()[0];
         sketch.getGeometry().on('change', function (evt) {
             document.getElementById('drawn_area_area').value = formatArea(evt.target);
@@ -35,7 +34,6 @@ export async function swalArea(selectClick, selectMove) {
     })
     modify.on("modifyend", function (e) {
         document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(e.features.getArray()[0].getGeometry());
-        selectMove.setActive(true)
     })
     map.addInteraction(modify);
 
@@ -88,7 +86,14 @@ export async function swalArea(selectClick, selectMove) {
                                             .then(data => {
                                                 if (data.success) {
                                                     feature.set('status', 'published');
+                                                    //map.removeInteraction(modify)
                                                     feature.setStyle(itemStyles['published']);
+                                                    map.getInteractions().forEach(f => {
+                                                        if (f instanceof Select) {
+                                                            f.getFeatures().clear()
+                                                        }
+                                                    })
+                                                    map.removeInteraction(modify);
                                                     Swal.close()
                                                 }
                                             })
@@ -167,21 +172,26 @@ export async function swalArea(selectClick, selectMove) {
                                     })
                             })
                         },
-                    didRender: () => {
-                        selectMove.getFeatures().clear();
-                    },
-                    didDestroy: () => {
+                    // didRender: () => {
+                    //
+                    // },
+                    willClose: () => {
                     //    selectClick.getFeatures().clear();
+                        map.getInteractions().forEach(f => {
+                            if (f instanceof Select) {
+                                f.getFeatures().clear()
+                            }
+                        })
                         map.removeInteraction(modify);
                     },
-                     willClose: () => {
-                    //         //    if (selectClick.getLayer(feature)) {
-                    //         //selectClick.getLayer(feature).getSource().refresh();
-                         selectClick.getFeatures().clear();
-                    //     map.removeInteraction(modify);
-                    //
-                    //         //    }
-                         },
+                    //  willClose: () => {
+                    // //         //    if (selectClick.getLayer(feature)) {
+                    // //         //selectClick.getLayer(feature).getSource().refresh();
+                    //      selectClick.getFeatures().clear();
+                    // //     map.removeInteraction(modify);
+                    // //
+                    // //         //    }
+                    //      },
                         showClass: {
                             popup: `
       animate__animated
@@ -208,7 +218,7 @@ export async function swalArea(selectClick, selectMove) {
                             Swal.showLoading();
                             let form = document.drawn_area;
                             let formData = new FormData(form);
-                            formData.set('drawn_area[area]', getArea(selectClick.getFeatures().getArray()[0].getGeometry()))
+                            formData.set('drawn_area[area]', getArea(feature.getGeometry()))
                             try {
                                 for (let item of formData.entries()) {
                                     if (item[0] === "drawn_area[link]") {

@@ -1,7 +1,7 @@
 import {Control} from 'ol/control';
 import {toggleMeasure} from "../add-measure";
-import {clickInfo} from "../click-info";
-import {toggleDraw} from "./add-draw";
+//import {clickInfo} from "../click-info";
+//import {toggleDraw} from "./add-draw";
 import {map} from "./draw_map";
 import {Draw, Select} from "ol/interaction";
 
@@ -55,11 +55,6 @@ class DrawButtonsControl extends Control {
     }
 
     toggleButtons(elem) {
-        map.getInteractions().forEach(f=>{
-            if(f instanceof Draw) {
-                map.removeInteraction(f)
-            }
-        })
         let buttons = document.getElementsByClassName("btn-edit");
         for (let b of buttons) {
             if (elem !== b) {
@@ -80,7 +75,25 @@ class DrawButtonsControl extends Control {
         evt.preventDefault();
         this.toggleButtons(evt.currentTarget);
         if (evt.currentTarget.classList.contains('active')) {
-            clickInfo();
+
+            map.getInteractions().forEach(f => {
+                if (f instanceof Select) {
+                    f.setActive(true)
+                }
+                if (f instanceof Draw) {
+                    f.setActive(false)
+                }
+            })
+        } else {
+
+            map.getInteractions().forEach(f => {
+                if (f instanceof Select) {
+                    f.setActive(false)
+                }
+                if (f instanceof Draw) {
+                    f.setActive(false)
+                }
+            })
         }
     }
 
@@ -88,10 +101,20 @@ class DrawButtonsControl extends Control {
         evt.preventDefault();
         this.toggleButtons(evt.currentTarget);
         if (evt.currentTarget.classList.contains('active')) {
-            toggleDraw();
-        } {
             map.getInteractions().forEach(f => {
-                if(f instanceof Select) {
+                if (f instanceof Select) {
+                    f.setActive(false)
+                }
+                if (f instanceof Draw) {
+                    f.setActive(true)
+                }
+            })
+        } else {
+            map.getInteractions().forEach(f => {
+                if (f instanceof Select) {
+                    f.setActive(false)
+                }
+                if (f instanceof Draw) {
                     f.setActive(false)
                 }
             })

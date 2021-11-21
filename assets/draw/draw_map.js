@@ -10,16 +10,12 @@ import '../scss/app/draw_map.scss';
 
 import Map from 'ol/Map';
 import View from 'ol/View';
-import {Fill, Stroke, Style} from 'ol/style';
+import {Circle, Fill, Stroke, Style} from 'ol/style';
 
 import {OSM, Vector as VectorSource, TileWMS as TileWMSSource, XYZ} from 'ol/source';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {fromLonLat} from "ol/proj";
-
 import LayerSwitcher from 'ol-layerswitcher';
-
-import DrawButtonsControl from './draw_buttons_control';
-
 import '../portal/app';
 import LayerGroup from "ol/layer/Group";
 import {Feature} from "ol";
@@ -30,6 +26,10 @@ import {listener} from "../listener";
 import {Draw, Modify, Select} from "ol/interaction";
 
 import {swal_person} from "./swal_person";
+import {addInteractions} from "./add-interactions";
+import DrawButtonsControl from './draw_buttons_control';
+import Swal from "sweetalert2";
+import {swalArea} from "./swal-area";
 
 export const itemStyles = {
     'created': new Style({
@@ -356,16 +356,50 @@ export const map = new Map({
     ])
 });
 
+let draw = new Draw({
+    source: plants.getSource(),
+    type: 'Polygon',
+    style: new Style({
+        fill: new Fill({
+            color: 'rgba(255, 255, 255, 0.2)',
+        }),
+        stroke: new Stroke({
+            color: 'rgba(0, 0, 0, 0.5)',
+            lineDash: [10, 10],
+            width: 2,
+        }),
+        image: new Circle({
+            radius: 5,
+            stroke: new Stroke({
+                color: 'rgba(0, 0, 0, 0.7)',
+            }),
+            fill: new Fill({
+                color: 'rgba(255, 255, 255, 0.2)',
+            }),
+        }),
+    }),
+});
+draw.on('drawend', function (evt) {
+    evt.preventDefault();
+    let feature = evt.feature;
+    feature.set('number', 'new');
+    feature.set('status', 'created');
+    swalArea(feature)
+})
+draw.setActive(false);
 const layerSwitcher = new LayerSwitcher({
     reverse: false,
     groupSelectStyle: 'group',
     target: document.getElementsByClassName('edit-buttons')[0],
 
 });
+addInteractions();
+map.addInteraction(draw);
 
 map.addControl(new DrawButtonsControl());
 //document.getElementsByClassName('edit-buttons')[0].append(layerSwitcher);
 map.addControl(layerSwitcher);
+
 
 listener();
 
