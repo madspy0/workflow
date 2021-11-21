@@ -1,13 +1,13 @@
 import Overlay from 'ol/Overlay';
 import {Select} from "ol/interaction";
 import {redirect} from "./redirect";
-import {update_draw} from "./draw/update";
 
-let map;
 let infoTooltip;
 let infoTooltipElement;
 import {click, pointerMove, never} from 'ol/events/condition';
-import {plants} from "./draw/draw_map";
+import {map, plants} from "./draw/draw_map";
+import {swalArea} from "./draw/swal-area";
+import Swal from "sweetalert2";
 
 
 /**
@@ -32,50 +32,30 @@ function createInfoTooltip() {
     map.addOverlay(infoTooltip);
 }
 
-export function clickInfo(smap) {
-    map = smap;
+export function clickInfo() {
+
     createInfoTooltip();
 
     const selectClick = new Select({
-        toggleCondition: function () {
-            let toast = document.getElementById('draw_toast');
-            return toast && toast.classList.contains('show');
-
-        },
         layers: [plants],
-        filter: function () {
-            let toast = document.getElementById('draw_toast');
-            return (!toast || toast.classList.contains('hide'));
-
-        }
     });
 
     const selectMove = new Select({
         condition: pointerMove,
         layers: [plants],
-        filter: function () {
-            let toast = document.getElementById('draw_toast');
-            return (!toast || toast.classList.contains('hide'));
-
-        }
     });
 
     map.getInteractions().extend([selectClick, selectMove]);
 
     selectClick.on('select', function (e) {
-        let toast = document.getElementById('draw_toast');
-        if ((toast !== null) && toast.classList.contains('show')) {
-            return;
-        }
-
         let selected = e.target.getFeatures().getArray()[0];
         if (selected != null) {
             if (typeof selected.get('nom') !== 'undefined') {
                 redirect('/appl/' + selected.get('nom') + '?cc=' + map.getView().getCenter().join() + '&z=' + map.getView().getZoom());
             } else if (typeof selected.get('number') !== 'undefined') {
-                update_draw(selected, map);
+                swalArea(selectClick, selectMove)
             }
-        }
+        } else { if(Swal.isVisible()) {Swal.close()}}
     });
     selectMove.on('select', function (e) {
         let toast = document.getElementById('draw_toast');

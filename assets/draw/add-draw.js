@@ -1,20 +1,20 @@
 import {Vector as VectorSource} from 'ol/source';
 import {Vector as VectorLayer} from 'ol/layer';
-import {Draw} from 'ol/interaction';
+import {Draw, Select} from 'ol/interaction';
 import {Fill, Stroke, Style, Circle} from 'ol/style';
-import {formatArea} from "./draw_map";
-import {my_toast} from "../my_toasts";
-import {defaultStyle, drawLayer} from "./draw_map";
-import LayerGroup from "ol/layer/Group";
+import {map, plants} from "./draw_map";
 
-let map;
+import {pointerMove} from "ol/events/condition";
+import {Collection} from "ol";
+import {swalArea} from "./swal-area";
+import Swal from "sweetalert2";
 
-export function toggleDraw(smap, status) {
-    map = smap;
+export function toggleDraw() {
+
     const type = 'Polygon';
-    let source = drawLayer.getSource();
+    if(Swal.isVisible()) {Swal.close()}
     let draw = new Draw({
-        source: source,
+        source: plants.getSource(),
         type: type,
         style: new Style({
             fill: new Fill({
@@ -36,38 +36,46 @@ export function toggleDraw(smap, status) {
             }),
         }),
     });
-    // let listener;
-    // let sketch;
+
     map.addInteraction(draw);
-    // draw.on('drawstart', function(evt){
-    //     sketch = evt.feature;
-    //     // console.log(sketch)
-    //     listener = sketch.getGeometry().on('change', function (evt) {
-    //         const geom = evt.target;
-    //         console.log(formatArea(geom))
-    //         // let area = document.getElementById('drawn_area_area');
-    //        // area.value = "77";//formatArea(geom);
-    //     });
+
+    // draw.on('drawstart', function (evt){
+    //     evt.preventDefault()
+    //     map.getInteractions().forEach(f => {
+    //         if(f instanceof Select) {
+    //             f.setActive(false)
+    //         }
+    //     })
     // })
+
     draw.on('drawend', function (evt) {
+        evt.preventDefault();
         let feature = evt.feature;
-        //let geom = new WKT().writeGeometry(feature.getGeometry());
-        //
-        //myModal.show();
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", '/dr_add', true);
-        xhr.responseType = 'json';
-        //        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.onreadystatechange = function () {
-            if (this.readyState != 4) return;
-            //myModal.innerHTML(this.response.content);
-            //           myModal.show();
-            //           alert(this.response.content);
-            my_toast(this.response.content, feature, map, 'add');
-            document.getElementById('drawn_area_area').value = formatArea(feature.getGeometry());
-        }
-        xhr.send();
-        // unByKey(listener);
+        feature.set('number', 'new');
+        feature.set('status', 'created')
+        // map.getInteractions().forEach(f => {
+        //     if(f instanceof Select) {
+        //         f.setActive(false)
+        //     }
+        // })
+        let features = new Collection();
+    //    plants.getSource().addFeature(feature);
+        features.push(feature)
+        const selectClick = new Select({
+            features: features,
+            layers: [plants],
+        });
+
+        const selectMove = new Select({
+            condition: pointerMove,
+            layers: [plants],
+        });
+
+        map.getInteractions().extend([selectClick, selectMove]);
+        // draw.finishDrawing()
+        // map.removeInteraction(draw)
+        swalArea(selectClick, selectMove);
+
     });
 
 }

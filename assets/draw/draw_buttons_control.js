@@ -2,7 +2,8 @@ import {Control} from 'ol/control';
 import {toggleMeasure} from "../add-measure";
 import {clickInfo} from "../click-info";
 import {toggleDraw} from "./add-draw";
-import {sourceClear} from "./draw_map";
+import {map} from "./draw_map";
+import {Draw, Select} from "ol/interaction";
 
 class DrawButtonsControl extends Control {
     constructor(opt_options) {
@@ -54,6 +55,11 @@ class DrawButtonsControl extends Control {
     }
 
     toggleButtons(elem) {
+        map.getInteractions().forEach(f=>{
+            if(f instanceof Draw) {
+                map.removeInteraction(f)
+            }
+        })
         let buttons = document.getElementsByClassName("btn-edit");
         for (let b of buttons) {
             if (elem !== b) {
@@ -64,12 +70,7 @@ class DrawButtonsControl extends Control {
 
     handleArea(evt) {
         evt.preventDefault();
-        let toast = document.getElementById('draw_toast');
-        if ((toast !== null) && toast.classList.contains('show')) {
-            return;
-        }
         this.toggleButtons(evt.currentTarget);
-        sourceClear();
         if (evt.currentTarget.classList.contains('active')) {
             toggleMeasure(this.getMap());
         }
@@ -77,27 +78,23 @@ class DrawButtonsControl extends Control {
 
     handleInfo(evt) {
         evt.preventDefault();
-        let toast = document.getElementById('draw_toast');
-        if ((toast !== null) && toast.classList.contains('show')) {
-            return;
-        }
         this.toggleButtons(evt.currentTarget);
-        sourceClear();
         if (evt.currentTarget.classList.contains('active')) {
-            clickInfo(this.getMap());
+            clickInfo();
         }
     }
 
     handleDraw(evt) {
         evt.preventDefault();
-        let toast = document.getElementById('draw_toast');
-        if ((toast !== null) && toast.classList.contains('show')) {
-            return;
-        }
         this.toggleButtons(evt.currentTarget);
-        sourceClear();
         if (evt.currentTarget.classList.contains('active')) {
-            toggleDraw(this.getMap());
+            toggleDraw();
+        } {
+            map.getInteractions().forEach(f => {
+                if(f instanceof Select) {
+                    f.setActive(false)
+                }
+            })
         }
     }
 

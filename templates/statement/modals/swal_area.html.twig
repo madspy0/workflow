@@ -73,7 +73,7 @@
 
             <button type="button"
                     id="dr_save" value="{{ drawnArea.id }}"
-                    class="btn btn-primary
+                    class="btn btn-primary swal2-actions swal2-styled
                {% if workflow_has_marked_place(drawnArea, 'published') or workflow_has_marked_place(drawnArea, 'archived') %}
                 d-none
                 {% endif %}
@@ -82,18 +82,18 @@
 
             <button type="button"
                     id="dr_drop" value="{{ drawnArea.id }}"
-                    class="btn btn-warning
+                    class="btn btn-warning swal2-warning swal2-styled
                 {% if ((drawnArea.id is null) or (workflow_can(drawnArea, 'to_archive')) or workflow_has_marked_place(drawnArea, 'archived')) %}
                 d-none
                 {% endif %}
                 ">Видалити
             </button>
 
-            <button type="button" class="btn btn-success
+            <button type="button" class="btn btn-success swal2-success swal2-styled
                 {% if (drawnArea.id is null) or workflow_can(drawnArea, 'to_archive') or workflow_has_marked_place(drawnArea, 'archived') %}
                 d-none
                 {% endif %}
-            " id="dr_publ" value="{{ drawnArea.id }}"
+            " id="dr_publ"
             >До ПКК
             </button>
 
@@ -106,7 +106,7 @@
             >В архів
             </button>
 
-            <button type="button" class="btn btn-info">Відмінити</button>
+            <button type="button" class="btn btn-info swal2-info swal2-styled" id="dr_close">Відмінити</button>
 
         </div>
     </div>

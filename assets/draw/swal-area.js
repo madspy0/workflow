@@ -1,76 +1,259 @@
 import Swal from "sweetalert2";
+import {Modify} from "ol/interaction";
+import {drawLayer, formatArea, itemStyles, map} from "./draw_map";
+import {WKT} from "ol/format";
+import {categoryForm} from "./category-form";
+import {getArea} from "ol/sphere";
+import Litepicker from "litepicker";
+import {toggle_form} from "./toggle-form";
+import {Collection} from "ol";
 
-export async function swalArea(content, area) {
+export async function swalArea(selectClick, selectMove) {
+    let feature = selectClick.getFeatures().getArray()[0];
+    let featureModify = new Collection();
+    if (feature.get('status') === "created") {
+        featureModify.push(feature)
+    }
+    const modify = new Modify({
+        features: featureModify,
+        // insertVertexCondition: () => {
+        //     return (feature.get('status') === "created")
+        // }
+        // insertVertexCondition: () => {
+        //     // prevent new vertices to be added to the polygons
+        //     return !selectClick.getFeatures().getArray().every(function(feature) {
+        //         return feature.getGeometry().getType().match(/Polygon/);
+        //     });
+        // }
+    });
+    modify.on('modifystart', function (e) {
+        selectMove.setActive(false)
+        let sketch = e.features.getArray()[0];
+        sketch.getGeometry().on('change', function (evt) {
+            document.getElementById('drawn_area_area').value = formatArea(evt.target);
+        });
+    })
+    modify.on("modifyend", function (e) {
+        document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(e.features.getArray()[0].getGeometry());
+        selectMove.setActive(true)
+    })
+    map.addInteraction(modify);
 
     // RIGHT SIDEBAR
-    await Swal.fire({
-            title: 'Атрибутивна інформація',
-            html: content,
-            position: 'top-end',
-            showClass: {
-                popup: `
+    let reqUrl;
+    if (feature.get('number') === 'new') {
+        reqUrl = '/dr_add'
+    } else {
+        reqUrl = '/dr_upd/' + feature.get('number')
+    }
+
+    await fetch(reqUrl)
+        .then(response => response.json())
+        .then((data) => {
+                Swal.fire({
+                        title: 'Атрибутивна інформація',
+                        html: data.content,
+                        position: 'top-end',
+                        // didRender: (popup) => {
+                        // },
+                        willOpen: () => {
+                            categoryForm();
+                            document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(feature.getGeometry());
+                            document.getElementById('drawn_area_area').value = formatArea(feature.getGeometry());
+                            new Litepicker({
+                                element: document.getElementById('drawn_area_solutedAt'),
+                                autoRefresh: true,
+                                lang: "uk-UA",
+                                format: "DD-MM-YYYY"
+                            });
+                            document.getElementById('dr_close').addEventListener('click', () => {
+                                Swal.clickCancel()
+                            })
+                            document.getElementById('dr_save').addEventListener('click', () => {
+                                Swal.clickConfirm()
+                            })
+                            document.getElementById('dr_publ').addEventListener('click', (e) => {
+                                e.preventDefault()
+                                Swal.fire({
+                                    title: "Ви впевнені?",
+                                    text: "Після публікації ви не зможете змінити дані",
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Опублікувати',
+                                    cancelButtonText: 'Скасувати'
+                                }).then(willPubl => {
+                                    if (willPubl.isConfirmed) {
+                                        fetch('/dr_publ/' + feature.get('number'))
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    feature.set('status', 'published');
+                                                    feature.setStyle(itemStyles['published']);
+                                                    Swal.close()
+                                                }
+                                            })
+                                    }
+                                })
+
+                            })
+                            document.getElementById('dr_arch').addEventListener('click', (e) => {
+                                e.preventDefault()
+                                fetch('/dr_archground/' + feature.get('number'))
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.content) {
+                                            Swal.fire({
+                                                title: 'Підстави',
+                                                grow: 'column',
+                                                html: data.content,
+                                                showConfirmButton: true,
+                                                showCloseButton: true,
+                                                showCancelButton: true,
+                                            //    buttonsStyling: false,
+                                                willOpen: () => {
+                                                    new Litepicker({
+                                                        element: document.getElementById('archive_ground_gov_registrationAt'),
+                                                        autoRefresh: true,
+                                                        lang: "uk-UA",
+                                                        format: "DD-MM-YYYY"
+                                                    });
+                                                    new Litepicker({
+                                                        element: document.getElementById('archive_ground_documentDate'),
+                                                        autoRefresh: true,
+                                                        lang: "uk-UA",
+                                                        format: "DD-MM-YYYY"
+                                                    });
+                                                    let groundForm = document.archive_ground;
+                                                    let groundGovForm = document.archive_ground_gov;
+                                                    let formCheck = document.getElementById('formCheck');
+                                                    let formGovCheck = document.getElementById('formGovCheck');
+                                                    toggle_form(groundForm)
+                                                    formCheck.addEventListener('change', () => {
+                                                        toggle_form(groundForm);
+                                                        toggle_form(groundGovForm);
+                                                    })
+                                                    formGovCheck.addEventListener('change', () => {
+                                                        toggle_form(groundForm);
+                                                        toggle_form(groundGovForm);
+                                                    })
+                                                },
+                                                preConfirm: () => {
+                                                    let checkGov = document.getElementById('formGovCheck')
+
+                                                    return fetch('/dr_archground/' + feature.get('number'), {
+                                                        method: "POST",
+                                                        body: checkGov.checked ?
+                                                            new FormData(document.archive_ground_gov)
+                                                            : new FormData(document.archive_ground)
+                                                    }).then(response => {
+                                                        if (!response.ok) {
+                                                            throw new Error(response.statusText)
+                                                        }
+                                                        return response.json()
+                                                    }).then(data => {
+                                                        console.log(data)
+                                                        feature.set('status', 'archived');
+                                                        feature.setStyle(itemStyles['archived']);
+                                                    })
+                                                        .catch(error => {
+                                                            Swal.showValidationMessage(
+                                                                `Request failed: ${error}`
+                                                            )
+                                                        })
+                                                }
+                                            });
+
+                                        }
+                                    })
+                            })
+                        },
+                    didRender: () => {
+                        selectMove.getFeatures().clear();
+                    },
+                    didDestroy: () => {
+                    //    selectClick.getFeatures().clear();
+                        map.removeInteraction(modify);
+                    },
+                     willClose: () => {
+                    //         //    if (selectClick.getLayer(feature)) {
+                    //         //selectClick.getLayer(feature).getSource().refresh();
+                         selectClick.getFeatures().clear();
+                    //     map.removeInteraction(modify);
+                    //
+                    //         //    }
+                         },
+                        showClass: {
+                            popup: `
       animate__animated
       animate__lightSpeedInRight
       animate__fadeInRight
       animate__faster
     `
-            },
-            hideClass: {
-                popup: `
+                        },
+                        hideClass: {
+                            popup: `
       animate__animated
       animate__fadeOutRight
       animate__faster
     `
-            },
-            grow: 'column',
-            width: 550,
-            showConfirmButton: false,
-            showCloseButton: true,
-            //  toast: true,
-            backdrop: false,
+                        },
+                        grow: 'column',
+                        width: 550,
+                        showConfirmButton: false,
+                        showCloseButton: true,
+                        //  toast: true,
+                        backdrop: false,
 
-            preConfirm: () => {
-                Swal.showLoading();
-                let form = document.drawn_area;
-                let formData = new FormData(form);
-                formData.set('drawn_area[area]', area)
-                try {
-                    for (let item of formData.entries()) {
-                        if (item[0] === "drawn_area[link]") {
-                            let url;
+                        preConfirm: () => {
+                            Swal.showLoading();
+                            let form = document.drawn_area;
+                            let formData = new FormData(form);
+                            formData.set('drawn_area[area]', getArea(selectClick.getFeatures().getArray()[0].getGeometry()))
                             try {
-                                url = new URL(item[1]);
-                            } catch (ev) {
-                                if (ev instanceof TypeError) {
-                                    throw new Error('Введіть посилання на сайт');
+                                for (let item of formData.entries()) {
+                                    if (item[0] === "drawn_area[link]") {
+                                        let url;
+                                        try {
+                                            url = new URL(item[1]);
+                                        } catch (ev) {
+                                            if (ev instanceof TypeError) {
+                                                throw new Error('Введіть посилання на сайт');
+                                            }
+                                        }
+                                    }
+                                    if (item[1] === "") {
+                                        throw new Error('Значення поля ' + item[0] + ' не може бути порожнім');
+                                    }
                                 }
+                            } catch (e) {
+                                Swal.showValidationMessage(
+                                    '<i class="fa fa-info-circle"></i>  ' + e.message
+                                )
+                                return Promise.resolve(false);
                             }
-                        }
-                        if (item[1] === "") {
-                            throw new Error('Значення поля ' + item[0] + ' не може бути порожнім');
+                            return fetch(form.action, {
+                                method: 'POST',
+                                body: formData
+                            }).then(response => {
+                                if (!response.ok) {
+                                    throw new Error(response.statusText)
+                                }
+                                return response.json()
+                            }).then(data => {
+                                if (data.id) {
+                                    feature.set('number', data.id);
+                                    feature.set('appl', data.appl);
+                                    Swal.close()
+                                }
+                            })
+                                .catch(error => {
+                                    Swal.showValidationMessage(
+                                        `Request failed: ${error}`
+                                    )
+                                })
                         }
                     }
-                } catch (e) {
-                    Swal.showValidationMessage(
-                        '<i class="fa fa-info-circle"></i>  ' + e.message
-                    )
-                    return Promise.resolve(false);
-                }
-                return fetch(form.action, {
-                    method: 'POST',
-                    body: formData
-                }).then(response => {
-                    if (!response.ok) {
-                        throw new Error(response.statusText)
-                    }
-                    return response.json()
-                })
-                    .catch(error => {
-                        Swal.showValidationMessage(
-                            `Request failed: ${error}`
-                        )
-                    })
+                )
             }
-        }
-    )
+        )
 }

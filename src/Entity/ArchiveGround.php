@@ -18,16 +18,6 @@ class ArchiveGround
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=21)
-     */
-    private $cadnum;
-
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
-    private $registrationAt;
-
-    /**
      * @ORM\Column(type="string", length=64)
      */
     private $localGoverment;
@@ -60,30 +50,6 @@ class ArchiveGround
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getCadnum(): ?string
-    {
-        return $this->cadnum;
-    }
-
-    public function setCadnum(?string $cadnum): self
-    {
-        $this->cadnum = $cadnum;
-
-        return $this;
-    }
-
-    public function getRegistrationAt(): ?\DateTimeImmutable
-    {
-        return $this->registrationAt;
-    }
-
-    public function setRegistrationAt(?\DateTimeImmutable $registrationAt): self
-    {
-        $this->registrationAt = $registrationAt;
-
-        return $this;
     }
 
     public function getLocalGoverment(): ?string

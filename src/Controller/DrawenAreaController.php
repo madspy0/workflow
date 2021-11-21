@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\ArchiveGround;
+use App\Entity\ArchiveGroundGov;
 use App\Entity\DrawnArea;
 use App\Entity\Profile;
 use App\Form\ArchiveGroundType;
+use App\Form\ArchiveGroundGovType;
 use App\Form\DrawnAreaType;
 use App\Form\ProfileType;
 use App\Repository\DrawnAreaRepository;
@@ -23,6 +25,7 @@ use Symfony\Component\Workflow\WorkflowInterface;
 use DateTimeImmutable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\ORMException;
+
 class DrawenAreaController extends AbstractController
 {
     /**
@@ -94,7 +97,7 @@ class DrawenAreaController extends AbstractController
                 $drawnArea->setAuthor($this->getUser());
                 $em->persist($drawnArea);
                 $em->flush();
-                return new JsonResponse(['success' => true, 'id' => $drawnArea->getId()]);
+                return new JsonResponse(['success' => true, 'id' => $drawnArea->getId(), 'appl' => $drawnArea->getLastname() . ' ' . $drawnArea->getFirstname()]);
             }
             $profile = $this->getUser()->getProfile();
             if ($profile) {
@@ -106,7 +109,7 @@ class DrawenAreaController extends AbstractController
                 $form->get('link')->setData($profile->getUrl());
             }
             $content = $this->renderView(
-                'statement/modals/draw_toast_wo_div.html.twig',
+                'statement/modals/swal_area.html.twig',
                 array('form' => $form->createView(), 'drawnArea' => $drawnArea)
             );
             return new JsonResponse(['content' => $content]);
@@ -143,11 +146,9 @@ class DrawenAreaController extends AbstractController
                 array('form' => $form->createView(), 'drawnArea' => $drawnArea)
             );
             return new JsonResponse(['content' => $content]);
-        }
-        catch(ORMException $exception){
+        } catch (ORMException $exception) {
             return $this->json(['error' => $exception->getMessage()]);
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -237,7 +238,7 @@ class DrawenAreaController extends AbstractController
     /**
      * @Route("/dr_archground/{drawnArea}", name="drawen.arch.ground", methods={"GET", "POST"}, options={"expose"=true})
      */
-    public function archGroundForm(DrawnArea $drawnArea, Request $request, EntityManagerInterface $em): JsonResponse
+    public function archGroundForm(DrawnArea $drawnArea, Request $request, EntityManagerInterface $em, WorkflowInterface $drawnAreaFlowStateMachine): JsonResponse
     {
         try {
             $archiveGround = new ArchiveGround();
@@ -245,13 +246,32 @@ class DrawenAreaController extends AbstractController
             $form = $this->createForm(ArchiveGroundType::class, $archiveGround);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
+                $drawnAreaFlowStateMachine-> apply($drawnArea, 'to_archive');
+                $drawnArea->setArchivedAt(new DateTimeImmutable('now'));
+                $em->persist($drawnArea);
                 $em->persist($archiveGround);
                 $em->flush();
-                return new JsonResponse(['yes'=>'ok']);
+                return new JsonResponse(['yes' => 'ok']);
+            }
+
+            $archiveGroundGov = new ArchiveGroundGov();
+            $archiveGroundGov->setDrawnArea($drawnArea);
+            $formGov = $this->createForm(ArchiveGroundGovType::class, $archiveGroundGov);
+            $formGov->handleRequest($request);
+            if ($formGov->isSubmitted() && $formGov->isValid()) {
+                $drawnAreaFlowStateMachine->apply($drawnArea, 'to_archive');
+                $drawnArea->setArchivedAt(new DateTimeImmutable('now'));
+                $em->persist($drawnArea);
+                $em->persist($archiveGroundGov);
+                $em->flush();
+                return new JsonResponse(['yes' => 'ok']);
             }
             $content = $this->renderView(
                 'statement/modals/arch_ground_form.html.twig',
-                ['form' => $form->createView()]);
+                [
+                    'form' => $form->createView(),
+                    'formGov' => $formGov->createView()
+                ]);
             return new JsonResponse(['content' => $content]);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);

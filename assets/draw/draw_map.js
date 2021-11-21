@@ -30,7 +30,6 @@ import {listener} from "../listener";
 import {Draw, Modify, Select} from "ol/interaction";
 
 import {swal_person} from "./swal_person";
-import {areaButtonsControl} from "./area-buttons-control";
 
 export const itemStyles = {
     'created': new Style({
@@ -334,13 +333,13 @@ const myMaps = new LayerGroup({
     ]
 });
 
-const map = new Map({
+export const map = new Map({
     layers: [
         baseMaps,
         cadastreMaps,
         myMaps,
         measureLayer,
-        drawLayer
+ //       drawLayer
     ],
     target: 'full-map',
     view: new View({
@@ -447,11 +446,11 @@ document.getElementById('profile_button').addEventListener('click', function (e)
     swal_person()
 })
 
-document.querySelector('body').addEventListener('click', event => {
-
-    // This version checks the current element for a match, as well as it's parents.
-    // If none is found, it returns null
-    if (event.target.matches('.area-buttons') || event.target.closest('.area-buttons')) {
-        areaButtonsControl(event)
-    }
-})
+// document.querySelector('body').addEventListener('click', event => {
+//
+//     // This version checks the current element for a match, as well as it's parents.
+//     // If none is found, it returns null
+//     if (event.target.matches('.area-buttons') || event.target.closest('.area-buttons')) {
+//         areaButtonsControl(event)
+//     }
+// })

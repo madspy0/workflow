@@ -190,6 +190,10 @@ class DrawnArea
      */
     private $archiveGround;
     /**
+     * @ORM\OneToOne(targetEntity=ArchiveGroundGov::class, mappedBy="drawnArea", cascade={"persist", "remove"})
+     */
+    private $archiveGroundGov;
+    /**
      * @return mixed
      */
     public function getArea()
@@ -409,6 +413,34 @@ class DrawnArea
         }
 
         $this->archiveGround = $archiveGround;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getArchiveGroundGov()
+    {
+        return $this->archiveGroundGov;
+    }
+
+    /**
+     * @param mixed $archiveGroundGov
+     */
+    public function setArchiveGroundGov($archiveGroundGov): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($archiveGroundGov === null && $this->archiveGroundGov !== null) {
+            $this->archiveGroundGov->setDrawnArea(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($archiveGroundGov !== null && $archiveGroundGov->getDrawnArea() !== $this) {
+            $archiveGroundGov->setDrawnArea($this);
+        }
+
+        $this->archiveGroundGov = $archiveGroundGov;
 
         return $this;
     }
