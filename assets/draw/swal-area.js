@@ -90,7 +90,10 @@ export async function swalArea(feature) {
                                     icon: "warning",
                                     showCancelButton: true,
                                     confirmButtonText: 'Опублікувати',
-                                    cancelButtonText: 'Скасувати'
+                                    cancelButtonText: 'Скасувати',
+                                    willClose: () => {
+                                        clearBeforeClose(modify);
+                                    }
                                 }).then(willPubl => {
                                     if (willPubl.isConfirmed) {
                                         fetch('/dr_publ/' + feature.get('number'))
@@ -121,6 +124,9 @@ export async function swalArea(feature) {
                                                 showConfirmButton: true,
                                                 showCloseButton: true,
                                                 showCancelButton: true,
+                                                willClose: () => {
+                                                    clearBeforeClose(modify);
+                                                },
                                             //    buttonsStyling: false,
                                                 willOpen: () => {
                                                     new Litepicker({
