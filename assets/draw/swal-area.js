@@ -65,6 +65,9 @@ export async function swalArea(feature) {
                         // },
                         willOpen: () => {
                             categoryForm();
+                            if(feature.get('status')!='created') {
+                                toggle_form(document.drawn_area)
+                            }
                             document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(feature.getGeometry());
                             document.getElementById('drawn_area_area').value = formatArea(feature.getGeometry());
                             new Litepicker({

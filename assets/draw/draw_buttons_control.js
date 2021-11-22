@@ -2,7 +2,7 @@ import {Control} from 'ol/control';
 //import {toggleMeasure} from "../add-measure";
 //import {clickInfo} from "../click-info";
 import {map, measureLayer} from "./draw_map";
-import {Draw, Select} from "ol/interaction";
+import {Draw, Modify, Select} from "ol/interaction";
 import Swal from "sweetalert2";
 
 function clearLayers() {
@@ -10,6 +10,11 @@ function clearLayers() {
     map.getOverlays().getArray().slice(0).forEach(function (overlay) {
         map.removeOverlay(overlay);
     });
+    map.getInteractions().forEach(function (interaction) {
+        if (interaction instanceof Modify) {
+            map.removeInteraction(interaction);
+        }
+    }, this);
 }
 class DrawButtonsControl extends Control {
     constructor(opt_options) {
@@ -74,7 +79,11 @@ class DrawButtonsControl extends Control {
         clearLayers();
         this.toggleButtons(evt.currentTarget);
         if (evt.currentTarget.classList.contains('active')) {
-            if(Swal.isVisible()){Swal.close()}
+            if(Swal.isVisible()){
+
+                Swal.close()
+
+            }
             map.getInteractions().forEach(f => {
                 if (f instanceof Select) {
                     f.setActive(false)
