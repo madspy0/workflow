@@ -1,19 +1,11 @@
 import {Control} from 'ol/control';
-import {toggleMeasure} from "../add-measure";
+//import {toggleMeasure} from "../add-measure";
 //import {clickInfo} from "../click-info";
-//import {toggleDraw} from "./add-draw";
 import {map, measureLayer} from "./draw_map";
 import {Draw, Select} from "ol/interaction";
+import Swal from "sweetalert2";
 
 function clearLayers() {
-    map.getInteractions().forEach(f => {
-        if (f instanceof Select) {
-            f.setActive(false)
-        }
-        if (f instanceof Draw) {
-            f.setActive(false)
-        }
-    })
     measureLayer.getSource().clear();
     map.getOverlays().getArray().slice(0).forEach(function (overlay) {
         map.removeOverlay(overlay);
@@ -82,7 +74,29 @@ class DrawButtonsControl extends Control {
         clearLayers();
         this.toggleButtons(evt.currentTarget);
         if (evt.currentTarget.classList.contains('active')) {
-            toggleMeasure(this.getMap());
+            if(Swal.isVisible()){Swal.close()}
+            map.getInteractions().forEach(f => {
+                if (f instanceof Select) {
+                    f.setActive(false)
+                }
+                if (f instanceof Draw) {
+                    if(f.getProperties().name=='measu') {
+                        f.setActive(true)
+                    } else {
+                        f.setActive(false)
+                    }
+                }
+            })
+        } else {
+            clearLayers();
+            map.getInteractions().forEach(f => {
+                if (f instanceof Select) {
+                    f.setActive(false)
+                }
+                if (f instanceof Draw) {
+                    f.setActive(false)
+                }
+            })
         }
     }
 
@@ -120,7 +134,9 @@ class DrawButtonsControl extends Control {
                 if (f instanceof Select) {
                     f.setActive(false)
                 }
-                if (f instanceof Draw) {
+                if(f.getProperties().name=='measu') {
+                    f.setActive(false)
+                } else {
                     f.setActive(true)
                 }
             })

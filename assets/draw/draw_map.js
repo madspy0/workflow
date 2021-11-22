@@ -30,6 +30,7 @@ import {addInteractions} from "./add-interactions";
 import DrawButtonsControl from './draw_buttons_control';
 import Swal from "sweetalert2";
 import {swalArea} from "./swal-area";
+import {addInteractionMeasure} from "./add-interaction-measure";
 
 export const itemStyles = {
     'created': new Style({
@@ -386,7 +387,9 @@ draw.on('drawend', function (evt) {
     feature.set('status', 'created');
     swalArea(feature)
 })
+draw.setProperties({name: 'drawer'})
 draw.setActive(false);
+map.getInteractions().extend([draw]);
 const layerSwitcher = new LayerSwitcher({
     reverse: false,
     groupSelectStyle: 'group',
@@ -394,7 +397,8 @@ const layerSwitcher = new LayerSwitcher({
 
 });
 addInteractions();
-map.addInteraction(draw);
+addInteractionMeasure();
+
 
 map.addControl(new DrawButtonsControl());
 //document.getElementsByClassName('edit-buttons')[0].append(layerSwitcher);
