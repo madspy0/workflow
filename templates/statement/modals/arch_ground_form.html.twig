@@ -1,8 +1,22 @@
+<div class="container">
 <input type="radio" id="formGovCheck" name="formTypeCheck" checked="checked">
-<label for="formGovCheck">Говермент</label>
-{{ form(formGov) }}
+<label for="formGovCheck">У разі державної регистрації</label>
+    {{ form_start(formGov) }}
+    <div class="row">
+        <div class="col">{{ form_row(formGov.cadnum) }}</div>
+        <div class="col">{{ form_row(formGov.registrationAt) }}</div>
+    </div>
+{{ form_end(formGov) }}
 <input type="radio" id="formCheck" name="formTypeCheck">
-<label for="formCheck">Local</label>
-{{ form(form) }}
-
+<label for="formCheck">Прийнято рішення про скасування Розпорядчого документа</label>
+{{ form_start(form) }}
+    {{ form_row(form.localGoverment) }}
+    {{ form_row(form.documentsType) }}
+    <div class="row">
+        <div class="col">{{ form_row(form.docNumber) }}</div>
+        <div class="col">{{ form_row(form.documentDate) }}</div>
+    </div>
+    {{ form_row(form.link) }}
+    {{ form_end(form) }}
+</div>
 

@@ -13,10 +13,11 @@ class ArchiveGroundGovType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('cadnum')
+            ->add('cadnum',null, ['label'=>'Кадастровий номер'])
             ->add('registrationAt', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Дата документа',
+                'placeholder' => 'Дата документа',
                 'input' => 'datetime_immutable',
                 'input_format' => 'dd-MM-yyyy',
                 'format' => 'dd-MM-yyyy',

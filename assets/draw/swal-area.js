@@ -7,7 +7,16 @@ import {getArea} from "ol/sphere";
 import Litepicker from "litepicker";
 import {toggle_form} from "./toggle-form";
 import {Collection} from "ol";
+import {dropPlane} from "./drop-plane";
 
+function clearBeforeClose(modify) {
+    map.getInteractions().forEach(f => {
+        if (f instanceof Select) {
+            f.getFeatures().clear()
+        }
+    })
+    map.removeInteraction(modify);
+}
 export async function swalArea(feature) {
     //let feature = selectClick.getFeatures().getArray()[0];
     let featureModify = new Collection();
@@ -16,9 +25,9 @@ export async function swalArea(feature) {
     }
     const modify = new Modify({
         features: featureModify,
-        // insertVertexCondition: () => {
-        //     return (feature.get('status') === "created")
-        // }
+        insertVertexCondition: () => {
+            return (feature.get('status') === "created")
+        }
         // insertVertexCondition: () => {
         //     // prevent new vertices to be added to the polygons
         //     return !selectClick.getFeatures().getArray().every(function(feature) {
@@ -70,6 +79,9 @@ export async function swalArea(feature) {
                             document.getElementById('dr_save').addEventListener('click', () => {
                                 Swal.clickConfirm()
                             })
+                            document.getElementById('dr_drop').addEventListener('click', () => {
+                                dropPlane(feature, modify)
+                            })
                             document.getElementById('dr_publ').addEventListener('click', (e) => {
                                 e.preventDefault()
                                 Swal.fire({
@@ -88,12 +100,7 @@ export async function swalArea(feature) {
                                                     feature.set('status', 'published');
                                                     //map.removeInteraction(modify)
                                                     feature.setStyle(itemStyles['published']);
-                                                    map.getInteractions().forEach(f => {
-                                                        if (f instanceof Select) {
-                                                            f.getFeatures().clear()
-                                                        }
-                                                    })
-                                                    map.removeInteraction(modify);
+                                                    clearBeforeClose(modify)
                                                     Swal.close()
                                                 }
                                             })
@@ -108,7 +115,7 @@ export async function swalArea(feature) {
                                     .then(data => {
                                         if (data.content) {
                                             Swal.fire({
-                                                title: 'Підстави',
+                                                title: 'Перенесення в архів ділянки відображеної на ПКК',
                                                 grow: 'column',
                                                 html: data.content,
                                                 showConfirmButton: true,
@@ -156,7 +163,6 @@ export async function swalArea(feature) {
                                                         }
                                                         return response.json()
                                                     }).then(data => {
-                                                        console.log(data)
                                                         feature.set('status', 'archived');
                                                         feature.setStyle(itemStyles['archived']);
                                                     })
@@ -172,26 +178,9 @@ export async function swalArea(feature) {
                                     })
                             })
                         },
-                    // didRender: () => {
-                    //
-                    // },
                     willClose: () => {
-                    //    selectClick.getFeatures().clear();
-                        map.getInteractions().forEach(f => {
-                            if (f instanceof Select) {
-                                f.getFeatures().clear()
-                            }
-                        })
-                        map.removeInteraction(modify);
+                        clearBeforeClose(modify);
                     },
-                    //  willClose: () => {
-                    // //         //    if (selectClick.getLayer(feature)) {
-                    // //         //selectClick.getLayer(feature).getSource().refresh();
-                    //      selectClick.getFeatures().clear();
-                    // //     map.removeInteraction(modify);
-                    // //
-                    // //         //    }
-                    //      },
                         showClass: {
                             popup: `
       animate__animated
@@ -253,6 +242,7 @@ export async function swalArea(feature) {
                                 if (data.id) {
                                     feature.set('number', data.id);
                                     feature.set('appl', data.appl);
+                                    clearBeforeClose(modify)
                                     Swal.close()
                                 }
                             })

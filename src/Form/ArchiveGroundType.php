@@ -13,9 +13,9 @@ class ArchiveGroundType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('localGoverment')
-            ->add('documentsType')
-            ->add('docNumber')
+            ->add('localGoverment',null,['label'=>'Орган влади, який прийняв рішення'])
+            ->add('documentsType',null, ['label'=>'Назва документа'])
+            ->add('docNumber',null, ['label'=>'Номер документа'])
             ->add('documentDate', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Дата документа',
@@ -24,7 +24,7 @@ class ArchiveGroundType extends AbstractType
                 'format' => 'dd-MM-yyyy',
                 'html5' => false,
                 'attr'=>['autocomplete'=>'off']])
-            ->add('link')
+            ->add('link',null,['label'=>'Посилання на сайт'])
        //     ->add('drawnArea')
         ;
     }

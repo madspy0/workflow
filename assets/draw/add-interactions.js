@@ -46,8 +46,11 @@ export function addInteractions() {
         if (selected != null) {
             if (typeof selected.get('nom') !== 'undefined') {
                 redirect('/appl/' + selected.get('nom') + '?cc=' + map.getView().getCenter().join() + '&z=' + map.getView().getZoom());
-            } else if (typeof selected.get('number') !== 'undefined') {
+            } else {if (typeof selected.get('number') !== 'undefined') {
                 swalArea(selected)
+            } else {
+                if(Swal.isVisible()) {Swal.close()}
+            }
             }
         }
     });
