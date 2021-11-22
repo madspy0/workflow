@@ -97,7 +97,6 @@ class DrawButtonsControl extends Control {
                 }
             })
         } else {
-            clearLayers();
             map.getInteractions().forEach(f => {
                 if (f instanceof Select) {
                     f.setActive(false)
@@ -143,10 +142,12 @@ class DrawButtonsControl extends Control {
                 if (f instanceof Select) {
                     f.setActive(false)
                 }
-                if(f.getProperties().name=='measu') {
-                    f.setActive(false)
-                } else {
-                    f.setActive(true)
+                if (f instanceof Draw) {
+                    if (f.getProperties().name == 'measu') {
+                        f.setActive(false)
+                    } else {
+                        f.setActive(true)
+                    }
                 }
             })
         } else {
