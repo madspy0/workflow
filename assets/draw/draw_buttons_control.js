@@ -2,9 +2,23 @@ import {Control} from 'ol/control';
 import {toggleMeasure} from "../add-measure";
 //import {clickInfo} from "../click-info";
 //import {toggleDraw} from "./add-draw";
-import {map} from "./draw_map";
+import {map, measureLayer} from "./draw_map";
 import {Draw, Select} from "ol/interaction";
 
+function clearLayers() {
+    map.getInteractions().forEach(f => {
+        if (f instanceof Select) {
+            f.setActive(false)
+        }
+        if (f instanceof Draw) {
+            f.setActive(false)
+        }
+    })
+    measureLayer.getSource().clear();
+    map.getOverlays().getArray().slice(0).forEach(function (overlay) {
+        map.removeOverlay(overlay);
+    });
+}
 class DrawButtonsControl extends Control {
     constructor(opt_options) {
         const options = opt_options || {};
@@ -65,6 +79,7 @@ class DrawButtonsControl extends Control {
 
     handleArea(evt) {
         evt.preventDefault();
+        clearLayers();
         this.toggleButtons(evt.currentTarget);
         if (evt.currentTarget.classList.contains('active')) {
             toggleMeasure(this.getMap());
@@ -73,9 +88,9 @@ class DrawButtonsControl extends Control {
 
     handleInfo(evt) {
         evt.preventDefault();
+        clearLayers();
         this.toggleButtons(evt.currentTarget);
         if (evt.currentTarget.classList.contains('active')) {
-
             map.getInteractions().forEach(f => {
                 if (f instanceof Select) {
                     f.setActive(true)
@@ -85,7 +100,6 @@ class DrawButtonsControl extends Control {
                 }
             })
         } else {
-
             map.getInteractions().forEach(f => {
                 if (f instanceof Select) {
                     f.setActive(false)
@@ -99,6 +113,7 @@ class DrawButtonsControl extends Control {
 
     handleDraw(evt) {
         evt.preventDefault();
+        clearLayers();
         this.toggleButtons(evt.currentTarget);
         if (evt.currentTarget.classList.contains('active')) {
             map.getInteractions().forEach(f => {
