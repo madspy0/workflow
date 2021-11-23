@@ -45,10 +45,14 @@ export async function swalArea(feature) {
                         title: 'Атрибутивна інформація',
                         html: data.content,
                         position: 'top-end',
-                        // didRender: (popup) => {
-                        // },
+                        showConfirmButton: false,
+                        showCloseButton: true,
+                        showCancelButton: true,
                         willOpen: () => {
-                            categoryForm();
+
+                            Swal.getActions().insertAdjacentHTML('afterbegin', data.buttons);
+
+                        //    categoryForm();
                             if (feature.get('status') !== 'created') {
                                 toggle_form(document.drawn_area)
                             }
@@ -60,9 +64,9 @@ export async function swalArea(feature) {
                                 lang: "uk-UA",
                                 format: "DD-MM-YYYY"
                             });
-                            document.getElementById('dr_close').addEventListener('click', () => {
-                                Swal.clickCancel()
-                            })
+                            // document.getElementById('dr_close').addEventListener('click', () => {
+                            //     Swal.clickCancel()
+                            // })
                             document.getElementById('dr_save').addEventListener('click', () => {
                                 Swal.clickConfirm()
                             })
@@ -131,7 +135,7 @@ export async function swalArea(feature) {
                                                     let groundGovForm = document.archive_ground_gov;
                                                     let formCheck = document.getElementById('formCheck');
                                                     let formGovCheck = document.getElementById('formGovCheck');
-                                                    toggle_form(groundForm)
+                                                //    toggle_form(groundForm)
                                                     formCheck.addEventListener('change', () => {
                                                         toggle_form(groundForm);
                                                         toggle_form(groundGovForm);
@@ -190,8 +194,6 @@ export async function swalArea(feature) {
                         },
                         grow: 'column',
                         width: 550,
-                        showConfirmButton: false,
-                        showCloseButton: true,
                         //  toast: true,
                         backdrop: false,
 
@@ -228,7 +230,7 @@ export async function swalArea(feature) {
                                 body: formData
                             }).then(response => {
                                 if (!response.ok) {
-                                        throw new Error(response.statusText)
+                                    throw new Error(response.statusText)
                                 }
                                 return response.json()
                             }).then(data => {

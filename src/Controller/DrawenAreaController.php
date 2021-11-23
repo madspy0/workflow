@@ -156,7 +156,9 @@ class DrawenAreaController extends AbstractController
                 'statement/modals/swal_area.html.twig',
                 array('form' => $form->createView(), 'drawnArea' => $drawnArea)
             );
-            return new JsonResponse(['content' => $content]);
+            $buttons = $this->renderView(
+                'statement/modals/swal_area_buttons.html.twig',['drawnArea' => $drawnArea]);
+            return new JsonResponse(['content' => $content, 'buttons'=>$buttons]);
         }
         catch (HttpException $exception) {
             return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
