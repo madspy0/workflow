@@ -79,9 +79,9 @@ export async function swalArea(feature) {
                                     showCancelButton: true,
                                     confirmButtonText: 'Опублікувати',
                                     cancelButtonText: 'Скасувати',
-                                    // willClose: () => {
-                                    //
-                                    // }
+                                    willClose: () => {
+                                        clearBeforeClose();
+                                    }
                                 }).then(willPubl => {
                                     if (willPubl.isConfirmed) {
                                         fetch('/dr_publ/' + feature.get('number'))
