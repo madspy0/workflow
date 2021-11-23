@@ -18,7 +18,6 @@ function clearBeforeClose(modify) {
 }
 
 
-
 export async function swalArea(feature) {
     let modifyInteraction
     map.getInteractions().forEach(f => {
@@ -26,8 +25,8 @@ export async function swalArea(feature) {
             modifyInteraction = f
         }
     })
-    if(feature.get('status')==='created') {
-            modifyInteraction.setActive(true)
+    if (feature.get('status') === 'created') {
+        modifyInteraction.setActive(true)
     } else {
         modifyInteraction.setActive(false)
     }
@@ -171,9 +170,9 @@ export async function swalArea(feature) {
                                     })
                             })
                         },
-                         willClose: () => {
-                             clearBeforeClose();
-                         },
+                        willClose: () => {
+                            clearBeforeClose();
+                        },
                         showClass: {
                             popup: `
       animate__animated
@@ -204,6 +203,7 @@ export async function swalArea(feature) {
                             try {
                                 for (let item of formData.entries()) {
                                     if (item[0] === "drawn_area[link]") {
+                                        console.log(form.elements[item[0]].labels[0].textContent)
                                         let url;
                                         try {
                                             url = new URL(item[1]);
@@ -228,7 +228,7 @@ export async function swalArea(feature) {
                                 body: formData
                             }).then(response => {
                                 if (!response.ok) {
-                                    throw new Error(response.statusText)
+                                        throw new Error(response.statusText)
                                 }
                                 return response.json()
                             }).then(data => {

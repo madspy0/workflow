@@ -81,6 +81,15 @@ export const formatArea = function (polygon) {
     }
     return output;
 };
+const formatLoadArea = function (area) {
+    let output;
+    if (area > 10000) {
+        output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км \u00B2';
+    } else {
+        output = Math.round(area * 100) / 100 + ' ' + 'м \u00B2';
+    }
+    return output;
+}
 const source = new VectorSource({
     //format: new GeoJSON(),
     loader: function (extent, resolution, projection, success, failure) {
@@ -99,10 +108,18 @@ const source = new VectorSource({
         xhr.onload = function () {
             if (xhr.status === 200) {
                 let geoms = JSON.parse(xhr.response);
+                let status_dict = {'created':'створений', 'published': 'опублікований', 'archived':'архівований'}
+                let formatedDate = (date) => {
+                    let current_datetime = new Date(date)
+                    return current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds()
+                }
                 geoms.forEach(function (item, index) {
                     let feature = new Feature({
                         geometry: new WKT().readGeometry(item.geom),
-                        appl: '<div>' + item.lastname + ' ' + item.firstname + '</div>',
+                        appl: '<div>' + item.numberSolution +
+                            '</div><div> ' + formatedDate(item.createdAt) +
+                            '</div><div> ' +formatLoadArea(item.area) +
+                            '</div><div>' + status_dict[item.status] + '</div>',
                         number: item.id,
                         status: item.status,
                     });

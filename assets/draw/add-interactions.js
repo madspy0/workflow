@@ -120,8 +120,7 @@ export function addInteractions() {
                 let geom = selected.get('geometry');
                 if (geom) {
                     let tooltipCoord = geom.getInteriorPoint().getCoordinates();
-                    let status = selected.get('status');
-                    infoTooltipElement.innerHTML = name + " " + status;
+                    infoTooltipElement.innerHTML = name;
                     infoTooltip.setPosition(tooltipCoord);
                 } else {
                     document.body.style.cursor = 'default';

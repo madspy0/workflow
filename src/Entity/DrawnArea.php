@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\User as PortalUser;
+use App\Validator\ContainsGeom;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=DrawnAreaRepository::class)
@@ -29,19 +31,16 @@ class DrawnArea
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"geoms"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"geoms"})
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"geoms"})
      */
     private $middlename;
 
@@ -63,6 +62,7 @@ class DrawnArea
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups({"geoms"})
      */
     private $createdAt;
     /**
@@ -98,6 +98,7 @@ class DrawnArea
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"geoms"})
      */
     private $numberSolution;
 
@@ -140,6 +141,8 @@ class DrawnArea
     /**
      * @ORM\Column(type="geometry")
      * @Groups({"geoms"})
+     * @Assert\NotBlank(message="Намалюйте план ділянки")
+     * @ContainsGeom(message="Геометрія невірна")
      */
     private $geom;
 
@@ -155,6 +158,7 @@ class DrawnArea
     private $useSubCategory;
 
     /**
+     * @Groups({"geoms"})
      * @ORM\Column(type="string", length=64)
      */
     private $area;

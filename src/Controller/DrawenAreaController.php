@@ -15,9 +15,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -25,6 +27,9 @@ use Symfony\Component\Workflow\WorkflowInterface;
 use DateTimeImmutable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\ORMException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
+use Symfony\Component\Form\FormInterface;
 
 class DrawenAreaController extends AbstractController
 {
@@ -92,7 +97,10 @@ class DrawenAreaController extends AbstractController
                 'action' => $this->generateUrl('drawen.draw_add')
             ]);
             $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->isSubmitted()) {
+                if (!$form->isValid()) {
+                    throw new Exception($this->getErrorsFromForm($form)[0]);
+                }
                 $drawnAreaFlowStateMachine->getMarking($drawnArea);
                 $drawnArea->setAuthor($this->getUser());
                 $em->persist($drawnArea);
@@ -129,10 +137,13 @@ class DrawenAreaController extends AbstractController
             }
             $form = $this->createForm(DrawnAreaType::class, $drawnArea, [
                 'entity_manager' => $this->getDoctrine()->getManager(),
-                'action' => $this->generateUrl('drawen.draw_upd', ['id' => $drawnArea->getId()])
+                'action' => $this->generateUrl('drawen.draw_upd', ['id' => $drawnArea->getId()]),
             ]);
             $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->isSubmitted()) {
+                if (!$form->isValid()) {
+                    throw new HttpException(412, $this->getErrorsFromForm($form)[0]);
+                }
                 $this->addFlash(
                     'success',
                     ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
@@ -146,9 +157,11 @@ class DrawenAreaController extends AbstractController
                 array('form' => $form->createView(), 'drawnArea' => $drawnArea)
             );
             return new JsonResponse(['content' => $content]);
-        } catch (ORMException $exception) {
-            return $this->json(['error' => $exception->getMessage()]);
-        } catch (Exception $exception) {
+        }
+        catch (HttpException $exception) {
+            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
+        }
+         catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -246,7 +259,7 @@ class DrawenAreaController extends AbstractController
             $form = $this->createForm(ArchiveGroundType::class, $archiveGround);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $drawnAreaFlowStateMachine-> apply($drawnArea, 'to_archive');
+                $drawnAreaFlowStateMachine->apply($drawnArea, 'to_archive');
                 $drawnArea->setArchivedAt(new DateTimeImmutable('now'));
                 $em->persist($drawnArea);
                 $em->persist($archiveGround);
@@ -276,5 +289,21 @@ class DrawenAreaController extends AbstractController
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private function getErrorsFromForm(FormInterface $form)
+    {
+        $errors = array();
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $error->getMessage();
+        }
+        foreach ($form->all() as $childForm) {
+            if ($childForm instanceof FormInterface) {
+                if ($childErrors = $this->getErrorsFromForm($childForm)) {
+                    $errors[$childForm->getName()] = $childErrors;
+                }
+            }
+        }
+        return $errors;
     }
 }

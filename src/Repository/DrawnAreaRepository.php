@@ -18,7 +18,22 @@ class DrawnAreaRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, DrawnArea::class);
     }
-
+    /**
+     * Перевіряє валідність полігону
+     *
+     * @param $geom
+     *
+     * @return boolean
+     */
+    public function isValid($geom)
+    {
+        $stmt = $this->getEntityManager()
+            ->getConnection()
+            ->prepare('select ST_IsValid(ST_GeomFromText(\'' . $geom . '\')) = true as is_valid');
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        return $result[0]['is_valid'];
+    }
     // /**
     //  * @return DrawnArea[] Returns an array of DrawnArea objects
     //  */

@@ -2,6 +2,7 @@
 
 namespace App\Validator;
 
+use App\Entity\DrawnArea;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -43,7 +44,7 @@ class ContainsGeomValidator extends ConstraintValidator
 //            // ...
 //        }
 
-        $repository = $this->em->getRepository(DevelopmentApplication::class);
+        $repository = $this->em->getRepository(DrawnArea::class);
         if(!$repository->isValid($value)) {
         //    dump($this->context->getPropertyPath('geom'));
             $this->context->buildViolation($constraint->message)
