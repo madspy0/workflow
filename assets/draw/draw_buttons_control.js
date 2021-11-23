@@ -10,11 +10,11 @@ function clearLayers() {
     map.getOverlays().getArray().slice(0).forEach(function (overlay) {
         map.removeOverlay(overlay);
     });
-    map.getInteractions().forEach(function (interaction) {
-        if (interaction instanceof Modify) {
-            map.removeInteraction(interaction);
-        }
-    }, this);
+    // map.getInteractions().forEach(function (interaction) {
+    //     if (interaction instanceof Modify) {
+    //         map.removeInteraction(interaction);
+    //     }
+    // }, this);
 }
 class DrawButtonsControl extends Control {
     constructor(opt_options) {
@@ -80,9 +80,7 @@ class DrawButtonsControl extends Control {
         this.toggleButtons(evt.currentTarget);
         if (evt.currentTarget.classList.contains('active')) {
             if(Swal.isVisible()){
-
                 Swal.close()
-
             }
             map.getInteractions().forEach(f => {
                 if (f instanceof Select) {
@@ -138,15 +136,18 @@ class DrawButtonsControl extends Control {
         clearLayers();
         this.toggleButtons(evt.currentTarget);
         if (evt.currentTarget.classList.contains('active')) {
+            if(Swal.isVisible()){
+                Swal.close()
+            }
             map.getInteractions().forEach(f => {
                 if (f instanceof Select) {
                     f.setActive(false)
                 }
                 if (f instanceof Draw) {
-                    if (f.getProperties().name == 'measu') {
-                        f.setActive(false)
-                    } else {
+                    if(f.getProperties().name=='drawer') {
                         f.setActive(true)
+                    } else {
+                        f.setActive(false)
                     }
                 }
             })

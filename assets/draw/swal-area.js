@@ -15,37 +15,22 @@ function clearBeforeClose(modify) {
             f.getFeatures().clear()
         }
     })
-    map.removeInteraction(modify);
 }
-export async function swalArea(feature) {
-    //let feature = selectClick.getFeatures().getArray()[0];
-    let featureModify = new Collection();
-    if (feature.get('status') === "created") {
-        featureModify.push(feature)
-    }
-    const modify = new Modify({
-        features: featureModify,
-        insertVertexCondition: () => {
-            return (feature.get('status') === "created")
-        }
-        // insertVertexCondition: () => {
-        //     // prevent new vertices to be added to the polygons
-        //     return !selectClick.getFeatures().getArray().every(function(feature) {
-        //         return feature.getGeometry().getType().match(/Polygon/);
-        //     });
-        // }
-    });
-    modify.on('modifystart', function (e) {
-        let sketch = e.features.getArray()[0];
-        sketch.getGeometry().on('change', function (evt) {
-            document.getElementById('drawn_area_area').value = formatArea(evt.target);
-        });
-    })
-    modify.on("modifyend", function (e) {
-        document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(e.features.getArray()[0].getGeometry());
-    })
-    map.addInteraction(modify);
 
+
+
+export async function swalArea(feature) {
+    let modifyInteraction
+    map.getInteractions().forEach(f => {
+        if (f instanceof Modify) {
+            modifyInteraction = f
+        }
+    })
+    if(feature.get('status')==='created') {
+            modifyInteraction.setActive(true)
+    } else {
+        modifyInteraction.setActive(false)
+    }
     // RIGHT SIDEBAR
     let reqUrl;
     if (feature.get('number') === 'new') {
@@ -65,7 +50,7 @@ export async function swalArea(feature) {
                         // },
                         willOpen: () => {
                             categoryForm();
-                            if(feature.get('status')!='created') {
+                            if (feature.get('status') !== 'created') {
                                 toggle_form(document.drawn_area)
                             }
                             document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(feature.getGeometry());
@@ -83,7 +68,7 @@ export async function swalArea(feature) {
                                 Swal.clickConfirm()
                             })
                             document.getElementById('dr_drop').addEventListener('click', () => {
-                                dropPlane(feature, modify)
+                                dropPlane(feature)
                             })
                             document.getElementById('dr_publ').addEventListener('click', (e) => {
                                 e.preventDefault()
@@ -94,9 +79,9 @@ export async function swalArea(feature) {
                                     showCancelButton: true,
                                     confirmButtonText: 'Опублікувати',
                                     cancelButtonText: 'Скасувати',
-                                    willClose: () => {
-                                        clearBeforeClose(modify);
-                                    }
+                                    // willClose: () => {
+                                    //
+                                    // }
                                 }).then(willPubl => {
                                     if (willPubl.isConfirmed) {
                                         fetch('/dr_publ/' + feature.get('number'))
@@ -104,9 +89,8 @@ export async function swalArea(feature) {
                                             .then(data => {
                                                 if (data.success) {
                                                     feature.set('status', 'published');
-                                                    //map.removeInteraction(modify)
                                                     feature.setStyle(itemStyles['published']);
-                                                    clearBeforeClose(modify)
+                                                    clearBeforeClose();
                                                     Swal.close()
                                                 }
                                             })
@@ -128,9 +112,9 @@ export async function swalArea(feature) {
                                                 showCloseButton: true,
                                                 showCancelButton: true,
                                                 willClose: () => {
-                                                    clearBeforeClose(modify);
+                                                    clearBeforeClose();
                                                 },
-                                            //    buttonsStyling: false,
+                                                //    buttonsStyling: false,
                                                 willOpen: () => {
                                                     new Litepicker({
                                                         element: document.getElementById('archive_ground_gov_registrationAt'),
@@ -187,9 +171,9 @@ export async function swalArea(feature) {
                                     })
                             })
                         },
-                    willClose: () => {
-                        clearBeforeClose(modify);
-                    },
+                         willClose: () => {
+                             clearBeforeClose();
+                         },
                         showClass: {
                             popup: `
       animate__animated
@@ -251,7 +235,7 @@ export async function swalArea(feature) {
                                 if (data.id) {
                                     feature.set('number', data.id);
                                     feature.set('appl', data.appl);
-                                    clearBeforeClose(modify)
+                                    clearBeforeClose()
                                     Swal.close()
                                 }
                             })

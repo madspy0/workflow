@@ -1,14 +1,17 @@
-import {Select} from "ol/interaction";
-import {map, plants} from "./draw_map";
+import {Modify, Select} from "ol/interaction";
+import {formatArea, map, plants} from "./draw_map";
 import {pointerMove} from "ol/events/condition";
 import {redirect} from "../redirect";
 import {swalArea} from "./swal-area";
 import Swal from "sweetalert2";
 import Overlay from "ol/Overlay";
+import {WKT} from "ol/format";
+import {Collection} from "ol";
 
 
 let infoTooltip;
 let infoTooltipElement;
+
 function createInfoTooltip() {
     if (infoTooltipElement) {
         infoTooltipElement.parentNode.removeChild(infoTooltipElement);
@@ -38,7 +41,57 @@ export function addInteractions() {
         layers: [plants],
     });
     selectMove.setActive(false)
-    map.getInteractions().extend([selectClick, selectMove]);
+
+    // let getSelectedCreatedFeatures = () => {
+    //     let ret = new Collection();
+    //     selectClick.getFeatures().forEach(f => { if(f.get('status') === 'created') {ret.push(f)} });
+    //     return ret;
+    // }
+    const modifyInteraction = new Modify({
+        //    source: plants.getSource(),
+        features: selectClick.getFeatures(),
+        // insertVertexCondition: function () {
+        //     // prevent new vertices to be added to the polygons
+        //     return (selectClick
+        //         .getFeatures()
+        //         .getArray()[0].get('status') !== 'created')
+        //     // &&
+        //     // !selectClick
+        //     // .getFeatures()
+        //     // .getArray()
+        //     // .every(function (feature) {
+        //     //     return feature
+        //     //         .getGeometry()
+        //     //         .getType()
+        //     //         .match(/Polygon/);
+        //     // });
+        // },
+        // features: featureModify,
+        // insertVertexCondition: () => {
+        //     return (feature.get('status') === "created")
+        // }
+        // insertVertexCondition: () => {
+        //     // prevent new vertices to be added to the polygons
+        //     return !selectClick.getFeatures().getArray().every(function(feature) {
+        //         return feature.getGeometry().getType().match(/Polygon/);
+        //     });
+        // }
+    });
+    modifyInteraction.setActive(false)
+    modifyInteraction.on('modifystart', function (e) {
+        selectClick.setActive(false)
+        selectMove.setActive(false)
+        let sketch = e.features.getArray()[0];
+        sketch.getGeometry().on('change', function (evt) {
+            document.getElementById('drawn_area_area').value = formatArea(evt.target);
+        });
+    })
+    modifyInteraction.on("modifyend", function (e) {
+        selectClick.setActive(true)
+        selectMove.setActive(true)
+        document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(e.features.getArray()[0].getGeometry());
+    })
+    map.getInteractions().extend([selectClick, selectMove, modifyInteraction]);
 
     createInfoTooltip();
     selectClick.on('select', function (e) {
@@ -46,11 +99,14 @@ export function addInteractions() {
         if (selected != null) {
             if (typeof selected.get('nom') !== 'undefined') {
                 redirect('/appl/' + selected.get('nom') + '?cc=' + map.getView().getCenter().join() + '&z=' + map.getView().getZoom());
-            } else {if (typeof selected.get('number') !== 'undefined') {
-                swalArea(selected)
             } else {
-                if(Swal.isVisible()) {Swal.close()}
+                if (typeof selected.get('number') !== 'undefined') {
+                    swalArea(selected)
+                }
             }
+        } else {
+            if (Swal.isVisible()) {
+                Swal.close()
             }
         }
     });
