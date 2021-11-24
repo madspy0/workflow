@@ -100,7 +100,7 @@ class DrawenAreaController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted()) {
                 if (!$form->isValid()) {
-                    throw new Exception($this->getErrorsFromForm($form)[0]);
+                    throw new HttpException(412, $this->getErrorsFromForm($form)[0]);
                 }
                 $drawnAreaFlowStateMachine->getMarking($drawnArea);
                 $drawnArea->setAuthor($this->getUser());
@@ -122,8 +122,10 @@ class DrawenAreaController extends AbstractController
                 array('form' => $form->createView(), 'drawnArea' => $drawnArea)
             );
             $buttons = $this->renderView(
-                'statement/modals/swal_area_buttons.html.twig',['drawnArea' => $drawnArea]);
-            return new JsonResponse(['content' => $content, 'buttons'=>$buttons]);
+                'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
+            return new JsonResponse(['content' => $content, 'buttons' => $buttons]);
+        } catch (HttpException $exception) {
+            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -160,13 +162,11 @@ class DrawenAreaController extends AbstractController
                 array('form' => $form->createView(), 'drawnArea' => $drawnArea)
             );
             $buttons = $this->renderView(
-                'statement/modals/swal_area_buttons.html.twig',['drawnArea' => $drawnArea]);
-            return new JsonResponse(['content' => $content, 'buttons'=>$buttons]);
-        }
-        catch (HttpException $exception) {
+                'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
+            return new JsonResponse(['content' => $content, 'buttons' => $buttons]);
+        } catch (HttpException $exception) {
             return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
-        }
-         catch (Exception $exception) {
+        } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
