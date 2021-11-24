@@ -8,7 +8,7 @@ export function drawPublish(value) {
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: 'Опублікувати',
-        cancelButtonText: 'Скасувати'
+        cancelButtonText: 'Закрити'
     })
         .then((willPublic) => {
             if (willPublic.isConfirmed) {

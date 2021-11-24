@@ -1,6 +1,6 @@
 <button type="button"
         id="dr_save" value="{{ drawnArea.id }}"
-        class="btn btn-primary swal2-success swal2-styled
+        class="swal2-styled swal2-deny
                {% if workflow_has_marked_place(drawnArea, 'published') or workflow_has_marked_place(drawnArea, 'archived') %}
                 d-none
                 {% endif %}
@@ -9,14 +9,14 @@
 
 <button type="button"
         id="dr_drop" value="{{ drawnArea.id }}"
-        class="btn btn-warning swal2-warning swal2-styled
+        class="swal2-styled swal2-deny
                 {% if ((drawnArea.id is null) or (workflow_can(drawnArea, 'to_archive')) or workflow_has_marked_place(drawnArea, 'archived')) %}
                 d-none
                 {% endif %}
                 ">Видалити
 </button>
 
-<button type="button" class="btn btn-success swal2-success swal2-styled
+<button type="button" class="swal2-deny swal2-styled
                 {% if (drawnArea.id is null) or workflow_can(drawnArea, 'to_archive') or workflow_has_marked_place(drawnArea, 'archived') %}
                 d-none
                 {% endif %}
@@ -25,7 +25,7 @@
 </button>
 
 
-<button type="button" class="btn btn-danger
+<button type="button" class="swal2-deny swal2-styled
                 {% if not workflow_has_marked_place(drawnArea, 'published') %}
                  d-none
                 {% endif %}

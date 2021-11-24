@@ -34,6 +34,7 @@ use Symfony\Component\Form\FormInterface;
 class DrawenAreaController extends AbstractController
 {
     /**
+     * @Route("/", name="homepage")
      * @Route("/dr_map", name="drawen.draw_map")
      */
     public function drawMap(Request $request): Response
@@ -120,7 +121,9 @@ class DrawenAreaController extends AbstractController
                 'statement/modals/swal_area.html.twig',
                 array('form' => $form->createView(), 'drawnArea' => $drawnArea)
             );
-            return new JsonResponse(['content' => $content]);
+            $buttons = $this->renderView(
+                'statement/modals/swal_area_buttons.html.twig',['drawnArea' => $drawnArea]);
+            return new JsonResponse(['content' => $content, 'buttons'=>$buttons]);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -266,7 +269,7 @@ class DrawenAreaController extends AbstractController
                 $em->persist($drawnArea);
                 $em->persist($archiveGround);
                 $em->flush();
-                return new JsonResponse(['yes' => 'ok']);
+                return new JsonResponse(['success' => true]);
             }
 
             $archiveGroundGov = new ArchiveGroundGov();
@@ -279,7 +282,7 @@ class DrawenAreaController extends AbstractController
                 $em->persist($drawnArea);
                 $em->persist($archiveGroundGov);
                 $em->flush();
-                return new JsonResponse(['yes' => 'ok']);
+                return new JsonResponse(['success' => true]);
             }
             $content = $this->renderView(
                 'statement/modals/arch_ground_form.html.twig',

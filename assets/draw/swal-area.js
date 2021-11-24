@@ -48,11 +48,12 @@ export async function swalArea(feature) {
                         showConfirmButton: false,
                         showCloseButton: true,
                         showCancelButton: true,
+                        cancelButtonText: 'Закрити',
                         willOpen: () => {
 
                             Swal.getActions().insertAdjacentHTML('afterbegin', data.buttons);
 
-                        //    categoryForm();
+                            categoryForm();
                             if (feature.get('status') !== 'created') {
                                 toggle_form(document.drawn_area)
                             }
@@ -67,7 +68,7 @@ export async function swalArea(feature) {
                             // document.getElementById('dr_close').addEventListener('click', () => {
                             //     Swal.clickCancel()
                             // })
-                            document.getElementById('dr_save').addEventListener('click', () => {
+                            Swal.getActions().querySelector('#dr_save').addEventListener('click', () => {
                                 Swal.clickConfirm()
                             })
                             document.getElementById('dr_drop').addEventListener('click', () => {
@@ -81,7 +82,7 @@ export async function swalArea(feature) {
                                     icon: "warning",
                                     showCancelButton: true,
                                     confirmButtonText: 'Опублікувати',
-                                    cancelButtonText: 'Скасувати',
+                                    cancelButtonText: 'Закрити',
                                     willClose: () => {
                                         clearBeforeClose();
                                     }
@@ -114,6 +115,8 @@ export async function swalArea(feature) {
                                                 showConfirmButton: true,
                                                 showCloseButton: true,
                                                 showCancelButton: true,
+                                                confirmButtonText: 'Архівувати',
+                                                cancelButtonText: 'Закрити',
                                                 willClose: () => {
                                                     clearBeforeClose();
                                                 },
@@ -135,7 +138,7 @@ export async function swalArea(feature) {
                                                     let groundGovForm = document.archive_ground_gov;
                                                     let formCheck = document.getElementById('formCheck');
                                                     let formGovCheck = document.getElementById('formGovCheck');
-                                                //    toggle_form(groundForm)
+                                                    toggle_form(groundForm)
                                                     formCheck.addEventListener('change', () => {
                                                         toggle_form(groundForm);
                                                         toggle_form(groundGovForm);
@@ -158,9 +161,13 @@ export async function swalArea(feature) {
                                                             throw new Error(response.statusText)
                                                         }
                                                         return response.json()
-                                                    }).then(data => {
-                                                        feature.set('status', 'archived');
-                                                        feature.setStyle(itemStyles['archived']);
+                                                    }).then((data) => {
+                                                        if(data.success) {
+                                                            feature.set('status', 'archived');
+                                                            feature.setStyle(itemStyles['archived']);
+                                                            clearBeforeClose();
+                                                            Swal.close()
+                                                        }
                                                     })
                                                         .catch(error => {
                                                             Swal.showValidationMessage(
@@ -201,11 +208,12 @@ export async function swalArea(feature) {
                             Swal.showLoading();
                             let form = document.drawn_area;
                             let formData = new FormData(form);
-                            formData.set('drawn_area[area]', getArea(feature.getGeometry()))
+                            let geom = feature.getGeometry();
+                            formData.set('drawn_area[area]', getArea(geom))
+                            formData.set('drawn_area[geom]', new WKT().writeGeometry(geom));
                             try {
                                 for (let item of formData.entries()) {
                                     if (item[0] === "drawn_area[link]") {
-                                        console.log(form.elements[item[0]].labels[0].textContent)
                                         let url;
                                         try {
                                             url = new URL(item[1]);
@@ -216,7 +224,14 @@ export async function swalArea(feature) {
                                         }
                                     }
                                     if (item[1] === "") {
-                                        throw new Error('Значення поля ' + item[0] + ' не може бути порожнім');
+                                        let msg;
+                                        if(form.elements[item[0]].tagName.toLowerCase()==='select') {
+                                            msg = 'Майбутнє цільове призначення'
+                                        } else {
+                                            msg = form.elements[item[0]].getAttribute('placeholder') ? form.elements[item[0]].getAttribute('placeholder')
+                                                : form.elements[item[0]].labels[0].textContent;
+                                        }
+                                        throw new Error('Поле \'' + msg + '\' не може бути порожнім');
                                     }
                                 }
                             } catch (e) {

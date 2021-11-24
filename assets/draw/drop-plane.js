@@ -16,7 +16,7 @@ export async function dropPlane(feature) {
             })
         },
         confirmButtonText: 'Видалити',
-        cancelButtonText: 'Скасувати'
+        cancelButtonText: 'Закрити'
     }).then((willDelete) => {
         if (willDelete.isConfirmed) {
             fetch('/dr_drop/' + feature.get('number'))

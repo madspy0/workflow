@@ -79,6 +79,7 @@ class DrawnAreaType extends AbstractType
         $resolver->setDefaults([
             'data_class' => DrawnArea::class,
             'entity_manager' => null,
+            'csrf_protection' => false
         ]);
     }
 

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="uk" target-language="uk" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="3Z6IEjD" resname="archived">
+        <source>archived</source>
+        <target>арх</target>
+      </trans-unit>
+      <trans-unit id="QG7.sen" resname="created">
+        <source>created</source>
+        <target>створений</target>
+      </trans-unit>
+      <trans-unit id="sE5eogG" resname="published">
+        <source>published</source>
+        <target>опублікований</target>
+      </trans-unit>
+      <trans-unit id="NGolEdE" resname="архівований">
+        <source>архівований</source>
+        <target>archived</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

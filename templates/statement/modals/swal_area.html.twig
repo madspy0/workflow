@@ -1,20 +1,26 @@
 <div class="container">
     {{ form_start(form) }}
-    <div class="row gx-2">
-        <div class="col">
-            <p class="fw-bold fs-6">Вповноважена особа (ПIБ)</p>
+
+    <div class="row">
+        <div class="col-sm-3">
+            <p class="fw-bold">Вповноважена особа (ПIБ)</p>
         </div>
-        <div class="col">
-            {{ form_row(form.lastname) }}
-        </div>
-        <div class="col">
-            {{ form_row(form.firstname) }}
-        </div>
-        <div class="col">
-            {{ form_row(form.middlename) }}
+        <div class="col-sm-9">
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.lastname) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8 col-sm-6">
+                    {{ form_row(form.firstname) }}
+                </div>
+                <div class="col-4 col-sm-6">
+                    {{ form_row(form.middlename) }}
+                </div>
+            </div>
         </div>
     </div>
-
     <div class="row border border-bottom-0">
         <div class="col">
             {{ form_row(form.localGoverment) }}
@@ -52,19 +58,19 @@
             {{ form_widget(form.useSubCategory) }}
         </div>
     </div>
-    <div class="row border">
+    <div class="row border align-items-start">
         <div class="col">
-            <div>Статус: {{ drawnArea.status }}</div>
-            <div class="d-flex align-items-center">Площа:{{ form_widget(form.area) }}</div>
+            <p class="text-start">Статус: {{ drawnArea.status|trans }}</p>
+            <div class="text-start">Площа: {{ form_widget(form.area) }}</div>
         </div>
         <div class="col">
-            <div>Дата створення: {{ drawnArea.createdAt| format_datetime('short','short', locale='uk') }}</div>
-            <div>Дата
-                редагування: {% if(drawnArea.updatedAt) %} {{ drawnArea.updatedAt| format_datetime('short','short', locale='uk') }} {% endif %}</div>
-            <div>Дата
-                публікації: {% if(drawnArea.publishedAt) %} {{ drawnArea.publishedAt| format_datetime('short','short', locale='uk') }} {% endif %}</div>
-            <div>Дата перенесення в
-                архів: {% if(drawnArea.archivedAt) %} {{ drawnArea.archivedAt| format_datetime('short','short', locale='uk') }} {% endif %}</div>
+            <p class="text-start mb-0">Дата створення: {{ drawnArea.createdAt| format_datetime('short','short', locale='uk') }}</p>
+            <p class="text-start mb-0">Дата
+                редагування: {% if(drawnArea.updatedAt) %} {{ drawnArea.updatedAt| format_datetime('short','short', locale='uk') }} {% endif %}</p>
+            <p class="text-start mb-0">Дата
+                публікації: {% if(drawnArea.publishedAt) %} {{ drawnArea.publishedAt| format_datetime('short','short', locale='uk') }} {% endif %}</p>
+            <p class="text-start mb-0">Дата перенесення в
+                архів: {% if(drawnArea.archivedAt) %} {{ drawnArea.archivedAt| format_datetime('short','short', locale='uk') }} {% endif %}</p>
         </div>
     </div>
 
