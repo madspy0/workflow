@@ -7,11 +7,12 @@ import '../scss/portal.scss';
 import 'ol/ol.css';
 import 'ol-layerswitcher/dist/ol-layerswitcher.css';
 import '../scss/app/draw_map.scss';
+import '@algolia/autocomplete-theme-classic';
+
 
 import Map from 'ol/Map';
 import View from 'ol/View';
 import {Circle, Fill, Stroke, Style} from 'ol/style';
-
 import {OSM, Vector as VectorSource, TileWMS as TileWMSSource, XYZ} from 'ol/source';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {fromLonLat} from "ol/proj";
@@ -31,6 +32,7 @@ import DrawButtonsControl from './draw_buttons_control';
 import Swal from "sweetalert2";
 import {swalArea} from "./swal-area";
 import {addInteractionMeasure} from "./add-interaction-measure";
+import {autocomplete} from '@algolia/autocomplete-js';
 
 export const itemStyles = {
     'created': new Style({
@@ -108,7 +110,7 @@ const source = new VectorSource({
         xhr.onload = function () {
             if (xhr.status === 200) {
                 let geoms = JSON.parse(xhr.response);
-                let status_dict = {'created':'створений', 'published':'опублікований', 'archived':'архівований'}
+                let status_dict = {'created': 'створений', 'published': 'опублікований', 'archived': 'архівований'}
                 let formatedDate = (date) => {
                     let current_datetime = new Date(date)
                     return current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds()
@@ -118,8 +120,8 @@ const source = new VectorSource({
                         geometry: new WKT().readGeometry(item.geom),
                         appl: '<div>' + item.numberSolution +
                             '</div><div> ' + formatedDate(item.createdAt) +
-                            '</div><div> ' +formatLoadArea(item.area) + '</div>',
-                            // <div>' + item.status + '</div>',
+                            '</div><div> ' + formatLoadArea(item.area) + '</div>',
+                        // <div>' + item.status + '</div>',
                         number: item.id,
                         status: item.status,
                     });
@@ -357,7 +359,7 @@ export const map = new Map({
         cadastreMaps,
         myMaps,
         measureLayer,
- //       drawLayer
+        //       drawLayer
     ],
     target: 'full-map',
     view: new View({
@@ -501,11 +503,26 @@ document.getElementById('profile_button').addEventListener('click', function (e)
     swal_person()
 })
 
-// document.querySelector('body').addEventListener('click', event => {
-//
-//     // This version checks the current element for a match, as well as it's parents.
-//     // If none is found, it returns null
-//     if (event.target.matches('.area-buttons') || event.target.closest('.area-buttons')) {
-//         areaButtonsControl(event)
-//     }
-// })
+new autocomplete({
+    container: '#searchbox',
+    getSources() {
+        return [
+            {
+                sourceId: 'links',
+                getItems() {
+                    return [
+                        {label: 'Twitter', url: 'https://twitter.com'},
+                        {label: 'GitHub', url: 'https://github.com'},
+                    ];
+                },
+                getItemUrl({item}) {
+                    return item.url;
+                },
+                templates: {
+                    item({ item }) {
+                        return `Result: ${item.url}`;
+                    },
+                },
+            }]
+    }
+});
