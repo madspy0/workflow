@@ -18,7 +18,16 @@ class TownRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Town::class);
     }
-
+    public function findEntitiesByString($str){
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT e
+                FROM App:Town e
+                WHERE e.nameUa LIKE :str'
+            )
+            ->setParameter('str', '%'.$str.'%')
+            ->getResult();
+    }
     // /**
     //  * @return Town[] Returns an array of Town objects
     //  */

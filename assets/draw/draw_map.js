@@ -505,22 +505,38 @@ document.getElementById('profile_button').addEventListener('click', function (e)
 
 new autocomplete({
     container: '#searchbox',
-    getSources() {
+    getSources({ query }) {
         return [
             {
                 sourceId: 'links',
                 getItems() {
-                    return [
-                        {label: 'Twitter', url: 'https://twitter.com'},
-                        {label: 'GitHub', url: 'https://github.com'},
-                    ];
+                    return fetch('/dr_search/?q=' + query)
+                        .then(response=>{
+
+                            return response.json()
+                        })
+                        .then(data => {
+                            let ret = [];
+                            for(let i=0; i < Object.keys(data.entities).length; i++) {
+                                ret.push(Object.values(data.entities)[i])
+                            }
+                                   // }
+                            console.log(ret)
+                            return ret;
+                        })
+
+                    // [
+                    //     {label: 'Twitter', url: 'https://twitter.com'},
+                    //     {label: 'GitHub', url: 'https://github.com'},
+                    // ]
+                    ;
                 },
                 getItemUrl({item}) {
-                    return item.url;
+                    return item;
                 },
                 templates: {
                     item({ item }) {
-                        return `Result: ${item.url}`;
+                        return `Result: ${item}[0]`;
                     },
                 },
             }]

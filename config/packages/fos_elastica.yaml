@@ -1,15 +1,20 @@
 # Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/doc/setup.md
 fos_elastica:
     clients:
-        default: { url: '%env(ELASTICSEARCH_URL)%' }
+        default: { url: http://192.168.33.15:9200, host: 192.168.33.15, port: 80 }
+    serializer: ~
     indexes:
-        user:
+        town:
+            finder: ~
             persistence:
+                elastica_to_model_transformer:
+                    ignore_missing: true
                 # the driver can be orm, mongodb or phpcr
                 driver: orm
                 model: App\Entity\Town
+                listener: ~
                 provider: ~
-                finder: ~
             properties:
                 nameUa: ~
-                district: ~
+                nameObl: ~
+

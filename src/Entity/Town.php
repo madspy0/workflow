@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=TownRepository::class)
+ * @ORM\Table(name="town")
  */
 class Town
 {
@@ -33,7 +34,7 @@ class Town
     private $typeNp;
 
     /**
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $koatuu;
 
