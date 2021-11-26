@@ -34,6 +34,8 @@ import {swalArea} from "./swal-area";
 import {addInteractionMeasure} from "./add-interaction-measure";
 import {autocomplete} from '@algolia/autocomplete-js';
 
+import * as GeometryPoint from 'ol/geom/Point';
+
 export const itemStyles = {
     'created': new Style({
         fill: new Fill({
@@ -503,41 +505,30 @@ document.getElementById('profile_button').addEventListener('click', function (e)
     swal_person()
 })
 
-new autocomplete({
+autocomplete({
     container: '#searchbox',
-    getSources({ query }) {
+    getSources({query}) {
         return [
             {
-                sourceId: 'links',
+                sourceId: 'towns',
                 getItems() {
                     return fetch('/dr_search/?q=' + query)
-                        .then(response=>{
-
-                            return response.json()
-                        })
+                        .then(response => response.json())
                         .then(data => {
-                            let ret = [];
-                            for(let i=0; i < Object.keys(data.entities).length; i++) {
-                                ret.push(Object.values(data.entities)[i])
-                            }
-                                   // }
-                            console.log(ret)
-                            return ret;
-                        })
-
-                    // [
-                    //     {label: 'Twitter', url: 'https://twitter.com'},
-                    //     {label: 'GitHub', url: 'https://github.com'},
-                    // ]
-                    ;
+                            return data;
+                        });
                 },
-                getItemUrl({item}) {
-                    return item;
+                onSelect({item}) {
+                    let center = new WKT().readGeometry(item.geom);
+                    map.getView().setCenter(center.getCoordinates())
                 },
                 templates: {
-                    item({ item }) {
-                        return `Result: ${item}[0]`;
+                    item({item}) {
+                        return item.nameUa + ' ' + item.district + ' р-н ' + item.nameObl + ' обл.';
                     },
+                    // noResults() {
+                    //     return 'No results.';
+                    // }
                 },
             }]
     }

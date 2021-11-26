@@ -1,11 +1,31 @@
 # Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/doc/setup.md
 fos_elastica:
     clients:
-        default: { url: http://192.168.33.15:9200, host: 192.168.33.15, port: 80 }
-    serializer: ~
+        default:
+#            url: '%env(ELASTICSEARCH_URL)%'
+            host: 192.168.33.15
+            port: 9200
+            transport: http
     indexes:
         town:
+            settings:
+                number_of_shards: 1
+                analysis:
+                    filter:
+                        autocomplete_filter:
+                                type: "edge_ngram"
+                                min_gram: 1
+                                max_gram: 10
+                    analyzer:
+                        autocomplete:
+                            type: custom
+                            tokenizer: lowercase
+                            filter:
+                                - autocomplete_filter
+
             finder: ~
+            serializer:
+                groups: [searchOut]
             persistence:
                 elastica_to_model_transformer:
                     ignore_missing: true
@@ -15,6 +35,8 @@ fos_elastica:
                 listener: ~
                 provider: ~
             properties:
-                nameUa: ~
+                nameUa:
+                    type: text
+                    analyzer: autocomplete
                 nameObl: ~
-
+                district: ~

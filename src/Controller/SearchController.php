@@ -7,8 +7,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
+use Elastica\Query;
+use Elastica\Query\MatchQuery;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class SearchController extends AbstractController
 {
@@ -21,10 +25,9 @@ class SearchController extends AbstractController
     /**
      * @Route("/dr_search", name="search.autocomplete", methods={"GET"}, options={"expose"=true})
      */
-    public function search(Request $request, TownRepository $repository): JsonResponse
+    public function search(Request $request, TownRepository $repository, SerializerInterface $serializer): Response
     {
         $requestString = $request->get('q');
-        $this->finder->find($requestString);
 
 //        $entities =  $repository->findEntitiesByString($requestString);
 //
@@ -33,8 +36,14 @@ class SearchController extends AbstractController
 //        } else {
 //            $result['entities'] = $this->getRealEntities($entities);
 //        }
-        $result['entities'] = $this->finder->find($requestString);
-        return new JsonResponse($result);
+        $query = new Query();
+    //    $query->addSort(['nameUa' => 'asc']);
+        $fieldQuery = new MatchQuery();
+        $fieldQuery->setFieldQuery('nameUa', $requestString);
+        $fieldQuery->setFieldParam('nameUa', 'analyzer', 'autocomplete');
+    //    $query->setQuery($fieldQuery);
+        $result = $serializer->serialize($this->finder->find($fieldQuery), 'json', ['groups' => 'searchOut']);
+        return new Response($result);
     }
 
     public function getRealEntities($entities){

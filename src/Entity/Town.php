@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TownRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TownRepository::class)
@@ -25,6 +26,7 @@ class Town
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Groups({"searchOut"})
      */
     private $nameUa;
 
@@ -45,6 +47,7 @@ class Town
 
     /**
      * @ORM\Column(type="string", length=30, nullable=true)
+     * @Groups({"searchOut"})
      */
     private $district;
 
@@ -55,6 +58,7 @@ class Town
 
     /**
      * @ORM\Column(type="string", length=30, nullable=true)
+     * @Groups({"searchOut"})
      */
     private $nameObl;
 
@@ -85,6 +89,7 @@ class Town
 
     /**
      * @ORM\Column(type="geometry", nullable=true)
+     * @Groups({"searchOut"})
      */
     private $geom;
 
