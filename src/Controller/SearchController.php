@@ -18,10 +18,10 @@ class SearchController extends AbstractController
 {
     private $finder;
 
-    public function __construct(PaginatedFinderInterface $finder)
-    {
-        $this->finder = $finder;
-    }
+//    public function __construct(PaginatedFinderInterface $finder)
+//    {
+//        $this->finder = $finder;
+//    }
     /**
      * @Route("/dr_search", name="search.autocomplete", methods={"GET"}, options={"expose"=true})
      */
@@ -36,7 +36,7 @@ class SearchController extends AbstractController
 //        } else {
 //            $result['entities'] = $this->getRealEntities($entities);
 //        }
-        $query = new Query();
+     //   $query = new Query();
     //    $query->addSort(['nameUa' => 'asc']);
         $fieldQuery = new MatchQuery();
         $fieldQuery->setFieldQuery('nameUa', $requestString);

@@ -6,9 +6,9 @@ import '../scss/portal.scss';
 
 import 'ol/ol.css';
 import 'ol-layerswitcher/dist/ol-layerswitcher.css';
-import '../scss/app/draw_map.scss';
-import '@algolia/autocomplete-theme-classic';
 
+import '@algolia/autocomplete-theme-classic';
+import '../scss/app/draw_map.scss';
 
 import Map from 'ol/Map';
 import View from 'ol/View';
