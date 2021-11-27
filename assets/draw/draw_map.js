@@ -12,7 +12,7 @@ import '../scss/app/draw_map.scss';
 
 import Map from 'ol/Map';
 import View from 'ol/View';
-import {Circle, Fill, Stroke, Style} from 'ol/style';
+import {Circle, Fill, Icon, Stroke, Style} from 'ol/style';
 import {OSM, Vector as VectorSource, TileWMS as TileWMSSource, XYZ} from 'ol/source';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {fromLonLat} from "ol/proj";
@@ -519,8 +519,19 @@ autocomplete({
                         });
                 },
                 onSelect({item}) {
-                    let center = new WKT().readGeometry(item.geom);
-                    map.getView().setCenter(center.getCoordinates())
+                    let markerGeom = new WKT().readGeometry(item.geom);
+                    let marker = new Feature({
+                        style: new Style({
+                            image: new Icon({
+                                anchor: [0.5, 46],
+                                anchorXUnits: 'fraction',
+                                anchorYUnits: 'pixels',
+                                src: 'https://openlayers.org/en/latest/examples/data/icon.png'
+                            })
+                        })
+                    });
+                    measureLayer.getSource().addFeature(marker)
+                    map.getView().setCenter(markerGeom.getCoordinates())
                 },
                 templates: {
                     item({item}) {
