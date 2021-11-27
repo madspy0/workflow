@@ -89,12 +89,12 @@ class Town
 
     /**
      * @ORM\Column(type="geometry", nullable=true)
-     * @Groups({"searchOut"})
      */
     private $geom;
 
     /**
      * @ORM\Column(type="geometry", nullable=true)
+     * @Groups({"searchOut"})
      */
     private $geom42;
 

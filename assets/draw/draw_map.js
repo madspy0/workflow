@@ -35,6 +35,8 @@ import {addInteractionMeasure} from "./add-interaction-measure";
 import {autocomplete} from '@algolia/autocomplete-js';
 
 import * as GeometryPoint from 'ol/geom/Point';
+import {MousePosition} from "ol/control";
+import {createStringXY} from "ol/coordinate";
 
 export const itemStyles = {
     'created': new Style({
@@ -195,6 +197,12 @@ export const measureLayer = new VectorLayer({
             color: '#ffcc33',
             width: 2,
         }),
+        image: new Icon({
+            // anchor: [0.5, 46],
+            // anchorXUnits: 'fraction',
+            // anchorYUnits: 'pixels',
+            src: 'https://openlayers.org/en/latest/examples/data/icon.png'
+        })
     }),
 });
 export const drawLayer = new VectorLayer({
@@ -355,6 +363,15 @@ const myMaps = new LayerGroup({
     ]
 });
 
+const mousePositionControl = new MousePosition({
+    coordinateFormat: createStringXY(4),
+    projection: 'EPSG:900913',
+    // comment the following two lines to have the mouse position
+    // be placed within the map.
+//    className: 'custom-mouse-position',
+//    target: document.getElementById('mouse-position'),
+});
+
 export const map = new Map({
     layers: [
         baseMaps,
@@ -374,7 +391,8 @@ export const map = new Map({
     }).extend([
         new olControl.Zoom({
             className: "draw-zoom"
-        })
+        }),
+    //    mousePositionControl
     ])
 });
 
@@ -519,19 +537,11 @@ autocomplete({
                         });
                 },
                 onSelect({item}) {
-                    let markerGeom = new WKT().readGeometry(item.geom);
+                    let markerGeom = new WKT().readGeometry(item.geom42, 'EPSG:4326');
                     let marker = new Feature({
-                        style: new Style({
-                            image: new Icon({
-                                anchor: [0.5, 46],
-                                anchorXUnits: 'fraction',
-                                anchorYUnits: 'pixels',
-                                src: 'https://openlayers.org/en/latest/examples/data/icon.png'
-                            })
-                        })
+                        geometry: markerGeom.transform('EPSG:4326', 'EPSG:3857'),
                     });
-                    measureLayer.getSource().addFeature(marker)
-                    map.getView().setCenter(markerGeom.getCoordinates())
+                        measureLayer.getSource().addFeature(marker)
                 },
                 templates: {
                     item({item}) {
