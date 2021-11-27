@@ -6,7 +6,7 @@ import {swalArea} from "./swal-area";
 import Swal from "sweetalert2";
 import Overlay from "ol/Overlay";
 import {WKT} from "ol/format";
-import {Collection} from "ol";
+import {transform} from "ol/proj";
 
 
 let infoTooltip;
@@ -111,8 +111,6 @@ export function addInteractions() {
         }
     });
     selectMove.on('select', function (e) {
-        let toast = document.getElementById('draw_toast');
-        if (!((toast !== null) && toast.classList.contains('show'))) {
             let selected = selectMove.getFeatures().getArray()[0];
             if (selected != null) {
                 document.body.style.cursor = 'pointer';
@@ -130,8 +128,6 @@ export function addInteractions() {
                 document.body.style.cursor = 'default';
                 createInfoTooltip();
             }
-
-        }
 
     })
 }

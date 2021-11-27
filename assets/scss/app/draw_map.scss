@@ -23,7 +23,7 @@ $modal-fade-transform: scale(.8);
 }
 
 .app-card-body {
-  height: calc(100vh - 112px) !important;
+  height: calc(100vh - 102px) !important;
 }
 
 .container-map {
@@ -177,7 +177,7 @@ $modal-fade-transform: scale(.8);
   }
 }
 .draw-zoom {
-  bottom: .5em;
+  bottom: 3em;
   left: .5em;
 
   button {
@@ -187,13 +187,67 @@ $modal-fade-transform: scale(.8);
     height: 38px;
     padding: 2px;
   }
-
-  button:hover, button:focus, button:active, button.active {
+  button:hover, button.hover, button:active, button.active, button:focus, button.focus {
     background: #ecfafd;
+    box-shadow: none;
   }
 }
 
 #searchbox {
   --aa-primary-color-rgb: 21, 141, 162;
+ // --aa-search-input-height: 36px;
+  //--aa-spacing: 30px;
 }
 
+.ol-custom-overviewmap,
+.ol-custom-overviewmap.ol-uncollapsible {
+  bottom: 3em;
+  left: auto;
+  right: 1em;
+  top: auto;
+  button {
+    color: #158da2;
+    background-color: white;
+    width: 34px;
+    height: 34px;
+    padding: 2px;
+  }
+  button:hover, button:focus, button:active, button.active {
+    background: white;
+  }
+}
+
+.ol-custom-overviewmap:not(.ol-collapsed)  {
+  border: 1px solid black;
+}
+
+.ol-custom-overviewmap .ol-overviewmap-map {
+  border: none;
+  width: 300px;
+}
+
+.ol-custom-overviewmap .ol-overviewmap-box {
+  border: 2px solid red;
+}
+
+.ol-custom-overviewmap:not(.ol-collapsed) button{
+  bottom: 1px;
+  left: auto;
+  right: 1px;
+  top: auto;
+}
+
+.ol-scale-line {
+  background-color: #158da288;
+  left: 10em
+}
+
+.ol-mouse-position {
+  top: auto;
+  right: auto;
+  left: 1em;
+  bottom: 8px;
+  width: 8em;
+  background-color: #f8f8f888;
+  font-weight: 400;
+}

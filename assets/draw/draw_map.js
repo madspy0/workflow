@@ -35,7 +35,7 @@ import {addInteractionMeasure} from "./add-interaction-measure";
 import {autocomplete} from '@algolia/autocomplete-js';
 
 import * as GeometryPoint from 'ol/geom/Point';
-import {MousePosition} from "ol/control";
+import {MousePosition, OverviewMap, ScaleLine} from "ol/control";
 import {createStringXY} from "ol/coordinate";
 
 export const itemStyles = {
@@ -365,12 +365,32 @@ const myMaps = new LayerGroup({
 
 const mousePositionControl = new MousePosition({
     coordinateFormat: createStringXY(4),
-    projection: 'EPSG:900913',
-    // comment the following two lines to have the mouse position
-    // be placed within the map.
-//    className: 'custom-mouse-position',
+    projection: 'EPSG:4326',
+ //   className: 'draw-mouse-position',
 //    target: document.getElementById('mouse-position'),
 });
+
+const overviewMap = new OverviewMap({
+    layers: [
+        new TileLayer({
+            title: 'Openstreetmap',
+            type: 'base',
+            visible: true,
+            source: new OSM()
+        })
+    ],
+    className: 'ol-overviewmap ol-custom-overviewmap',
+    collapsed: false,
+    label: '«',
+    collapseLabel: '»',
+})
+
+const scaleLine = new ScaleLine(
+    {
+  //  className: 'ol-scale-line ol-custom-scale-line',
+  //  target: document.getElementById('scale-line')
+    }
+);
 
 export const map = new Map({
     layers: [
@@ -392,7 +412,9 @@ export const map = new Map({
         new olControl.Zoom({
             className: "draw-zoom"
         }),
-    //    mousePositionControl
+        mousePositionControl,
+        overviewMap,
+        scaleLine
     ])
 });
 
@@ -537,9 +559,10 @@ autocomplete({
                         });
                 },
                 onSelect({item}) {
-                    let markerGeom = new WKT().readGeometry(item.geom42, 'EPSG:4326');
+                    let markerGeom = new WKT().readGeometry(item.geom42, ['EPSG:4284']).transform('EPSG:4284', 'EPSG:3857');
+
                     let marker = new Feature({
-                        geometry: markerGeom.transform('EPSG:4326', 'EPSG:3857'),
+                        geometry: markerGeom,
                     });
                         measureLayer.getSource().addFeature(marker)
                 },
