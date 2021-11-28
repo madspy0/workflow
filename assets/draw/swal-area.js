@@ -245,20 +245,21 @@ export async function swalArea(feature) {
                                 body: formData
                             }).then(response => {
                                 if (!response.ok) {
-                                    throw new Error(response.statusText)
+                                    return response.json().then(Promise.reject.bind(Promise));
+                                 //   throw new Error(response.statusText)
                                 }
                                 return response.json()
                             }).then(data => {
+                                // console.log(data.error)
                                 if (data.id) {
                                     feature.set('number', data.id);
                                     feature.set('appl', data.appl);
                                     clearBeforeClose()
                                     Swal.close()
                                 }
-                            })
-                                .catch(error => {
+                            }).catch(error => {
                                     Swal.showValidationMessage(
-                                        `Request failed: ${error}`
+                                        `Помилка запиту: ${error.error}`
                                     )
                                 })
                         }

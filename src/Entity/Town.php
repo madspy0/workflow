@@ -5,10 +5,10 @@ namespace App\Entity;
 use App\Repository\TownRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-
+use Jsor\Doctrine\PostGIS\Types\PostGISType;
 /**
  * @ORM\Entity(repositoryClass=TownRepository::class)
- * @ORM\Table(name="town")
+ * @ORM\Table(name="town", indexes={@ORM\Index(fields={"geom42"}, flags={"spatial"})})
  */
 class Town
 {
@@ -93,7 +93,7 @@ class Town
     private $geom;
 
     /**
-     * @ORM\Column(type="geometry", nullable=true)
+     * @ORM\Column(name="geom42", type="geometry", nullable=true, options={"geometry_type"="POINT", "srid"=4284})
      * @Groups({"searchOut"})
      */
     private $geom42;

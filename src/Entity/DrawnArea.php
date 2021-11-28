@@ -142,7 +142,7 @@ class DrawnArea
      * @ORM\Column(type="geometry")
      * @Groups({"geoms"})
      * @Assert\NotBlank(message="Намалюйте план ділянки")
-     * @ContainsGeom(message="Геометрія невірна")
+     * @ContainsGeom(message="Геометрія не є валідною")
      */
     private $geom;
 

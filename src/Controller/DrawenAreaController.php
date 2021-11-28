@@ -16,6 +16,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -147,7 +148,8 @@ class DrawenAreaController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted()) {
                 if (!$form->isValid()) {
-                    throw new HttpException(412, $this->getErrorsFromForm($form)[0]);
+                    throw  new BadRequestException($this->getErrorsFromForm($form)[0], 412);
+                   // throw new HttpException(412, $this->getErrorsFromForm($form)[0]);
                 }
                 $this->addFlash(
                     'success',
@@ -164,8 +166,8 @@ class DrawenAreaController extends AbstractController
             $buttons = $this->renderView(
                 'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
             return new JsonResponse(['content' => $content, 'buttons' => $buttons]);
-        } catch (HttpException $exception) {
-            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
+        } catch (BadRequestException $exception) {
+            return $this->json(['error' => $exception->getMessage()], Response::HTTP_PRECONDITION_FAILED);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
