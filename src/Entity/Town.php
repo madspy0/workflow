@@ -93,7 +93,7 @@ class Town
     private $geom;
 
     /**
-     * @ORM\Column(name="geom42", type="geometry", nullable=true, options={"geometry_type"="POINT", "srid"=4284})
+     * @ORM\Column(name="geom42", type="geometry", nullable=true, options={geometry_type="POINT", srid=4284})
      * @Groups({"searchOut"})
      */
     private $geom42;

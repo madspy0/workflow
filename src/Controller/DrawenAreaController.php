@@ -139,16 +139,16 @@ class DrawenAreaController extends AbstractController
     {
         try {
             if ($drawnArea->getAuthor() !== $this->getUser()) {
-                throw new AccessDeniedException('Немає доступу до об\'єкту');
+                throw new AccessDeniedException('Немає доступу до об\'єкту', Response::HTTP_NOT_ACCEPTABLE);
             }
             $form = $this->createForm(DrawnAreaType::class, $drawnArea, [
-                'entity_manager' => $this->getDoctrine()->getManager(),
+                'entity_manager' => $em,
                 'action' => $this->generateUrl('drawen.draw_upd', ['id' => $drawnArea->getId()]),
             ]);
             $form->handleRequest($request);
             if ($form->isSubmitted()) {
                 if (!$form->isValid()) {
-                    throw  new BadRequestException($this->getErrorsFromForm($form)[0], 412);
+                    throw  new Exception($this->getErrorsFromForm($form)[0], 412);
                    // throw new HttpException(412, $this->getErrorsFromForm($form)[0]);
                 }
                 $this->addFlash(
@@ -166,10 +166,9 @@ class DrawenAreaController extends AbstractController
             $buttons = $this->renderView(
                 'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
             return new JsonResponse(['content' => $content, 'buttons' => $buttons]);
-        } catch (BadRequestException $exception) {
-            return $this->json(['error' => $exception->getMessage()], Response::HTTP_PRECONDITION_FAILED);
-        } catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        catch (Exception $exception) {
+            return $this->json(['error' => $exception->getMessage()], $exception->getCode());
         }
     }
 

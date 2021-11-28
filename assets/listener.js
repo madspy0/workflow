@@ -1,4 +1,4 @@
-export function listener() {
+function listener() {
     let proxied = window.XMLHttpRequest.prototype.send;
     window.XMLHttpRequest.prototype.send = function() {
        // console.log( arguments );

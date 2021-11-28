@@ -23,18 +23,14 @@ import {Feature} from "ol";
 import {WKT} from "ol/format";
 import {getArea} from "ol/sphere";
 import * as olControl from 'ol/control';
-import {listener} from "../listener";
 import {Draw, Modify, Select} from "ol/interaction";
 
 import {swal_person} from "./swal_person";
 import {addInteractions} from "./add-interactions";
 import DrawButtonsControl from './draw_buttons_control';
-import Swal from "sweetalert2";
 import {swalArea} from "./swal-area";
 import {addInteractionMeasure} from "./add-interaction-measure";
 import {autocomplete} from '@algolia/autocomplete-js';
-
-import * as GeometryPoint from 'ol/geom/Point';
 import {MousePosition, OverviewMap, ScaleLine} from "ol/control";
 import {createStringXY} from "ol/coordinate";
 
@@ -465,9 +461,6 @@ map.addControl(new DrawButtonsControl());
 //document.getElementsByClassName('edit-buttons')[0].append(layerSwitcher);
 map.addControl(layerSwitcher);
 
-
-listener();
-
 let elem_coords = document.getElementById('coord');
 let cc = elem_coords.dataset.cc.split(',');
 if (cc.length === 2) {
@@ -477,20 +470,6 @@ if (cc.length === 2) {
     let edit_buttons = document.getElementsByClassName('btn-edit');
     edit_buttons[0].dispatchEvent(new Event("click"));
 }
-
-// let clearVectorLayer = (layer, plants) => {
-//     if (layer instanceof VectorLayer) {
-//         if (layer.getSource()) {
-//             if (layer.get('name') === 'plants') {
-//                 if (plants) {
-//                     layer.getSource().refresh();
-//                 }
-//             } else {
-//                 layer.getSource().refresh();
-//             }
-//         }
-//     }
-// }
 
 let rmInteractionsOverlays = () => {
     map.getOverlays().getArray().slice(0).forEach(function (overlay) {
@@ -514,23 +493,6 @@ export function sourceClear(plants = false) {
             // clearVectorLayer(el, plants)
         }
     })
-}
-
-function processForm(e) {
-    e.preventDefault();
-    let xhr = new XMLHttpRequest();
-    let data = document.getElementById('form_person_edit');
-    let formData = new FormData(data);
-    xhr.open("POST", '/dr_profile', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function () {
-        if (XMLHttpRequest.DONE && xhr.status === 200) {
-            console.log('ok')
-        }
-    }
-    xhr.send(formData);
-    return false;
-
 }
 
 if (!!document.getElementById('profile_flag')) {
