@@ -94,10 +94,29 @@ class Town
 
     /**
      * @ORM\Column(name="geom42", type="geometry", nullable=true, options={geometry_type="POINT", srid=4284})
-     * @Groups({"searchOut"})
      */
     private $geom42;
 
+    /**
+     * @return mixed
+     */
+    public function getGeom3857()
+    {
+        return $this->geom3857;
+    }
+
+    /**
+     * @param mixed $geom3857
+     */
+    public function setGeom3857($geom3857): void
+    {
+        $this->geom3857 = $geom3857;
+    }
+    /**
+     * @ORM\Column(name="geom3857", type="geometry", nullable=true, options={geometry_type="POINT", srid=4284})
+     * @Groups({"searchOut"})
+     */
+    private $geom3857;
     /**
      * @ORM\Column(type="geometry", nullable=true)
      */

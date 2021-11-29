@@ -521,10 +521,10 @@ autocomplete({
                         });
                 },
                 onSelect({item}) {
-                    let markerGeom = new WKT().readGeometry(item.geom42, ['EPSG:4284']).transform('EPSG:4284', 'EPSG:3857');
+      //              let markerGeom = new WKT().readGeometry(item.geom3857, ['EPSG:4284']).transform('EPSG:4284', 'EPSG:3857');
 
                     let marker = new Feature({
-                        geometry: markerGeom,
+                        geometry: new WKT().readGeometry(item.geom3857)
                     });
                         measureLayer.getSource().addFeature(marker)
                 },
