@@ -25,7 +25,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
         $h = $request->headers->all();
    //     dump($h);
   //      $request->getSession()->getFlashBag()->add('note', 'Ви повинні увійти, щоб отримати доступ.');
-        if (("application/json" === $h['content-type'][0])||(strpos($h['content-type'][0],"multipart/form-data;")!==false)) {
+        if (array_key_exists('content-type',$h)&&(("application/json" === $h['content-type'][0])||(strpos($h['content-type'][0],"multipart/form-data;")!==false))) {
 
             return new JsonResponse(['error' => "Ви повинні увійти, щоб отримати доступ"], Response::HTTP_NOT_ACCEPTABLE);
        }

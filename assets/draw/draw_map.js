@@ -527,6 +527,7 @@ autocomplete({
                         geometry: new WKT().readGeometry(item.geom3857)
                     });
                         measureLayer.getSource().addFeature(marker)
+                        map.getView().fit(new WKT().readGeometry(item.bboxgeom));
                 },
                 templates: {
                     item({item}) {

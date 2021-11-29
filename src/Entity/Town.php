@@ -93,7 +93,7 @@ class Town
     private $geom;
 
     /**
-     * @ORM\Column(name="geom42", type="geometry", nullable=true, options={geometry_type="POINT", srid=4284})
+     * @ORM\Column(name="geom42", type="geometry", nullable=true)
      */
     private $geom42;
 
@@ -113,14 +113,15 @@ class Town
         $this->geom3857 = $geom3857;
     }
     /**
-     * @ORM\Column(name="geom3857", type="geometry", nullable=true, options={geometry_type="POINT", srid=4284})
+     * @ORM\Column(name="geom3857", type="geometry", nullable=true)
      * @Groups({"searchOut"})
      */
     private $geom3857;
     /**
      * @ORM\Column(type="geometry", nullable=true)
+     * @Groups({"searchOut"})
      */
-    private $bbox;
+    private $bboxgeom;
 
     /**
      * @ORM\Column(type="datetime")
@@ -312,17 +313,22 @@ class Town
         return $this;
     }
 
-    public function getBbox()
+    /**
+     * @return mixed
+     */
+    public function getBboxgeom()
     {
-        return $this->bbox;
+        return $this->bboxgeom;
     }
 
-    public function setBbox($bbox): self
+    /**
+     * @param mixed $bboxgeom
+     */
+    public function setBboxgeom($bboxgeom): void
     {
-        $this->bbox = $bbox;
-
-        return $this;
+        $this->bboxgeom = $bboxgeom;
     }
+
 
     public function getDateC(): ?\DateTimeInterface
     {
