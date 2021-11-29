@@ -8,6 +8,8 @@ import Litepicker from "litepicker";
 import {toggle_form} from "./toggle-form";
 import {Collection} from "ol";
 import {dropPlane} from "./drop-plane";
+import {swal_person} from "./swal_person";
+import {getCenter} from "ol/extent";
 
 function clearBeforeClose(modify) {
     map.getInteractions().forEach(f => {
@@ -17,6 +19,21 @@ function clearBeforeClose(modify) {
     })
 }
 
+export function toastFire(error) {
+    Swal.fire({
+        toast: true,
+        position: 'top-right',
+        iconColor: 'red',
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        icon: 'error',
+        title: error.error
+    }).then(
+        setTimeout(() => {
+            window.location.reload()
+        }, 2000))
+}
 
 export async function swalArea(feature) {
     let modifyInteraction
@@ -25,6 +42,11 @@ export async function swalArea(feature) {
             modifyInteraction = f
         }
     })
+    let selected_center = getCenter(feature.getGeometry().getExtent());
+    let resolution = map.getView().getResolution();
+    //console.log(selected_center[0] - 550 * resolution, selected_center[1], resolution)
+    map.getView().setCenter([selected_center[0] - 550 * resolution, selected_center[1]])
+    map.getView().fit(feature.getGeometry(), {padding: [15, 565, 15, 15], duration: 500})
     if (feature.get('status') === 'created') {
         modifyInteraction.setActive(true)
     } else {
@@ -38,9 +60,17 @@ export async function swalArea(feature) {
         reqUrl = '/dr_upd/' + feature.get('number')
     }
 
-    await fetch(reqUrl)
-        .then(response => response.json())
-        .then((data) => {
+    await fetch(reqUrl, {
+        headers: new Headers({'content-type': 'application/json'}),
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(Promise.reject.bind(Promise));
+                //   throw new Error(response.statusText)
+            }
+            return (response.json())
+        })
+        .then(data => {
                 Swal.fire({
                         title: 'Атрибутивна інформація',
                         html: data.content,
@@ -71,7 +101,8 @@ export async function swalArea(feature) {
                             Swal.getActions().querySelector('#dr_save').addEventListener('click', () => {
                                 Swal.clickConfirm()
                             })
-                            document.getElementById('dr_drop').addEventListener('click', () => {
+                            document.getElementById('dr_drop').addEventListener('click', (e) => {
+                                e.preventDefault()
                                 dropPlane(feature)
                             })
                             document.getElementById('dr_publ').addEventListener('click', (e) => {
@@ -88,8 +119,16 @@ export async function swalArea(feature) {
                                     }
                                 }).then(willPubl => {
                                     if (willPubl.isConfirmed) {
-                                        fetch('/dr_publ/' + feature.get('number'))
-                                            .then(response => response.json())
+                                        fetch('/dr_publ/' + feature.get('number'), {
+                                            headers: new Headers({'content-type': 'application/json'}),
+                                        })
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    return response.json().then(Promise.reject.bind(Promise));
+                                                    //   throw new Error(response.statusText)
+                                                }
+                                                return response.json()
+                                            })
                                             .then(data => {
                                                 if (data.success) {
                                                     feature.set('status', 'published');
@@ -98,14 +137,23 @@ export async function swalArea(feature) {
                                                     Swal.close()
                                                 }
                                             })
+                                            .catch(error => toastFire(error))
                                     }
                                 })
 
                             })
                             document.getElementById('dr_arch').addEventListener('click', (e) => {
                                 e.preventDefault()
-                                fetch('/dr_archground/' + feature.get('number'))
-                                    .then(response => response.json())
+                                fetch('/dr_archground/' + feature.get('number'), {
+                                    headers: new Headers({'content-type': 'application/json'}),
+                                })
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            return response.json().then(Promise.reject.bind(Promise));
+                                            //   throw new Error(response.statusText)
+                                        }
+                                        return response.json()
+                                    })
                                     .then(data => {
                                         if (data.content) {
                                             Swal.fire({
@@ -162,7 +210,7 @@ export async function swalArea(feature) {
                                                         }
                                                         return response.json()
                                                     }).then((data) => {
-                                                        if(data.success) {
+                                                        if (data.success) {
                                                             feature.set('status', 'archived');
                                                             feature.setStyle(itemStyles['archived']);
                                                             clearBeforeClose();
@@ -179,6 +227,7 @@ export async function swalArea(feature) {
 
                                         }
                                     })
+                                    .catch(error => toastFire(error))
                             })
                         },
                         willClose: () => {
@@ -225,7 +274,7 @@ export async function swalArea(feature) {
                                     }
                                     if (item[1] === "") {
                                         let msg;
-                                        if(form.elements[item[0]].tagName.toLowerCase()==='select') {
+                                        if (form.elements[item[0]].tagName.toLowerCase() === 'select') {
                                             msg = 'Майбутнє цільове призначення'
                                         } else {
                                             msg = form.elements[item[0]].getAttribute('placeholder') ? form.elements[item[0]].getAttribute('placeholder')
@@ -246,7 +295,7 @@ export async function swalArea(feature) {
                             }).then(response => {
                                 if (!response.ok) {
                                     return response.json().then(Promise.reject.bind(Promise));
-                                 //   throw new Error(response.statusText)
+                                    //   throw new Error(response.statusText)
                                 }
                                 return response.json()
                             }).then(data => {
@@ -258,13 +307,13 @@ export async function swalArea(feature) {
                                     Swal.close()
                                 }
                             }).catch(error => {
-                                    Swal.showValidationMessage(
-                                        `Помилка запиту: ${error.error}`
-                                    )
-                                })
+                                Swal.showValidationMessage(
+                                    `Помилка запиту: ${error.error}`
+                                )
+                            })
                         }
                     }
                 )
             }
-        )
+        ).catch(error => toastFire(error))
 }

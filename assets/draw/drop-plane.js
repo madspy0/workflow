@@ -1,6 +1,7 @@
 import {map, plants} from "./draw_map";
 import {Select} from "ol/interaction";
 import Swal from "sweetalert2";
+import {toastFire} from "./swal-area";
 
 export async function dropPlane(feature) {
     await Swal.fire({
@@ -19,8 +20,16 @@ export async function dropPlane(feature) {
         cancelButtonText: 'Закрити'
     }).then((willDelete) => {
         if (willDelete.isConfirmed) {
-            fetch('/dr_drop/' + feature.get('number'))
-                .then(response => response.json())
+            fetch('/dr_drop/' + feature.get('number'), {
+                headers: new Headers({'content-type': 'application/json'}),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(Promise.reject.bind(Promise));
+                        //   throw new Error(response.statusText)
+                    }
+                    return response.json()
+                })
                 .then(data => {
                     if (data.success) {
                         plants.getSource().removeFeature(feature);
@@ -33,6 +42,7 @@ export async function dropPlane(feature) {
                         Swal.close();
                     }
                 })
+                .catch(error => toastFire(error))
         }
-    });
+    })
 }

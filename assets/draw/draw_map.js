@@ -296,7 +296,7 @@ let pzf = new TileLayer({
 const osm = new TileLayer({
     title: 'Openstreetmap',
     type: 'base',
-    visible: true,
+    visible: false,
     source: new OSM()
 });
 
@@ -324,7 +324,7 @@ let oglydova = new TileLayer({
     source: new XYZ({
         url: 'https://m1.land.gov.ua/map/topo_map/{z}/{x}/{y}.png' //'http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
     }),
-    visible: false,
+    visible: true,
     title: 'Оглядова карта',
     type: 'base',
     maxZoom: 16
@@ -399,7 +399,7 @@ export const map = new Map({
     target: 'full-map',
     view: new View({
         center: fromLonLat([31.182233, 48.382778]),
-        zoom: 5,
+        zoom: 7,
         maxZoom: 18,
     }),
     controls: olControl.defaults({
