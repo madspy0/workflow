@@ -194,9 +194,11 @@ $modal-fade-transform: scale(.8);
 }
 
 #searchbox {
-  --aa-primary-color-rgb: 21, 141, 162;
- // --aa-search-input-height: 36px;
-  //--aa-spacing: 30px;
+  --aa-primary-color-rgb: 93, 103, 120;//21, 141, 162;
+  --aa-input-border-color-alpha: 1;
+  --aa-input-border-color-rgb: 93, 103, 120;
+  --aa-input-border-color-alpha: .4;
+  --aa-search-input-height: 34px;
 }
 
 .ol-custom-overviewmap,

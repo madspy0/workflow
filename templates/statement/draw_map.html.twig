@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block body %}
-
+<body class="app">
     {% include('statement/header.html.twig') %}
 
     <div class="app-wrapper">
@@ -27,4 +27,5 @@
     {% endif %}
     <div id="coord" data-cc="{{ cc }}" data-z="{{ z }}"></div>
 {#    <div id="profile-data" data-profile-form="{{ profileForm }}"></div>#}
+</body>
 {% endblock %}
