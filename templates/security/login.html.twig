@@ -14,20 +14,19 @@
 {% block body %}
     <body>
 <form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-    {% endif %}
-
     <div class="row g-0 app-auth-wrapper">
         <div class="col-12 col-md-7 col-lg-6 auth-main-col text-center p-5">
             <div class="d-flex flex-column align-content-end">
                 <div class="app-auth-body mx-auto">
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+
+                    {% if app.user %}
+                        <div class="mb-3">
+                            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                        </div>
+                    {% endif %}
                     <div class="app-auth-branding mb-4"><a class="app-logo" href="{{ path('homepage') }}">
 {#                            <img class="logo-icon me-2" src="/images/app-logo1.svg" alt="logo">#}
                             <svg xmlns="http://www.w3.org/2000/svg" width="215" height="215" fill="currentColor" class="bi bi-compass" viewBox="0 0 16 16">
@@ -35,6 +34,7 @@
                                 <path d="m6.94 7.44 4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z"/>
                             </svg>
                         </a></div>
+
                     <h2 class="auth-heading text-center mb-5">Log in to Portal</h2>
                     <div class="auth-form-container text-start">
                         <form class="auth-form login-form">
@@ -48,9 +48,8 @@
                                 <div class="extra mt-3 row justify-content-between">
                                     <div class="col-6">
                                         <div class="checkbox mb-3">
-                                            <label>
-                                                <input type="checkbox" name="_remember_me"> Remember me
-                                            </label>
+                                            <input type="checkbox" id="remember_me" name="_remember_me"/>
+                                            <label for="remember_me">Keep me logged in</label>
                                         </div>
                                     </div><!--//col-6-->
                                     <div class="col-6">

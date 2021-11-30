@@ -4,12 +4,14 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -40,6 +42,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToOne(targetEntity=Profile::class, mappedBy="users", cascade={"persist", "remove"})
      */
     private $profile;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDisabled = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isExpired = false;
 
     public function getId(): ?int
     {
@@ -129,16 +146,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-    /**
-     * @see UserInterface
-     */
+
     public function getProfile(): ?Profile
     {
         return $this->profile;
     }
-    /**
-     * @see UserInterface
-     */
+
     public function setProfile(Profile $profile): self
     {
         // set the owning side of the relation if necessary
@@ -147,6 +160,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->profile = $profile;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function IsDisabled(): ?bool
+    {
+        return $this->isDisabled;
+    }
+
+    public function setIsDisabled(?bool $isDisabled): self
+    {
+        $this->isDisabled = $isDisabled;
+
+        return $this;
+    }
+
+    public function IsExpired(): ?bool
+    {
+        return $this->isExpired;
+    }
+
+    public function setIsExpired(?bool $isExpired): self
+    {
+        $this->isExpired = $isExpired;
 
         return $this;
     }

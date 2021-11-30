@@ -19,10 +19,16 @@ security:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
     main:
+      pattern: ^/
+      # user_checker: App\Security\UserChecker
       entry_point: App\Security\AuthenticationEntryPoint
       lazy: true
       provider: app_user_provider
       custom_authenticator: App\Security\LoginFormAuthenticator
+      remember_me:
+        secret: '%kernel.secret%'
+        lifetime: 604800 # 1 week in seconds
+        path: /
       logout:
         path: app_logout
         # where to redirect after logout
@@ -39,6 +45,8 @@ security:
   access_control:
     # - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/verify/email, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/, roles: ROLE_USER }
 #         - { path: ^/appl, roles: ROLE_USER }
 #         - { path: ^/sess, roles: ROLE_USER }

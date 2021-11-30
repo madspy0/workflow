@@ -25,7 +25,7 @@ class Town
     private $objectId;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=30, nullable=true)
      * @Groups({"searchOut"})
      */
     private $nameUa;
@@ -63,7 +63,7 @@ class Town
     private $nameObl;
 
     /**
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $koatuuO;
 

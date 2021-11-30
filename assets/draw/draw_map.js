@@ -33,6 +33,7 @@ import {addInteractionMeasure} from "./add-interaction-measure";
 import {autocomplete} from '@algolia/autocomplete-js';
 import {MousePosition, OverviewMap, ScaleLine} from "ol/control";
 import {createStringXY} from "ol/coordinate";
+import {Point} from "ol/geom";
 
 export const itemStyles = {
     'created': new Style({
@@ -227,7 +228,7 @@ let cadastre = new TileLayer({
     visible: 0,
     title: 'Кадастровий поділ',
     maxZoom: 18,
-    transitionEffect: 'resize',
+    transition: 300,
 });
 
 let restriction = new TileLayer({
@@ -309,7 +310,7 @@ let ortoPhoto = new TileLayer({
     title: 'Ортофотоплани',
     type: 'base',
     maxZoom: 18,
-    transitionEffect: 'resize',
+    transition: 300,
 });
 
 let clearLayer = new VectorLayer({
@@ -327,7 +328,8 @@ let oglydova = new TileLayer({
     visible: true,
     title: 'Оглядова карта',
     type: 'base',
-    maxZoom: 16
+    maxZoom: 18,
+    transition: 300
 });
 
 const baseMaps = new LayerGroup({
@@ -362,7 +364,7 @@ const myMaps = new LayerGroup({
 const mousePositionControl = new MousePosition({
     coordinateFormat: createStringXY(4),
     projection: 'EPSG:4326',
- //   className: 'draw-mouse-position',
+    //   className: 'draw-mouse-position',
 //    target: document.getElementById('mouse-position'),
 });
 
@@ -383,8 +385,8 @@ const overviewMap = new OverviewMap({
 
 const scaleLine = new ScaleLine(
     {
-  //  className: 'ol-scale-line ol-custom-scale-line',
-  //  target: document.getElementById('scale-line')
+        //  className: 'ol-scale-line ol-custom-scale-line',
+        //  target: document.getElementById('scale-line')
     }
 );
 
@@ -507,8 +509,22 @@ document.getElementById('profile_button').addEventListener('click', function (e)
     swal_person()
 })
 
-autocomplete({
+let dAutocomplete = autocomplete({
     container: '#searchbox',
+    onReset() {
+        let measureSource = measureLayer.getSource();
+        measureSource.getFeatures().forEach(f => {
+                if (f.getGeometry() instanceof Point) {
+                    measureSource.removeFeature(f)
+                }
+            }
+        )
+    },
+    // onSubmit(state, e) {
+    //     console.log('submit',state)
+    //     activeItemId(3)
+    // },
+    placeholder: 'Пошук',
     getSources({query}) {
         return [
             {
@@ -521,14 +537,24 @@ autocomplete({
                         });
                 },
                 onSelect({item}) {
-      //              let markerGeom = new WKT().readGeometry(item.geom3857, ['EPSG:4284']).transform('EPSG:4284', 'EPSG:3857');
+                    let measureSource = measureLayer.getSource();
+                    measureSource.getFeatures().forEach(f => {
+                            if (f.getGeometry() instanceof Point) {
+                                measureSource.removeFeature(f)
+                            }
+                        }
+                    )
 
                     let marker = new Feature({
                         geometry: new WKT().readGeometry(item.geom3857)
                     });
-                        measureLayer.getSource().addFeature(marker)
-                        map.getView().fit(new WKT().readGeometry(item.bboxgeom), {padding: [15, 565, 15, 15], duration: 500});
+                    measureLayer.getSource().addFeature(marker)
+                    map.getView().fit(new WKT().readGeometry(item.bboxgeom), {
+                        padding: [15, 565, 15, 15],
+                        duration: 500
+                    });
                 },
+
                 templates: {
                     item({item}) {
                         return item.nameUa + ' ' + item.district + ' р-н ' + item.nameObl + ' обл.';
