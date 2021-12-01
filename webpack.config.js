@@ -21,6 +21,7 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
+    .addEntry('login', './assets/login.js')
     .addEntry('map', './assets/map.js')
     .addEntry('fullMap', './assets/full-map.js')
     .addEntry('drawMap', './assets/draw/draw_map.js')

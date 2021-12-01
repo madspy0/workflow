@@ -20,7 +20,7 @@ security:
       security: false
     main:
       pattern: ^/
-      # user_checker: App\Security\UserChecker
+      user_checker: App\Security\UserChecker
       entry_point: App\Security\AuthenticationEntryPoint
       lazy: true
       provider: app_user_provider

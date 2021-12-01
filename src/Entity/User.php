@@ -43,10 +43,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $profile;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isVerified = false;
+//    /**
+//     * @ORM\Column(type="boolean")
+//     */
+//    private $isVerified = false;
 
     /**
      * @ORM\Column(type="boolean")
@@ -164,17 +164,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
-
-        return $this;
-    }
+//    public function isVerified(): bool
+//    {
+//        return $this->isVerified;
+//    }
+//
+//    public function setIsVerified(bool $isVerified): self
+//    {
+//        $this->isVerified = $isVerified;
+//
+//        return $this;
+//    }
 
     public function IsDisabled(): ?bool
     {

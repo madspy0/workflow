@@ -4,11 +4,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('app') }}
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('app') }}
+    {{ parent() }}
+    {{ encore_entry_script_tags('login') }}
 {% endblock %}
 
 {% block body %}
@@ -94,7 +94,9 @@
                value="{{ csrf_token('authenticate') }}"
         >
     </div><!--//row-->
-
 </form>
+    {% if app.session.flashbag.get('user-register-notice') %}
+    <div class="hidden" id="isDisable"></div>
+    {% endif %}
     </body>
 {% endblock %}
