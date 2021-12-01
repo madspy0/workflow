@@ -18,7 +18,7 @@ class UserChecker implements UserCheckerInterface
 
         if ($user->isDisabled()) {
 // the message passed to this exception is meant to be displayed to the user
-            throw new CustomUserMessageAccountStatusException('Your user account no longer exists.');
+            throw new CustomUserMessageAccountStatusException('Ваш обліковий запис тимчасово заблоковано');
         }
     }
 
@@ -30,7 +30,7 @@ class UserChecker implements UserCheckerInterface
 
 // user account is expired, the user may be notified
         if ($user->isExpired()) {
-            throw new AccountExpiredException('...');
+            throw new AccountExpiredException('Tермін дії вашого облікового запису витрачено');
         }
     }
 }

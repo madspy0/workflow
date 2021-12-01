@@ -22,6 +22,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('login', './assets/login.js')
+    .addEntry('account', './assets/account.js')
     .addEntry('map', './assets/map.js')
     .addEntry('fullMap', './assets/full-map.js')
     .addEntry('drawMap', './assets/draw/draw_map.js')
