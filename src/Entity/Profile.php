@@ -49,7 +49,7 @@ class Profile
     private $address;
 
     /**
-     * @ORM\Column(type="string", length=13)
+     * @ORM\Column(type="string", length=20)
      */
     private $phone;
 

@@ -32,12 +32,13 @@
                                     <table class="table app-table-hover mb-0 text-left">
                                         <thead>
                                         <tr>
-                                            <th class="cell">Order</th>
-                                            <th class="cell">Product</th>
-                                            <th class="cell">Customer</th>
-                                            <th class="cell">Date</th>
-                                            <th class="cell">Status</th>
-                                            <th class="cell">Total</th>
+                                            <th class="cell"></th>
+                                            <th class="cell">e-mail</th>
+                                            <th class="cell">Користувач</th>
+                                            <th class="cell">Дата підключення</th>
+                                            <th class="cell">Дата останнього відвідування</th>
+                                            <th class="cell">Ліміт закінчився</th>
+                                            <th class="cell">Активні</th>
                                             <th class="cell"></th>
                                         </tr>
                                         </thead>
@@ -46,10 +47,12 @@
                                             <tr>
                                                 <td class="cell">#{{ user.id }}</td>
                                                 <td class="cell"><span class="truncate">{{ user.email }}</span></td>
-                                                <td class="cell">{# {{ user.profile.lastname }} {{ user.profile.firstname }} {{ user.profile.middlename }} #}</td>
-                                                <td class="cell"><span>17 Oct</span><span class="note">2:16 PM</span>
+                                                <td class="cell">{% if user.profile.lastname is defined %} {{ user.profile.lastname }} {{ user.profile.firstname }} {{ user.profile.middlename }} {% endif %}</td>
+                                                <td class="cell"><span>{%  if(repo.getLogEntries(user)[0]) is defined %} {% set firstLog = repo.getLogEntries(user)|last %}{{ firstLog.loggedAt| format_datetime('short','short', locale='uk') }} {% endif %}</span>
                                                 </td>
-                                                <td class="cell"><span class="badge bg-success">Paid</span></td>
+                                                <td class="cell"><span>{{ user.currentAt | format_datetime('short','short', locale='uk') }}</span>
+                                                </td>
+                                                <td class="cell"><span class="badge bg-success">Нi</span></td>
                                                 {# <td class="cell"><div class="form-check form-switch"><input type="checkbox"{% if user.isDisabled %} checked{% endif %} class="form-check-input"></div></td> #}
                                                 <td class="cell"><span>
                                                         <button class="account-button {% if user.isDisabled %} active{% endif %}" value="{{ user.id }}">
@@ -63,7 +66,7 @@
 {#                                                                 </span>#}
                                                         </button>
                                                     </span></td>
-                                                <td class="cell"><a class="btn-sm app-btn-secondary" href="#">View</a>
+                                                <td class="cell"><a class="btn-sm app-btn-secondary" href="#">Файл</a>
                                                 </td>
                                             </tr>
                                         {% endfor %}

@@ -14,10 +14,9 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-//         if ($this->getUser() && $this->getUser()->getIsDisabled()) {
-//             dump($this->getUser());
-//         //    return $this->redirectToRoute('target_path');
-//         }
+        if ($this->getUser() && in_array('ROLE_ACCOUNT', $this->getUser()->getRoles(), true)) {
+             return $this->redirectToRoute('account');
+         }
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user

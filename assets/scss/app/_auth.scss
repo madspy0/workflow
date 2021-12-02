@@ -1,14 +1,7 @@
-.auth-background-holder {
-	background: url("../../images/background/bg4.png") no-repeat center center;
-	@include background-size(cover);
-	height: 100vh;
-	min-height: 100%;
-}
-
 .app-login {
 
 	.auth-background-holder {
-		background: url("../../images/background/background-1.jpg") no-repeat center center;
+		background: url("../../images/background/bg4.png") no-repeat center center;
 		@include background-size(cover);
 		height: 100vh;
 		min-height: 100%;
@@ -17,7 +10,7 @@
 
 .app-signup {
 	.auth-background-holder {
-		background: url("../../images/background/background-2.jpg") repeat-y center center;
+		background: url("../../images/background/background-1.jpg") repeat-y center center;
 		@include background-size(cover);
 		height: 100vh;
 		min-height: 100%;
@@ -84,7 +77,7 @@
 
 .app-auth-wrapper {
 	background: white;
-	height: 100vh;
+	height: 100%;
 
 	.app-auth-body {
 		width: 360px;
@@ -151,7 +144,7 @@
 	}
 
 	.app-auth-wrapper .app-auth-body{
-		width: 100%;
+	//	width: 100%;
 	}
 
  }

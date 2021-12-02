@@ -23,8 +23,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-#    App\Controller\SearchController:
-#        tags: ['controller.service_arguments']
-#        public: true
-#        arguments:
-#            - '@fos_elastica.finder.town'
+    App\Controller\SearchController:
+        tags: ['controller.service_arguments']
+        public: true
+        arguments:
+            - '@fos_elastica.finder.town'
+#App\EventListener\LoginSubscriber:
+#    tags:
+#        - { name: 'kernel.event_listener', event: 'security.interactive_login' }

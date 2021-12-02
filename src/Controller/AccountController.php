@@ -22,10 +22,11 @@ class AccountController extends AbstractController
     /**
      * @Route("/", name="account_index")
      */
-    public function index(UserRepository $repository): Response
+    public function index(UserRepository $repository, EntityManagerInterface $em): Response
     {
         return $this->render('account/index.html.twig', [
             'users' => $repository->findAll(),
+            'repo' => $em->getRepository('Gedmo\Loggable\Entity\LogEntry')
         ]);
     }
 

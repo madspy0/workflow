@@ -46,7 +46,7 @@ security:
     # - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/verify/email, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/account, roles: ROLE_ACCOUNT }
     - { path: ^/, roles: ROLE_USER }
 #         - { path: ^/appl, roles: ROLE_USER }
 #         - { path: ^/sess, roles: ROLE_USER }

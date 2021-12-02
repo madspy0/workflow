@@ -7,9 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @Gedmo\Loggable
  * @ORM\Table(name="`user`")
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
@@ -57,6 +59,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="boolean")
      */
     private $isExpired = false;
+
+    /**
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Gedmo\Versioned
+     */
+    private $current_at;
 
     public function getId(): ?int
     {
@@ -196,6 +204,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsExpired(?bool $isExpired): self
     {
         $this->isExpired = $isExpired;
+
+        return $this;
+    }
+
+    public function getCurrentAt(): ?\DateTimeImmutable
+    {
+        return $this->current_at;
+    }
+
+    public function setCurrentAt(\DateTimeImmutable $current_at): self
+    {
+        $this->current_at = $current_at;
 
         return $this;
     }
