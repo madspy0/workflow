@@ -105,7 +105,7 @@ class DrawnAreaType extends AbstractType
 
         $form->add('useSubCategory', EntityType::class, array(
             'required' => true,
-            'placeholder' => 'Спочатку виберіть категорию ...',
+            'placeholder' => 'Спочатку виберіть цільове призначення',
             'class' => UsePlantSubCategory::class,
             'choices' => $subcategories,
             'choice_label' => 'title',
