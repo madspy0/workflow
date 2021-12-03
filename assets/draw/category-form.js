@@ -15,7 +15,7 @@ export function categoryForm() {
                 options.forEach(o => o.remove());
                 let opt = document.createElement('option');
                 opt.value = null;
-                opt.innerHTML = "Оберіть субкатегорію";
+                opt.innerHTML = "Оберіть цільове призначення";
                 document.getElementById('drawn_area_useSubCategory').appendChild(opt);
                 let arr = JSON.parse(Request.responseText);
                 arr.forEach(function (item, i) {
