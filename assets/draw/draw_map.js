@@ -78,7 +78,8 @@ export const formatArea = function (polygon) {
     const area = getArea(polygon);
     let output;
     if (area > 10000) {
-        output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км \u00B2';
+ //       output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км \u00B2';
+        output = Math.round((area / 10000) * 100) / 100 + ' ' + 'Га';
     } else {
         output = Math.round(area * 100) / 100 + ' ' + 'м \u00B2';
     }
@@ -87,7 +88,8 @@ export const formatArea = function (polygon) {
 const formatLoadArea = function (area) {
     let output;
     if (area > 10000) {
-        output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км \u00B2';
+        output = Math.round((area / 10000) * 100) / 100 + ' ' + 'Га';
+ //       output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км \u00B2';
     } else {
         output = Math.round(area * 100) / 100 + ' ' + 'м \u00B2';
     }
