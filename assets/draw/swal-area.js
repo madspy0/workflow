@@ -112,7 +112,7 @@ export async function swalArea(feature) {
                                     text: "Після відображення на ПКК ви не зможете змінити дані",
                                     icon: "warning",
                                     showCancelButton: true,
-                                    confirmButtonText: 'Відображено',
+                                    confirmButtonText: 'Відобразити',
                                     cancelButtonText: 'Закрити',
                                     willClose: () => {
                                         clearBeforeClose();
