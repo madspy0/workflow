@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Реєстрація{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('login') }}
+{% endblock %}
+{% block body %}
+    <body class="app app-signup p-0">
+        <div class="row g-0 app-auth-wrapper">
+            <div class="col-12 col-md-7 col-lg-6 auth-main-col text-center p-5">
+                <div class="d-flex flex-column align-content-end">
+                    <div class="app-auth-body mx-auto">
+                        {# {% if error %} #}
+                        {# <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div> #}
+                        {# {% endif %} #}
+
+                        <div class="app-auth-branding mb-4"><a class="app-logo" href="{{ path('homepage') }}">
+                                {# <img class="logo-icon me-2" src="/images/app-logo1.svg" alt="logo"> #}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="215" height="215" fill="currentColor"
+                                     class="bi bi-compass" viewBox="0 0 16 16">
+                                    <path d="M8 16.016a7.5 7.5 0 0 0 1.962-14.74A1 1 0 0 0 9 0H7a1 1 0 0 0-.962 1.276A7.5 7.5 0 0 0 8 16.016zm6.5-7.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                                    <path d="m6.94 7.44 4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z"/>
+                                </svg>
+                            </a></div>
+
+                        <h2 class="auth-heading text-center mb-5">Вивантаження та завантаження файлу підписаного КЕП</h2>
+                        <div class="auth-form-container text-left mx-auto">
+                            <div class="row">
+                                <div class="col mb-3">
+                          кол 1
+                                </div>
+                                <div class="col mb-3">
+кол 2
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="app-auth-footer">
+                        <div class="container text-center py-3">
+                            <small class="copyright">Держгеокадастр &copy;2021</small>
+                        </div>
+                    </footer><!--//app-auth-footer-->
+                </div>
+            </div>
+            <div class="col-12 col-md-5 col-lg-6 auth-background-col">
+                <div class="auth-background-holder">
+                </div>
+                <div class="auth-background-mask"></div>
+                <div class="auth-background-overlay p-3 p-lg-5">
+                    <div class="d-flex flex-column align-content-end">
+                        {# <div class="overlay-content p-3 p-lg-4 rounded"> #}
+                        {# <h5 class="mb-3 overlay-title">Explore Portal Admin Template</h5> #}
+                        {# <div>Portal is a free Bootstrap 5 admin dashboard template. You can download and view the #}
+                        {# template license <a #}
+                        {# href="https://themes.3rdwavemedia.com/bootstrap-templates/admin-dashboard/portal-free-bootstrap-admin-dashboard-template-for-developers/">here</a>. #}
+                        {# </div> #}
+                    </div>
+                </div>
+            </div><!--//auth-background-overlay-->
+        </div><!--//auth-background-col-->
+    </div>
+    </body>
+{% endblock %}

@@ -21,6 +21,7 @@ class ProfileType extends AbstractType
             ->add('localGoverment', null, ['label' => 'Назва органу влади'])
             ->add('url', null, ['label' => 'Посилання на сайт'])
             ->add('phone', null, ['label' => 'Телефон'])
+            ->add('ecpFile')
 //            ->add('save', SubmitType::class, [
 //                'label' => 'Зберегти',
 //                'attr' => ['class' => 'save'],
