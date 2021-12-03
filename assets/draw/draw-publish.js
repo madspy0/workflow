@@ -4,10 +4,10 @@ import {itemStyles} from "./draw_map";
 export function drawPublish(value) {
     Swal.fire({
         title: "Ви впевнені?",
-        text: "Після публікації ви не зможете змінити дані",
+        text: "Після відображення на ПКК ви не зможете змінити дані",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: 'Опублікувати',
+        confirmButtonText: 'Выдобразити на ПКК',
         cancelButtonText: 'Закрити'
     })
         .then((willPublic) => {

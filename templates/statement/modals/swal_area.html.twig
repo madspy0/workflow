@@ -3,7 +3,7 @@
 
     <div class="row">
         <div class="col-sm-3">
-            <p class="fw-bold fs-6">Вповноважена особа (ПIБ)</p>
+            <p class="fw-bold fs-6">Уповноважена особа (ПIБ)</p>
         </div>
         <div class="col-sm-9">
             <div class="row">
@@ -67,8 +67,7 @@
             <p class="text-start mb-0">Дата створення: {{ drawnArea.createdAt| format_datetime('short','short', locale='uk') }}</p>
             <p class="text-start mb-0">Дата
                 редагування: {% if(drawnArea.updatedAt) %} {{ drawnArea.updatedAt| format_datetime('short','short', locale='uk') }} {% endif %}</p>
-            <p class="text-start mb-0">Дата
-                публікації: {% if(drawnArea.publishedAt) %} {{ drawnArea.publishedAt| format_datetime('short','short', locale='uk') }} {% endif %}</p>
+            <p class="text-start mb-0">Дата відображення на ПКК: {% if(drawnArea.publishedAt) %} {{ drawnArea.publishedAt| format_datetime('short','short', locale='uk') }} {% endif %}</p>
             <p class="text-start mb-0">Дата перенесення в
                 архів: {% if(drawnArea.archivedAt) %} {{ drawnArea.archivedAt| format_datetime('short','short', locale='uk') }} {% endif %}</p>
         </div>

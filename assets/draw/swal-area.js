@@ -109,10 +109,10 @@ export async function swalArea(feature) {
                                 e.preventDefault()
                                 Swal.fire({
                                     title: "Ви впевнені?",
-                                    text: "Після публікації ви не зможете змінити дані",
+                                    text: "Після відображення на ПКК ви не зможете змінити дані",
                                     icon: "warning",
                                     showCancelButton: true,
-                                    confirmButtonText: 'Опублікувати',
+                                    confirmButtonText: 'Відображено',
                                     cancelButtonText: 'Закрити',
                                     willClose: () => {
                                         clearBeforeClose();

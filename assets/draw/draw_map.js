@@ -163,7 +163,7 @@ export const plants = new VectorLayer({
 });
 const allPlants = new TileLayer({
     name: 'allPlants',
-    title: 'Дiлянкi с дозволом на розробку ТД',
+    title: 'Дiлянки с дозволом на розробку ТД',
     visible: false,
     maxZoom: 17,
     transitionEffect: 'resize',
