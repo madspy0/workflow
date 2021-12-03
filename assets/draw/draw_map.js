@@ -145,7 +145,7 @@ export const plants = new VectorLayer({
     source: source,
     name: 'plants',
     title: 'Ділянки',
-    maxZoom: 18,
+    maxZoom: 17,
     transitionEffect: 'resize',
     visible: true,
     style: function (feature, resolution) {
@@ -165,7 +165,7 @@ const allPlants = new TileLayer({
     name: 'allPlants',
     title: 'Дiлянкi с дозволом на розробку ТД',
     visible: false,
-    maxZoom: 18,
+    maxZoom: 17,
     transitionEffect: 'resize',
     source: new TileWMSSource({
         url: 'http://192.168.33.17:8080/geoserver/dd/wms',
@@ -227,7 +227,7 @@ let cadastre = new TileLayer({
     source: cadastreSource,
     visible: 0,
     title: 'Кадастровий поділ',
-    maxZoom: 18,
+    maxZoom: 17,
     transition: 300,
 });
 
@@ -247,7 +247,7 @@ let restriction = new TileLayer({
         }
     }),
     visible: 0,
-    maxZoom: 18,
+    maxZoom: 17,
     transitionEffect: 'resize',
     title: 'Обмеження у використаннi земель'
 })
@@ -268,7 +268,7 @@ let atu = new TileLayer({
         }
     }),
     visible: 0,
-    maxZoom: 18,
+    maxZoom: 17,
     transitionEffect: 'resize',
     title: 'АТУ'
 })
@@ -289,7 +289,7 @@ let pzf = new TileLayer({
         }
     }),
     visible: 0,
-    maxZoom: 18,
+    maxZoom: 17,
     transitionEffect: 'resize',
     title: 'Природно-заповiдний фонд'
 })
@@ -309,7 +309,7 @@ let ortoPhoto = new TileLayer({
     visible: false,
     title: 'Ортофотоплани',
     type: 'base',
-    maxZoom: 18,
+    maxZoom: 17,
     transition: 300,
 });
 
@@ -328,7 +328,7 @@ let oglydova = new TileLayer({
     visible: true,
     title: 'Оглядова карта',
     type: 'base',
-    maxZoom: 18,
+    maxZoom: 17,
     transition: 300
 });
 
@@ -405,7 +405,7 @@ export const map = new Map({
     view: new View({
         center: fromLonLat([31.182233, 48.382778]),
         zoom: 7,
-        maxZoom: 18,
+        maxZoom: 17,
     }),
     controls: olControl.defaults({
         zoom: false,
@@ -576,3 +576,8 @@ let dAutocomplete = autocomplete({
             }]
     }
 });
+
+const copyright = document.createElement('div');
+copyright.style = 'position:absolute; bottom:0;width:100%;'
+copyright.innerHTML = '<div class="container text-center py-2"><small class="copyright" style="background-color: #f8f8f888">Держгеокадастр &copy;2021</small></div>'
+document.body.append(copyright)
