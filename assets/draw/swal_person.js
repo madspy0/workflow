@@ -9,7 +9,7 @@ export let swal_person = () => {
                 html: data.content,
                 showCancelButton: true,
                 confirmButtonText: 'Зберегти',
-                cancelButtonText: 'Закрити',
+                cancelButtonText: 'Вiдмiнити',
                 preConfirm: () => {
                     let form = document.getElementById('form_person_edit');
                     let formData = new FormData(form);

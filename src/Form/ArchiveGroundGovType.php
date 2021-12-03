@@ -16,8 +16,8 @@ class ArchiveGroundGovType extends AbstractType
             ->add('cadnum',null, ['label'=>'Кадастровий номер'])
             ->add('registrationAt', DateType::class, [
                 'widget' => 'single_text',
-                'label' => 'Дата документа',
-                'placeholder' => 'Дата документа',
+                'label' => 'Дата реєстрації',
+                'placeholder' => 'Дата реєстрації',
                 'input' => 'datetime_immutable',
                 'input_format' => 'dd-MM-yyyy',
                 'format' => 'dd-MM-yyyy',

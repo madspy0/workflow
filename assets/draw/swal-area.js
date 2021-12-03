@@ -78,7 +78,7 @@ export async function swalArea(feature) {
                         showConfirmButton: false,
                         showCloseButton: true,
                         showCancelButton: true,
-                        cancelButtonText: 'Закрити',
+                        cancelButtonText: 'Вiдмiнити',
                         willOpen: () => {
 
                             Swal.getActions().insertAdjacentHTML('afterbegin', data.buttons);
@@ -113,7 +113,7 @@ export async function swalArea(feature) {
                                     icon: "warning",
                                     showCancelButton: true,
                                     confirmButtonText: 'Відобразити',
-                                    cancelButtonText: 'Закрити',
+                                    cancelButtonText: 'Вiдмiнити',
                                     willClose: () => {
                                         clearBeforeClose();
                                     }
@@ -164,7 +164,7 @@ export async function swalArea(feature) {
                                                 showCloseButton: true,
                                                 showCancelButton: true,
                                                 confirmButtonText: 'Архівувати',
-                                                cancelButtonText: 'Закрити',
+                                                cancelButtonText: 'Вiдмiнити',
                                                 willClose: () => {
                                                     clearBeforeClose();
                                                 },

@@ -8,7 +8,7 @@ export function drawPublish(value) {
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: 'Выдобразити на ПКК',
-        cancelButtonText: 'Закрити'
+        cancelButtonText: 'Вiдмiнити'
     })
         .then((willPublic) => {
             if (willPublic.isConfirmed) {
