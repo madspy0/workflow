@@ -32,7 +32,7 @@
                             <div class="app-utility-item app-notifications-dropdown dropdown">
                                 <a class="dropdown-toggle no-toggle-arrow" id="notifications-dropdown-toggle"
                                    data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"
-                                   title="Notifications">
+                                   title="Повідомлення">
                                     <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
                                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell icon"
                                          fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -46,9 +46,16 @@
                                 </a><!--//dropdown-toggle-->
                                 <div class="dropdown-menu p-0" aria-labelledby="notifications-dropdown-toggle">
                                     <div class="dropdown-menu-header p-3">
-                                        <h5 class="dropdown-menu-title mb-0">Сповіщення</h5>
+                                        <h5 class="dropdown-menu-title mb-0">Повідомлення</h5>
                                     </div><!--//dropdown-menu-title-->
                                     <div class="dropdown-menu-content">
+                                        {% if(app.session.flashbag.peek('success')|length == 0) %}
+                                        <div class="item p-3">
+                                            <div class="row gx-2 justify-content-between align-items-center">
+                                            У Вас немає нових повідомлень
+                                            </div>
+                                        </div>
+                                        {% endif %}
                                         {% for message in app.flashes('success') %}
                                             <div class="item p-3">
                                                 <div class="row gx-2 justify-content-between align-items-center">
@@ -78,7 +85,7 @@
                                     </div><!--//dropdown-menu-content-->
 
                                     <div class="dropdown-menu-footer p-2 text-center">
-                                        <a href="notifications.html">View all</a>
+                                        <a href="notifications.html">Усі повідомлення</a>
                                     </div>
 
                                 </div><!--//dropdown-menu-->
@@ -97,7 +104,7 @@
 {#                                </a>#}
 {#                            </div><!--//app-utility-item-->#}
                             <div class="app-utility-item app-user-dropdown dropdown">
-                                <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                                <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#" title="Профіль користувача"
                                    role="button" aria-expanded="false">
                                     {# <img src="images/user.png" alt="user profile"> #}
                                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear icon"
@@ -112,7 +119,7 @@
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">Вийти</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">Вийти з програми</a></li>
                                 </ul>
                             </div><!--//app-user-dropdown-->
                         {% else %}

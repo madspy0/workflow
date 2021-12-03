@@ -364,6 +364,7 @@ const myMaps = new LayerGroup({
 const mousePositionControl = new MousePosition({
     coordinateFormat: createStringXY(4),
     projection: 'EPSG:4326',
+    placeholder: false, //'Довгота Широта'
     //   className: 'draw-mouse-position',
 //    target: document.getElementById('mouse-position'),
 });
@@ -381,10 +382,12 @@ const overviewMap = new OverviewMap({
     collapsed: false,
     label: '«',
     collapseLabel: '»',
+    tipLabel: 'Екстент та переміщення'
 })
 
 const scaleLine = new ScaleLine(
     {
+        // 'Лінійний масштаб'
         //  className: 'ol-scale-line ol-custom-scale-line',
         //  target: document.getElementById('scale-line')
     }
@@ -408,7 +411,9 @@ export const map = new Map({
         zoom: false,
     }).extend([
         new olControl.Zoom({
-            className: "draw-zoom"
+            className: "draw-zoom",
+            zoomOutTipLabel: 'Збільшити масштаб',
+            zoomInTipLabel: 'Зменшити масштаб'
         }),
         mousePositionControl,
         overviewMap,
@@ -511,6 +516,10 @@ document.getElementById('profile_button').addEventListener('click', function (e)
 
 let dAutocomplete = autocomplete({
     container: '#searchbox',
+    translations: {
+        clearButtonTitle: 'скинути',
+        submitButtonTitle: 'пошук'
+    },
     onReset() {
         let measureSource = measureLayer.getSource();
         measureSource.getFeatures().forEach(f => {
@@ -522,9 +531,9 @@ let dAutocomplete = autocomplete({
     },
     // onSubmit(state, e) {
     //     console.log('submit',state)
-    //     activeItemId(3)
+    //   //  activeItemId(3)
     // },
-    placeholder: 'Пошук',
+    placeholder: 'Пошук по населеному пункту',
     getSources({query}) {
         return [
             {
@@ -537,6 +546,7 @@ let dAutocomplete = autocomplete({
                         });
                 },
                 onSelect({item}) {
+                    dAutocomplete.setQuery(item.nameUa)
                     let measureSource = measureLayer.getSource();
                     measureSource.getFeatures().forEach(f => {
                             if (f.getGeometry() instanceof Point) {

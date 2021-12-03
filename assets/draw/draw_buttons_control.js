@@ -27,7 +27,7 @@ class DrawButtonsControl extends Control {
             '</svg>';
         infoButton.dataset.bsToggle = 'button';
         infoButton.dataset.bsPlacement = 'left';
-        infoButton.title = 'Виправити';
+        infoButton.title = 'Редагувати полігон';
         infoButton.className = 'btn btn-edit';
         const areaButton = document.createElement('button');
         areaButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bounding-box" viewBox="0 0 16 16">\n' +
@@ -48,7 +48,7 @@ class DrawButtonsControl extends Control {
             '</svg>';
         drawButton.dataset.bsToggle = 'button';
         drawButton.dataset.bsPlacement = 'left';
-        drawButton.title = 'Додати';
+        drawButton.title = 'Створити полігон';
         drawButton.className = 'btn btn-edit';
 
         const element = document.createElement('div');
