@@ -116,11 +116,11 @@ class DrawnAreaType extends AbstractType
     protected function formatArea($area)
     {
         $pf = mb_convert_encoding('&#x00B2;', 'UTF-8', 'HTML-ENTITIES');
-        if ($area > 10000) {
-            $output = round(($area / 1000000) * 100) / 100 . ' км ' . $pf;
-        } else {
-            $output = round($area * 100) / 100 . ' м ' . $pf;
-        }
+//        if ($area > 10000) {
+            $output = round(($area / 10000) * 100) / 100 . ' Га';
+//        } else {
+//            $output = round($area * 100) / 100 . ' м ' . $pf;
+//        }
         return $output;
     }
 }
