@@ -77,6 +77,9 @@ export async function swalArea(feature) {
                         position: 'top-end',
                         showConfirmButton: false,
                         showCloseButton: true,
+                        customClass: {
+                            htmlContainer: 'swalarea_html'
+                        },
                         showCancelButton: true,
                         cancelButtonText: 'Вiдмiнити',
                         willOpen: () => {

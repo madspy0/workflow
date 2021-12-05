@@ -253,3 +253,16 @@ $modal-fade-transform: scale(.8);
   background-color: #f8f8f888;
   font-weight: 400;
 }
+
+.swalarea_html {
+  font-size: 1rem !important;
+  text-align: left;
+  dl {
+    --bs-gutter-x: .5rem;
+    margin-bottom: 0;
+  }
+  dt {
+    font-size: .8125rem;
+  }
+}
+
