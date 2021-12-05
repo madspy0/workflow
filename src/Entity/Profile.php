@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ProfileRepository;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Serializable;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Entity\File as EmbeddedFile;
@@ -14,7 +16,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Entity(repositoryClass=ProfileRepository::class)
  * @Vich\Uploadable
  */
-class Profile
+class Profile implements Serializable
 {
     /**
      * @ORM\Id
@@ -240,7 +242,25 @@ class Profile
         if (null !== $ecpFile) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
-            $this->ecpAt = new \DateTimeImmutable();
+            $this->ecpAt = new DateTimeImmutable();
         }
+    }
+    /** @see Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->ecp,
+
+        ));
+    }
+
+    /** @see Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->ecp,
+            ) = unserialize($serialized);
     }
 }

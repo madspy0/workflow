@@ -45,12 +45,7 @@ security:
   access_control:
     # - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/register/file, roles: ROLE_WAIT }
     - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/account, roles: ROLE_ACCOUNT }
     - { path: ^/, roles: ROLE_USER }
-#         - { path: ^/appl, roles: ROLE_USER }
-#         - { path: ^/sess, roles: ROLE_USER }
-#         - { path: ^/sol, roles: ROLE_USER }
-#         - { path: ^/statement, roles: ROLE_USER }
-#         - { path: ^/history, roles: ROLE_USER }
-#         - { path: ^/calendar, roles: ROLE_USER }

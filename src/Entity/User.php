@@ -53,12 +53,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isDisabled = false;
+    private bool $isDisabled = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isExpired = false;
+    private bool $isExpired = false;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)

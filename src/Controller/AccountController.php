@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
+use Vich\UploaderBundle\Handler\DownloadHandler;
 
 /**
  * @Route("/account", name="account")
@@ -31,12 +32,12 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/enable/{user}", name="account_enable")
+     * @Route("/enable/{user}", name="_enable")
      */
     public function enable(User $user, EntityManagerInterface $em, MailerInterface $mailer): JsonResponse
     {
         try {
-            if($user->IsDisabled()) {
+            if ($user->IsDisabled()) {
                 $user->setIsDisabled(false);
                 $status = 'enabled';
                 $email = (new TemplatedEmail())
@@ -53,10 +54,17 @@ class AccountController extends AbstractController
             }
             $em->persist($user);
             $em->flush();
-            return new JsonResponse(['status'=>$status], 200);
-        }
-        catch (Exception $exception) {
+            return new JsonResponse(['status' => $status], 200);
+        } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], $exception->getCode());
         }
+    }
+
+    /**
+     * @Route("/file/{user}", name="_show_file")
+     */
+    public function showFile(User $user, DownloadHandler $downloadHandler)
+    {
+        return $downloadHandler->downloadObject($user->getProfile(), $fileField = 'ecpFile');
     }
 }

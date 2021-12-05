@@ -7,7 +7,8 @@ import '@fortawesome/fontawesome-free/js/brands'
 import './scss/portal.scss';
 import {swal_person} from "./draw/swal_person";
 
-document.getElementsByClassName('account-button').forEach(b=>{
+let account_buttons = document.getElementsByClassName('account-button')
+Array.from(account_buttons).forEach(b=>{
     b.addEventListener('click',  e => {
         e.preventDefault()
         let button = e.currentTarget;

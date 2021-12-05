@@ -32,10 +32,11 @@
                         <div class="auth-form-container text-left mx-auto">
                             <div class="row">
                                 <div class="col mb-3">
-                          кол 1
+                                    Для продовження реєстрації, завантажте файл за <a href="{{ path('app_register_access_file_download') }}">посиланням</a>, заповніть його та підпишіть електронним підписом
                                 </div>
                                 <div class="col mb-3">
-кол 2
+                                    Перешліть заповнений та підвисаний файл
+{{ form(form) }}
                                 </div>
                             </div>
                         </div>
@@ -63,6 +64,5 @@
                 </div>
             </div><!--//auth-background-overlay-->
         </div><!--//auth-background-col-->
-    </div>
     </body>
 {% endblock %}

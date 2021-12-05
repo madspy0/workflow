@@ -43,19 +43,33 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for user in users %}
+                                        {% for currentUser in users %}
                                             <tr>
-                                                <td class="cell">#{{ user.id }}</td>
-                                                <td class="cell"><span class="truncate">{{ user.email }}</span></td>
-                                                <td class="cell">{% if user.profile.lastname is defined %} {{ user.profile.lastname }} {{ user.profile.firstname }} {{ user.profile.middlename }} {% endif %}</td>
-                                                <td class="cell"><span>{%  if(repo.getLogEntries(user)[0]) is defined %} {% set firstLog = repo.getLogEntries(user)|last %}{{ firstLog.loggedAt| format_datetime('short','short', locale='uk') }} {% endif %}</span>
+                                                <td class="cell">#{{ currentUser.id }}</td>
+                                                <td class="cell"><span class="truncate">{{ currentUser.email }}</span></td>
+                                                <td class="cell">
+                                                    {% if currentUser.profile.lastname is defined %}
+                                                        {{ currentUser.profile.lastname }} {{ currentUser.profile.firstname }} {{ currentUser.profile.middlename }}
+                                                    {% endif %}
                                                 </td>
-                                                <td class="cell"><span>{{ user.currentAt | format_datetime('short','short', locale='uk') }}</span>
+                                                <td class="cell">
+                                                    <span>
+                                                        {%  if(currentUser.currentAt is not null) %}
+                                                            {% set firstLog = repo.getLogEntries(currentUser)|last %}
+                                                            {{ firstLog.loggedAt| format_datetime('short','short', locale='uk') }}
+                                                        {% endif %}
+                                                    </span>
+                                                </td>
+                                                <td class="cell"><span>
+                                                        {%  if(currentUser.currentAt is not null) %}
+                                                            {{ currentUser.currentAt | format_datetime('short','short', locale='uk') }}
+                                                        {% endif %}
+                                                    </span>
                                                 </td>
                                                 <td class="cell"><span class="badge bg-success">Нi</span></td>
                                                 {# <td class="cell"><div class="form-check form-switch"><input type="checkbox"{% if user.isDisabled %} checked{% endif %} class="form-check-input"></div></td> #}
                                                 <td class="cell"><span>
-                                                        <button class="account-button {% if user.isDisabled %} active{% endif %}" value="{{ user.id }}">
+                                                        <button class="account-button {% if currentUser.isDisabled %} active{% endif %}" value="{{ currentUser.id }}">
 {#                                                                <span class="icon-text">#}
 {#                                                                    <svg class="icon icon--is-spinning" aria-hidden="true" viewBox="0 0 16 16"><title>Loading</title><g#}
 {#                                                                                stroke-width="1" fill="currentColor" stroke="currentColor"><path d="M.5,8a7.5,7.5,0,1,1,1.91,5"#}
@@ -66,7 +80,10 @@
 {#                                                                 </span>#}
                                                         </button>
                                                     </span></td>
-                                                <td class="cell"><a class="btn-sm app-btn-secondary" href="#">Файл</a>
+                                                <td class="cell">
+                                                    {% if ((currentUser.profile != null) and (currentUser.profile.ecp.size != null)) %}
+                                                        <a class="btn-sm app-btn-secondary" href="{{ path('account_show_file', {'user':currentUser.id}) }}">Файл</a>
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                         {% endfor %}
