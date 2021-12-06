@@ -2,10 +2,10 @@
     {{ form_start(form) }}
 
     <div class="row">
-        <div class="col-sm-3">
-            <p class="fw-bold fs-6">Уповноважена особа (ПIБ)</p>
+        <div class="col-3 fw-bold">
+            Уповно-важена особа (ПIБ)
         </div>
-        <div class="col-sm-9">
+        <div class="col-9">
             <div class="row">
                 <div class="col">
                     {{ form_row(form.lastname) }}
@@ -21,80 +21,131 @@
             </div>
         </div>
     </div>
-    <div class="row border border-bottom-0">
-        <div class="col">
-            {{ form_row(form.localGoverment) }}
-        </div>
-    </div>
-    <div class="row border border-bottom-0 border-top-0">
-        <div class="col">
-            {{ form_row(form.documentsType) }}
-        </div>
-    </div>
-    <div class="row border border-bottom-0 border-top-0">
-        <div class="col">
-            {{ form_row(form.numberSolution) }}
-        </div>
-        <div class="col">
-            {{ form_label(form.solutedAt) }}
-            <div class="input-group mb-3">
-
-            {{ form_widget(form.solutedAt) }}
-                <div class="input-group-append">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-calendar-date" viewBox="0 0 16 16">
-                        <path d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z"/>
-                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-                    </svg>
+    <fieldset>
+        <legend><span>Інформація про Розпорядчий документ</span></legend>
+        <div class="row">
+            <div class="col">
+                <div class="form-field">
+                    <div class="form-field__control">
+                        {{ form_label(form.localGoverment) }}
+                        {{ form_widget(form.localGoverment) }}
+                        <div class="form-field__bar"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row border border-top-0">
-        <div class="col">
-            {{ form_row(form.link) }}
+        <div class="row">
+            <div class="col">
+                <div class="form-field">
+                    <div class="form-field__control">
+                        {{ form_label(form.documentsType) }}
+                        {{ form_widget(form.documentsType) }}
+                        <div class="form-field__bar"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row border border-bottom-0 ">
-        <div class="col">
-            {{ form_row(form.address) }}
+        <div class="row ">
+            <div class="col">
+                <div class="form-field">
+                    <div class="form-field__control">
+                        {{ form_label(form.numberSolution) }}
+                        {{ form_widget(form.numberSolution) }}
+                        <div class="form-field__bar"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-field">
+                    <div class="form-field__control">
+                        {{ form_label(form.solutedAt) }}
+                        {{ form_widget(form.solutedAt) }}
+                        <div class="form-field__bar"></div>
+                        {# <div class="input-group"> #}
+                        {# {{ form_widget(form.solutedAt) }} #}
+                        {# <div class="input-group-append"> #}
+                        {# <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" #}
+                        {# class="bi bi-calendar-date" viewBox="0 0 32 32"> #}
+                        {# <path d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z"/> #}
+                        {# <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/> #}
+                        {# </svg> #}
+                        {# </div> #}
+                        {# </div> #}
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row border  border-top-0 py-3">
-        <p>Майбутнє цільове призначення</p>
-        <div class="col">
-            {{ form_widget(form.useCategory) }}
+        <div class="row ">
+            <div class="col">
+                <div class="form-field">
+                    <div class="form-field__control">
+                        {{ form_label(form.link) }}
+                        {{ form_widget(form.link) }}
+                        <div class="form-field__bar"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col">
-            {{ form_widget(form.useSubCategory) }}
+    </fieldset>
+    <fieldset>
+        <legend><span>Інформація про земельну дилянку</span></legend>
+        <div class="row">
+            <div class="col">
+                <div class="form-field">
+                    <div class="form-field__control">
+                        {{ form_label(form.address) }}
+                        {{ form_widget(form.address) }}
+                        <div class="form-field__bar"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row border align-items-start">
-        <div class="col">
-            <p class="text-start">Статус: {{ drawnArea.status|trans }}</p>
-            <div class="text-start">Площа: {{ form_widget(form.area) }}</div>
-        </div>
-        <div class="col">
-            <dl class="row">
-                <dt class="col-sm-6 text-start">Дата створення:</dt>
-                <dd class="col-sm-6">{{ drawnArea.createdAt| format_datetime('short','short', locale='uk') }}</dd>
-            </dl>
-            <dl class="row">
-                <dt class="col-sm-6 text-start">Дата редагування:</dt>
-                <dd class="col-sm-6">{% if(drawnArea.updatedAt) %} {{ drawnArea.updatedAt| format_datetime('short','short', locale='uk') }} {% endif %}</dd>
-            </dl>
-            <dl class="row">
-                <dt class="col-sm-6 text-start">Дата відображення на ПКК:</dt>
-                <dd class="col-sm-6 ">{% if(drawnArea.publishedAt) %} {{ drawnArea.publishedAt| format_datetime('short','short', locale='uk') }} {% endif %}</dd>
-            </dl>
-            <dl class="row">
-                <dt class="col-sm-6 text-start">Дата перенесення в архів:</dt>
-                <dd class="col-sm-6">{% if(drawnArea.archivedAt) %} {{ drawnArea.archivedAt| format_datetime('short','short', locale='uk') }} {% endif %}</dd>
-            </dl>
-        </div>
-    </div>
 
-</div>
+        <div class="row">
+            <div class="select-category">Майбутнє цільове призначення</div>
+            <div class="col mb-3">
 
-{{ form_row(form.geom) }}
+                {{ form_widget(form.useCategory) }}
+
+            </div>
+            <div class="col">
+                {{ form_widget(form.useSubCategory) }}
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend><span>Статус</span></legend>
+        <div class="row align-items-start">
+            <div class="col" id="col-area">
+                <dl class="row">
+                    <dt class="col-sm-4 text-start">Статус:</dt>
+                    <dd class="col-sm-8">{{ drawnArea.status|trans }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-4 text-start">Площа:</dt>
+                    <dd class="col-sm-8">{{ form_widget(form.area) }}</dd>
+                </dl>
+            </div>
+            <div class="col">
+                <dl class="row">
+                    <dt class="col-sm-6 text-start">Створення:</dt>
+                    <dd class="col-sm-6">{{ drawnArea.createdAt| format_datetime('short','short', locale='uk') }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-6 text-start">Редагування:</dt>
+                    <dd class="col-sm-6">{% if(drawnArea.updatedAt) %} {{ drawnArea.updatedAt| format_datetime('short','short', locale='uk') }} {% endif %}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-6 text-start">Відображення на ПКК:</dt>
+                    <dd class="col-sm-6 ">{% if(drawnArea.publishedAt) %} {{ drawnArea.publishedAt| format_datetime('short','short', locale='uk') }} {% endif %}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-6 text-start">Перенесення в архів:</dt>
+                    <dd class="col-sm-6">{% if(drawnArea.archivedAt) %} {{ drawnArea.archivedAt| format_datetime('short','short', locale='uk') }} {% endif %}</dd>
+                </dl>
+            </div>
+        </div>
+    </fieldset>
+    {{ form_row(form.geom) }}
     {{ form_end(form) }}
 </div>

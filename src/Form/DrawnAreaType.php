@@ -27,13 +27,13 @@ class DrawnAreaType extends AbstractType
     {
         $this->entityManager = $options['entity_manager'];
         $builder
-            ->add('localGoverment', null, ['label' => 'Орган влади, який прийняв рішення'])
+            ->add('localGoverment', null, ['attr'=>['class'=>'form-field__input'], 'label' => 'Орган влади, який прийняв рішення', 'label_attr'=>['class'=>'form-field__label']])
             ->add('firstname', null, ['label' => false, 'attr' => ['placeholder' => 'Ім\'я']])
             ->add('lastname', null, ['label' => false, 'attr' => ['placeholder' => 'Прізвище']])
             ->add('middlename', null, ['label' => false, 'attr' => ['placeholder' => 'По-батькові']])
             //          ->add('createdAt')
-            ->add('documentsType', null, ['label' => 'Назва документа'])
-            ->add('address', null, ['label' => 'Орієнтовне місце розташування (адреса)'])
+            ->add('documentsType', null, ['label' => 'Назва документа', 'attr'=>['class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
+            ->add('address', null, ['label' => 'Орієнтовне місце розташування (адреса)', 'attr'=>['class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
 //            ->add('use', ChoiceType::class, ['label'=>'Вид використання',
 //                'choices' => [
 //                    'First choice' => 'вибір',
@@ -45,7 +45,7 @@ class DrawnAreaType extends AbstractType
                 'choice_label' => 'title',
                 'placeholder' => 'Оберіть категорію',
             ])
-            ->add('numberSolution', null, ['label' => 'Номер документа'])
+            ->add('numberSolution', null, ['label' => 'Номер документа', 'attr'=>['class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
             ->add('solutedAt', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Дата документа',
@@ -53,10 +53,10 @@ class DrawnAreaType extends AbstractType
                 'input_format' => 'dd-MM-yyyy',
                 'format' => 'dd-MM-yyyy',
                 'html5' => false,
-                'attr'=>['autocomplete'=>'off']])
+                'attr'=>['autocomplete'=>'off', 'class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
 //            ->add('publishedAt')
-            ->add('area', null, ['label' => 'Площа', 'attr' => ['readonly' => 'true']])
-            ->add('link', null, ['label' => 'Посилання на сайт'])
+            ->add('area', null, ['label' => 'Площа', 'attr' => ['readonly' => 'true', 'class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
+            ->add('link', null, ['label' => 'Посилання на сайт', 'attr'=>['class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
 //            ->add('status', ChoiceType::class, ['label' => 'Статус',
 //                'choices' => [
 //                    'Внесено' => 'draft',
