@@ -52,6 +52,28 @@ class Profile implements Serializable
     private $localGoverment;
 
     /**
+     * @ORM\ManyToOne(targetEntity="DzkAdminOtg")
+     * @ORM\JoinqColumn(name="otg_id", referencedColumnName="id")
+     */
+    private $otg;
+
+    /**
+     * @return mixed
+     */
+    public function getOtg()
+    {
+        return $this->otg;
+    }
+
+    /**
+     * @param mixed $otg
+     */
+    public function setOtg($otg): void
+    {
+        $this->otg = $otg;
+    }
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $address;

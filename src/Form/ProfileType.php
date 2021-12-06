@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\DzkAdminOtg;
 use App\Entity\Profile;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,6 +24,13 @@ class ProfileType extends AbstractType
             ->add('localGoverment', null, ['label' => 'Назва органу влади'])
             ->add('url', null, ['label' => 'Посилання на сайт'])
             ->add('phone', null, ['label' => 'Телефон'])
+            ->add('otg', EntityType::class, [
+                'class' => DzkAdminOtg::class,
+                'choice_label' => 'name_rgn',
+                'label' => 'ОТГ'
+                // 'multiple' => true,
+                // 'expanded' => true,
+            ])
             ->add('ecpFile', VichFileType::class, [
                 'required' => false,
                 'allow_delete' => true,
