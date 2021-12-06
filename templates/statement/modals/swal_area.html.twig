@@ -8,15 +8,30 @@
         <div class="col-9">
             <div class="row">
                 <div class="col">
-                    {{ form_row(form.lastname) }}
+                    <div class="form-field">
+                        <div class="form-field__control">
+                    {{ form_widget(form.lastname) }}
+                            <div class="form-field__bar"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-8 col-sm-6">
-                    {{ form_row(form.firstname) }}
+                    <div class="form-field">
+                        <div class="form-field__control">
+                    {{ form_widget(form.firstname) }}
+                            <div class="form-field__bar"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-4 col-sm-6">
-                    {{ form_row(form.middlename) }}
+                    <div class="form-field">
+                        <div class="form-field__control">
+                    {{ form_widget(form.middlename) }}
+                            <div class="form-field__bar"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

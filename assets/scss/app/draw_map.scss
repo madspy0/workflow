@@ -154,7 +154,7 @@ $modal-fade-transform: scale(.8);
   text-align: right;
 }
 #col-area {
-  background-color: #f8f8f8;
+  background-color: #e9ecef;
 }
 #dr_save {
   background-color: rgb(51, 122, 183) !important;
@@ -401,6 +401,9 @@ $modal-fade-transform: scale(.8);
   }
   .form-field__textarea {
     height: 150px;
+  }
+  #drawn_area_lastname, #drawn_area_firstname, #drawn_area_middlename {
+    margin-top: 0 !important;
   }
 }
 
