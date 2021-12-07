@@ -48,4 +48,5 @@ security:
     - { path: ^/register/file, roles: ROLE_WAIT }
     - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/account, roles: ROLE_ACCOUNT }
-    - { path: ^/, roles: ROLE_USER }
+    - { path: ^/dr_otg, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/, roles: ROLE_EDITOR }

@@ -18,7 +18,7 @@ class SecurityController extends AbstractController
              return $this->redirectToRoute('account');
          }
         if ($this->getUser() && in_array('ROLE_WAIT', $this->getUser()->getRoles(), true)) {
-            return $this->redirectToRoute('app_register_upload');
+            return $this->redirectToRoute('app_register_access_file');
         }
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();

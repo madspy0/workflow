@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Form\ProfileWOtgType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -14,8 +15,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationFormType extends AbstractType
 {
+    private $entityManager;
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $this->entityManager = $options['entity_manager'];
         $builder
             ->add('email')
 //            ->add('agreeTerms', CheckboxType::class, [
@@ -26,7 +29,7 @@ class RegistrationFormType extends AbstractType
 //                    ]),
 //                ],
 //            ])
-            ->add('profile', ProfileType::class, ['label'=>false])
+            ->add('profile', ProfileWOtgType::class, ['label'=>false, 'entity_manager'=> $this->entityManager])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -51,6 +54,7 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'entity_manager' => null,
         ]);
     }
 }

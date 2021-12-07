@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class StatementController extends AbstractController
 {
     /**
-     * @Route("/", name="homepage")
+
      */
     public function index(DevelopmentApplicationRepository $applicationRepository, DevelopmentSolutionRepository $solutionRepository, CouncilSessionRepository $sessionRepository): Response
     {

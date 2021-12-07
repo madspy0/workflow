@@ -34,7 +34,7 @@ class RegistrationController extends AbstractController
                              LoginFormAuthenticator $formAuthenticator): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class, $user, ['entity_manager'=>$this->getDoctrine()->getManager()]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

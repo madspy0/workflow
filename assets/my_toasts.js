@@ -179,10 +179,10 @@ export function my_toast(content, selected = null, map = null, action = null) {
         // myToast.hide();
         Swal.fire({
             title: "Ви впевнені?",
-            text: "Після публікації ви не зможете змінити дані",
+            text: "Після відображення на ПКК ви не зможете змінити дані",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonText: 'Опублікувати',
+            confirmButtonText: 'Відображено',
             cancelButtonText: 'Скасувати'
         })
             .then((willPublic) => {
@@ -206,7 +206,7 @@ export function my_toast(content, selected = null, map = null, action = null) {
 
                             myToast.hide();
                             Swal.fire({
-                                text: "Дані опубліковані",
+                                text: "Відображено",
                                 icon: "success",
                             });
 

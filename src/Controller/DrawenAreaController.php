@@ -114,7 +114,6 @@ class DrawenAreaController extends AbstractController
                 $form->get('firstname')->setData($profile->getFirstname());
                 $form->get('lastname')->setData($profile->getLastname());
                 $form->get('middlename')->setData($profile->getMiddlename());
-                $form->get('localGoverment')->setData($profile->getLocalGoverment());
                 $form->get('address')->setData($profile->getAddress());
                 $form->get('link')->setData($profile->getUrl());
             }

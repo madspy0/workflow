@@ -4,17 +4,24 @@ namespace App\Form;
 
 use App\Entity\DzkAdminOtg;
 use App\Entity\Profile;
+use App\Entity\UsePlantCategory;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
-class ProfileType extends AbstractType
+class ProfileWOtgType extends AbstractType
 {
+    private $entityManager;
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->entityManager = $options['entity_manager'];
         $builder
             ->setAction('/dr_profile')
             ->add('firstname', null, ['label' => false, 'attr' => ['placeholder' => 'Ім\'я']])
@@ -23,13 +30,18 @@ class ProfileType extends AbstractType
             ->add('address', null, ['label' => 'Адреса'])
             ->add('url', null, ['label' => 'Посилання на сайт'])
             ->add('phone', null, ['label' => 'Телефон'])
-//            ->add('otg', EntityType::class, [
+            ->add('otg', HiddenType::class
+//                EntityType::class,
+//                [
 //                'class' => DzkAdminOtg::class,
 //                'choice_label' => 'name_rgn',
-//                'label' => 'ОТГ'
+//                'label' => false,
+//                'placeholder' => 'Назва органу влади',
+//                'attr'=>['class'=>'form-control']
 //                // 'multiple' => true,
 //                // 'expanded' => true,
-//            ])
+//            ]
+            )
 
 //            ->add('ecpFile', VichFileType::class, [
 //                'required' => false,
@@ -45,6 +57,15 @@ class ProfileType extends AbstractType
 //            ])
         //    ->add('users')
         ;
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
+    }
+
+    function onPreSubmit(FormEvent $event)
+    {
+        $form = $event->getForm();
+        $data = $event->getData();
+        $data['otg'] = $this->entityManager->getRepository(DzkAdminOtg::class)->find($data['otg']);
+        $event->setData($data);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -52,6 +73,7 @@ class ProfileType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Profile::class,
             'csrf_protection' => false,
+            'entity_manager' => null,
         ]);
     }
 }

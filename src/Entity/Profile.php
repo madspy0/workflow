@@ -47,13 +47,8 @@ class Profile implements Serializable
     private $users;
 
     /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private $localGoverment;
-
-    /**
      * @ORM\ManyToOne(targetEntity="DzkAdminOtg")
-     * @ORM\JoinqColumn(name="otg_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="otg_id", referencedColumnName="id")
      */
     private $otg;
 
@@ -137,18 +132,6 @@ class Profile implements Serializable
     public function setUsers(User $users): self
     {
         $this->users = $users;
-
-        return $this;
-    }
-
-    public function getLocalGoverment(): ?string
-    {
-        return $this->localGoverment;
-    }
-
-    public function setLocalGoverment(string $localGoverment): self
-    {
-        $this->localGoverment = $localGoverment;
 
         return $this;
     }

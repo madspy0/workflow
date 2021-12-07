@@ -4,16 +4,18 @@ namespace App\Entity;
 
 use App\Repository\DzkAdminOtgRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=DzkAdminOtgRepository::class)
- * @ORM\Table(name="dzk_admin_otg")
+ * @ORM\Table(name="dzk_admin_otg", indexes={@ORM\Index(fields={"geom"}, flags={"spatial"})})
  */
 class DzkAdminOtg
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @Groups({"otgOut"})
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -40,6 +42,7 @@ class DzkAdminOtg
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"otgOut"})
      */
     private $name_otg;
 

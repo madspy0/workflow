@@ -3,6 +3,7 @@
 {% block title %}Реєстрація{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('login') }}
 {% endblock %}
 
 {% block javascripts %}
@@ -52,8 +53,10 @@
                             {{ form_widget(registrationForm.profile.middlename) }}
                                 </div>
                             </div>
-                            {{ form_row(registrationForm.profile.localGoverment, {'label': false, 'attr':{'placeholder': 'Назва органу влади'}}) }}
-
+{#                            {{ form_row(registrationForm.profile.otg) }}#}
+                            <div class="mb-3">
+                                <div id="otg-registration"></div>
+                            </div>
                             {{ form_row(registrationForm.profile.address, {'label': false, 'attr':{'placeholder': 'Адреса'}}) }}
                             <div class="row">
                                 <div class="col mb-3">
