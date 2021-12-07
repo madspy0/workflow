@@ -67,4 +67,19 @@ class AccountController extends AbstractController
     {
         return $downloadHandler->downloadObject($user->getProfile(), $fileField = 'ecpFile');
     }
+
+    /**
+     * @Route("/authorize/{user}", name="_enable")
+     */
+    public function authorize(User $user, EntityManagerInterface $em, MailerInterface $mailer): JsonResponse
+    {
+        try {
+            $user->setRoles(['ROLE_EDITOR']);
+            $em->persist($user);
+            $em->flush();
+            return new JsonResponse(['status' => 'ok'], 200);
+        } catch (Exception $exception) {
+            return $this->json(['error' => $exception->getMessage()], $exception->getCode());
+        }
+    }
 }

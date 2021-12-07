@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\User as PortalUser;
 use App\Validator\ContainsGeom;
+use App\Validator\Boards;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -143,6 +144,7 @@ class DrawnArea
      * @Groups({"geoms"})
      * @Assert\NotBlank(message="Намалюйте план ділянки")
      * @ContainsGeom(message="Геометрія не є валідною")
+     * @Boards(message="Не в межах ОМС")
      */
     private $geom;
 

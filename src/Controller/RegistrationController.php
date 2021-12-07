@@ -60,6 +60,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("/register/file", name="app_register_access_file")
      *
@@ -75,7 +76,7 @@ class RegistrationController extends AbstractController
                 'allow_delete' => false,
 //                'delete_label' => '...',
 //                'download_uri' => '/register/file',
-//                'download_label' => 'Завантажити',
+                'download_label' => false,
                 'asset_helper' => true,
                 'label' => false
             ])
@@ -83,7 +84,6 @@ class RegistrationController extends AbstractController
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-//            dump($profile);
             $em->persist($profile);
             $em->flush();
             $flashBag = $request->getSession()->getFlashBag();
