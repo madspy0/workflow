@@ -15,10 +15,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationFormType extends AbstractType
 {
-    private $entityManager;
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->entityManager = $options['entity_manager'];
+        $entityManager = $options['entity_manager'];
         $builder
             ->add('email')
 //            ->add('agreeTerms', CheckboxType::class, [
@@ -29,7 +28,7 @@ class RegistrationFormType extends AbstractType
 //                    ]),
 //                ],
 //            ])
-            ->add('profile', ProfileWOtgType::class, ['label'=>false, 'entity_manager'=> $this->entityManager])
+            ->add('profile', ProfileWOtgType::class, ['label'=>false, 'entity_manager'=> $entityManager])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller

@@ -30,11 +30,11 @@ class RegistrationController extends AbstractController
     public function register(Request                     $request,
                              UserPasswordHasherInterface $userPasswordHasher,
                              EntityManagerInterface      $entityManager,
-                             UserAuthenticatorInterface $authenticator,
-                             LoginFormAuthenticator $formAuthenticator): Response
+                             UserAuthenticatorInterface  $authenticator,
+                             LoginFormAuthenticator      $formAuthenticator): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user, ['entity_manager'=>$this->getDoctrine()->getManager()]);
+        $form = $this->createForm(RegistrationFormType::class, $user, ['entity_manager' => $this->getDoctrine()->getManager()]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -48,12 +48,11 @@ class RegistrationController extends AbstractController
             $user->setRoles(['ROLE_WAIT']);
             $entityManager->persist($user);
             $entityManager->flush();
-
-   //        return $this->redirectToRoute('app_register_access_file');
-            return $authenticator->authenticateUser(
+            $authenticator->authenticateUser(
                 $user,
                 $formAuthenticator,
                 $request);
+            return $this->redirectToRoute('app_register_access_file');
         }
 
         return $this->render('security/register.html.twig', [
@@ -66,7 +65,7 @@ class RegistrationController extends AbstractController
      *
      * @throws TransportExceptionInterface
      */
-    public function accessFile(Request $request, EntityManagerInterface $em, MailerInterface             $mailer): Response
+    public function accessFile(Request $request, EntityManagerInterface $em, MailerInterface $mailer): Response
     {
         $profile = $this->getUser()->getProfile();
         $form = $this->createFormBuilder($profile)
@@ -80,10 +79,10 @@ class RegistrationController extends AbstractController
                 'asset_helper' => true,
                 'label' => false
             ])
-            ->add('download', SubmitType::class, ['label'=>'Завантажити'])
+            ->add('download', SubmitType::class, ['label' => 'Завантажити'])
             ->getForm();
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 //            dump($profile);
             $em->persist($profile);
             $em->flush();
@@ -101,7 +100,7 @@ class RegistrationController extends AbstractController
             $mailer->send($email);
             return $this->redirectToRoute('app_login');
         }
-        return $this->render('security/access-file.html.twig',['form'=>$form->createView()]);
+        return $this->render('security/access-file.html.twig', ['form' => $form->createView()]);
     }
 
     /**
