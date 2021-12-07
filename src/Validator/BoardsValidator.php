@@ -22,7 +22,7 @@ class BoardsValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint) {
         $user = $this->tokenStorage->getToken()->getUser();
         if (!$constraint instanceof ContainsGeom) {
-            throw new UnexpectedTypeException($constraint, ContainsGeom::class);
+            throw new UnexpectedTypeException($constraint, Boards::class);
         }
         if (null === $value || '' === $value) {
             return;
