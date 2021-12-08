@@ -58,16 +58,16 @@ class ProfileWOtgType extends AbstractType
 //            ])
         //    ->add('users')
         ;
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
+  //      $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
     }
 
-    function onPreSubmit(FormEvent $event)
-    {
-        $form = $event->getForm();
-        $data = $event->getData();
-        $data['otg'] = $this->entityManager->getRepository(DzkAdminOtg::class)->find($data['otg']);
-        $event->setData($data);
-    }
+//    function onPreSubmit(FormEvent $event)
+//    {
+//        $form = $event->getForm();
+//        $data = $event->getData();
+//        $data['otg'] = $this->entityManager->getRepository(DzkAdminOtg::class)->find($data['otg']);
+//        $event->setData($data);
+//    }
 
     public function configureOptions(OptionsResolver $resolver)
     {
