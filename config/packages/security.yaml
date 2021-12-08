@@ -46,6 +46,7 @@ security:
     # - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/register/file, roles: ROLE_WAIT }
     - { path: ^/login, roles: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_WAIT] }
+    - { path: ^/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/account, roles: ROLE_ACCOUNT }
     - { path: ^/dr_otg, roles: IS_AUTHENTICATED_ANONYMOUSLY }
