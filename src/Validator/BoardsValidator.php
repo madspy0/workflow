@@ -21,7 +21,7 @@ class BoardsValidator extends ConstraintValidator
 
     public function validate($value, Constraint $constraint) {
         $user = $this->tokenStorage->getToken()->getUser();
-        if (!$constraint instanceof Board) {
+        if (!$constraint instanceof Boards) {
             throw new UnexpectedTypeException($constraint, Boards::class);
         }
         if (null === $value || '' === $value) {

@@ -37,8 +37,9 @@
                                             <th class="cell">Користувач</th>
                                             <th class="cell">Дата підключення</th>
                                             <th class="cell">Дата останнього відвідування</th>
-                                            <th class="cell">Ліміт закінчився</th>
+                                            <th class="cell">Ліміт</th>
                                             <th class="cell">Активні</th>
+                                            <th class="cell">Авторизований</th>
                                             <th class="cell"></th>
                                         </tr>
                                         </thead>
@@ -71,15 +72,16 @@
                                                 <td class="cell"><span>
                                                         <button class="account-button {% if currentUser.isDisabled %} active{% endif %}" value="{{ currentUser.id }}">
 {#                                                                <span class="icon-text">#}
-{#                                                                    <svg class="icon icon--is-spinning" aria-hidden="true" viewBox="0 0 16 16"><title>Loading</title><g#}
-{#                                                                                stroke-width="1" fill="currentColor" stroke="currentColor"><path d="M.5,8a7.5,7.5,0,1,1,1.91,5"#}
-{#                                                                                         fill="none" stroke="currentColor"#}
-{#                                                                                         stroke-linecap="round"#}
-{#                                                                                         stroke-linejoin="round"></path></g>#}
-{#                                                                    </svg>#}
-{#                                                                 </span>#}
+                                                            {#                                                                    <svg class="icon icon--is-spinning" aria-hidden="true" viewBox="0 0 16 16"><title>Loading</title><g#}
+                                                            {#                                                                                stroke-width="1" fill="currentColor" stroke="currentColor"><path d="M.5,8a7.5,7.5,0,1,1,1.91,5"#}
+                                                            {#                                                                                         fill="none" stroke="currentColor"#}
+                                                            {#                                                                                         stroke-linecap="round"#}
+                                                            {#                                                                                         stroke-linejoin="round"></path></g>#}
+                                                            {#                                                                    </svg>#}
+                                                            {#                                                                 </span>#}
                                                         </button>
                                                     </span></td>
+                                                <td class="cell"><span class="badge bg-success">Так</span></td>
                                                 <td class="cell">
                                                     {% if ((currentUser.profile != null) and (currentUser.profile.ecp.size != null)) %}
                                                         <a class="btn-sm app-btn-secondary" href="{{ path('account_show_file', {'user':currentUser.id}) }}">Файл</a>
