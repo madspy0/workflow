@@ -46,26 +46,46 @@ class Profile implements Serializable
      */
     private $users;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="DzkAdminOtg")
+//     * @ORM\JoinColumn(name="otg_id", referencedColumnName="id")
+//     */
+//    private $otg;
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getOtg()
+//    {
+//        return $this->otg;
+//    }
+//
+//    /**
+//     * @param mixed $otg
+//     */
+//    public function setOtg($otg): void
+//    {
+//        $this->otg = $otg;
+//    }
     /**
-     * @ORM\ManyToOne(targetEntity="DzkAdminOtg")
-     * @ORM\JoinColumn(name="otg_id", referencedColumnName="id")
+     * @ORM\Column(type="string", length=255)
      */
-    private $otg;
+    private $localGoverment;
 
     /**
      * @return mixed
      */
-    public function getOtg()
+    public function getLocalGoverment()
     {
-        return $this->otg;
+        return $this->localGoverment;
     }
 
     /**
-     * @param mixed $otg
+     * @param mixed $localGoverment
      */
-    public function setOtg($otg): void
+    public function setLocalGoverment($localGoverment): void
     {
-        $this->otg = $otg;
+        $this->localGoverment = $localGoverment;
     }
 
     /**

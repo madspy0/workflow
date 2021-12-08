@@ -30,7 +30,8 @@ class ProfileWOtgType extends AbstractType
             ->add('address', null, ['label' => 'Адреса'])
             ->add('url', null, ['label' => 'Посилання на сайт'])
             ->add('phone', null, ['label' => 'Телефон'])
-            ->add('otg', HiddenType::class
+            ->add('localGoverment', null,['label' => 'Назва органу влади'])
+ //           ->add('otg', HiddenType::class
 //                EntityType::class,
 //                [
 //                'class' => DzkAdminOtg::class,
@@ -41,7 +42,7 @@ class ProfileWOtgType extends AbstractType
 //                // 'multiple' => true,
 //                // 'expanded' => true,
 //            ]
-            )
+//            )
 
 //            ->add('ecpFile', VichFileType::class, [
 //                'required' => false,
