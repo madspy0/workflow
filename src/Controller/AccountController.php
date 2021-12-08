@@ -69,7 +69,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/authorize/{user}", name="_enable")
+     * @Route("/authorize/{user}", name="_authorize")
      */
     public function authorize(User $user, EntityManagerInterface $em, MailerInterface $mailer): JsonResponse
     {

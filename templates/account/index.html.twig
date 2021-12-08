@@ -81,9 +81,20 @@
                                                             {#                                                                 </span>#}
                                                         </button>
                                                     </span></td>
-                                                <td class="cell"><span class="badge bg-success">Так</span></td>
                                                 <td class="cell">
-                                                    {% if ((currentUser.profile != null) and (currentUser.profile.ecp.size != null)) %}
+                                                    {% if 'ROLE_EDITOR' in currentUser.getRoles(true) %}
+                                                        <span class="badge bg-success">Так</span>
+                                                    {% else %}
+                                                        {% if ((currentUser.profile != null) and (currentUser.profile.ecp.size != null)) %}
+                                                            <button class="btn-sm btn-warning auth-button" href="{{ path('account_authorize', {'user':currentUser.id}) }}"
+                                                            value="{{ currentUser.id }}">Авторизовати</button>
+                                                        {% else %}
+                                                            <span class="badge bg-warning">Hi</span>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </td>
+                                                <td class="cell">
+                                                    {% if ((currentUser.profile != null) and (currentUser.profile.ecp.size != null) and ('ROLE_EDITOR' not in currentUser.getRoles(true))) %}
                                                         <a class="btn-sm app-btn-secondary" href="{{ path('account_show_file', {'user':currentUser.id}) }}">Файл</a>
                                                     {% endif %}
                                                 </td>

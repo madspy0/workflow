@@ -33,6 +33,36 @@ Array.from(account_buttons).forEach(b=>{
     })
 })
 
+let auth_buttons = document.getElementsByClassName('auth-button')
+Array.from(auth_buttons).forEach(b=>{
+    b.addEventListener('click',  e => {
+        e.preventDefault()
+        let button = e.currentTarget;
+        fetch('/account/authorize/'+e.currentTarget.value)
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(Promise.reject.bind(Promise));
+                }
+                return response.json()})
+            .then(data => {
+                if(data.status == 'ok') {
+                    button.classList.remove('active')
+                    let parent = button.parentNode;
+                    let new_span = document.createElement("span")
+                    new_span.setAttribute("class","badge bg-success")
+                    let new_span_context = document.createTextNode("Так");
+                    new_span.appendChild(new_span_context)
+                    parent.replaceChild(new_span, button);
+                }
+            })
+            .catch(error => {
+                console.log(
+                    `Помилка запиту: ${error}`
+                )
+            })
+    })
+})
+
 document.getElementById('profile_button').addEventListener('click', function (e) {
     e.preventDefault()
     //  my_modal(true)
