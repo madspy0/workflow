@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\DzkAdminObl;
 use App\Entity\DzkAdminOtg;
 use App\Entity\Profile;
 use App\Entity\UsePlantCategory;
@@ -31,8 +32,14 @@ class ProfileWOtgType extends AbstractType
             ->add('url', null, ['label' => 'Посилання на сайт'])
             ->add('phone', null, ['label' => 'Телефон'])
             ->add('localGoverment', null,['label' => 'Назва органу влади'])
+            ->add('oblast',EntityType::class, [
+                'label' => false,
+                'class' => DzkAdminObl::class,
+                'choice_label' => 'nameRgn',
+                'placeholder' => 'Область',
+            ])
  //           ->add('otg', HiddenType::class
-//                EntityType::class,
+//                EntityType::class,связать их по id
 //                [
 //                'class' => DzkAdminOtg::class,
 //                'choice_label' => 'name_rgn',

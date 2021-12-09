@@ -515,7 +515,6 @@ document.getElementById('profile_button').addEventListener('click', function (e)
     //  my_modal(true)
     swal_person()
 })
-
 let dAutocomplete = autocomplete({
     container: '#searchbox',
     translations: {
@@ -578,7 +577,6 @@ let dAutocomplete = autocomplete({
             }]
     }
 });
-
 const copyright = document.createElement('div');
 copyright.style = 'position:absolute; bottom:0;width:100%;'
 copyright.innerHTML = '<div class="container text-center py-2"><small class="copyright" style="background-color: #f8f8f888">Держгеокадастр &copy;2021</small></div>'

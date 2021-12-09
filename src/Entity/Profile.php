@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProfileRepository;
+use App\Entity\DzkAdminObl;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -46,27 +47,27 @@ class Profile implements Serializable
      */
     private $users;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="DzkAdminOtg")
-//     * @ORM\JoinColumn(name="otg_id", referencedColumnName="id")
-//     */
-//    private $otg;
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getOtg()
-//    {
-//        return $this->otg;
-//    }
-//
-//    /**
-//     * @param mixed $otg
-//     */
-//    public function setOtg($otg): void
-//    {
-//        $this->otg = $otg;
-//    }
+    /**
+     * @ORM\ManyToOne(targetEntity="DzkAdminObl")
+     * @ORM\JoinColumn(name="oblast_id", referencedColumnName="id")
+     */
+    private $oblast;
+
+    /**
+     * @return mixed
+     */
+    public function getOblast()
+    {
+        return $this->oblast;
+    }
+
+    /**
+     * @param mixed $oblast
+     */
+    public function setOblast($oblast): void
+    {
+        $this->oblast = $oblast;
+    }
     /**
      * @ORM\Column(type="string", length=255)
      */

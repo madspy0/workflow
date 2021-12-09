@@ -21,7 +21,7 @@ use Vich\UploaderBundle\Handler\DownloadHandler;
 class AccountController extends AbstractController
 {
     /**
-     * @Route("/", name="account_index")
+     * @Route("/", name="_index")
      */
     public function index(UserRepository $repository, EntityManagerInterface $em): Response
     {
