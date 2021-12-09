@@ -144,7 +144,7 @@ class DrawnArea
      * @Groups({"geoms"})
      * @Assert\NotBlank(message="Намалюйте план ділянки")
      * @ContainsGeom(message="Геометрія не є валідною")
-     * @Boards(message="Не в межах ОМС")
+     * @Boards(message="Не в межах області")
      */
     private $geom;
 

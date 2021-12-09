@@ -35,11 +35,11 @@ class DrawnAreaRepository extends ServiceEntityRepository
         return $result[0]['is_valid'];
     }
 
-    public function inBoard($geom, $board)
+    public function inBoard($geom)
     {
         $stmt = $this->getEntityManager()
             ->getConnection()
-            ->prepare('select ST_Within(ST_GeomFromText(\'' . $geom . '\'), ST_GeomFromText(\'' . $board . '\')) = true as is_valid');
+            ->prepare('select aa_check_obl(ST_GeomFromText(\'' . $geom . '\')) != 0 as is_valid');
         $stmt->execute();
         $result = $stmt->fetchAll();
         return $result[0]['is_valid'];

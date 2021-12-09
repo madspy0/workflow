@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -19,7 +20,17 @@ class RegistrationFormType extends AbstractType
     {
         $entityManager = $options['entity_manager'];
         $builder
-            ->add('email')
+            ->add('email'
+                , null,
+                ['constraints' => [
+                    new NotBlank([
+                        'message' => 'Будь ласка, введіть e-mail',
+                    ]),
+                    new Email([
+                        'message' => 'Будь ласка, заповніть поле e-mail вірно'
+                    ])
+                ]]
+            )
 //            ->add('agreeTerms', CheckboxType::class, [
 //                'mapped' => false,
 //                'constraints' => [
@@ -28,7 +39,7 @@ class RegistrationFormType extends AbstractType
 //                    ]),
 //                ],
 //            ])
-            ->add('profile', ProfileWOtgType::class, ['label'=>false, 'entity_manager'=> $entityManager])
+            ->add('profile', ProfileWOtgType::class, ['label' => false, 'entity_manager' => $entityManager])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -36,17 +47,16 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Будь ласка, введіть пароль',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Ваш пароль має містити щонайменше {{ limit }} символів',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

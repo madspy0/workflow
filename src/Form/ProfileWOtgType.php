@@ -37,6 +37,7 @@ class ProfileWOtgType extends AbstractType
                 'class' => DzkAdminObl::class,
                 'choice_label' => 'nameRgn',
                 'placeholder' => 'Область',
+                'required' => true
             ])
  //           ->add('otg', HiddenType::class
 //                EntityType::class,связать их по id
