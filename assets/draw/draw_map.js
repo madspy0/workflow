@@ -38,7 +38,7 @@ import {Point} from "ol/geom";
 export const itemStyles = {
     'created': new Style({
         fill: new Fill({
-            color: 'rgba(255, 255, 0, 0.2)',
+            color: 'rgba(255, 255, 102, .2)',
         }),
         stroke: new Stroke({
             color: 'rgb(255, 255, 0)',
@@ -47,19 +47,19 @@ export const itemStyles = {
     }),
     'published': new Style({
         fill: new Fill({
-            color: 'rgba(230, 103, 175, 0.2)',
+            color: 'rgba(51, 51, 255, .2)',
         }),
         stroke: new Stroke({
-            color: 'rgb(230, 103, 175)',
+            color: 'rgb(51, 51, 255)',
             width: 2,
         }),
     }),
     'archived': new Style({
         fill: new Fill({
-            color: 'rgba(173, 102, 213, 0.2)',
+            color: 'rgba(255, 102, 102, .2)',
         }),
         stroke: new Stroke({
-            color: 'rgb(173, 102, 213)',
+            color: 'rgb(204, 0, 0)',
             width: 2,
         }),
     })
