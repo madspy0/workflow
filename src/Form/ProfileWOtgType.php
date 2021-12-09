@@ -14,6 +14,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Url;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class ProfileWOtgType extends AbstractType
@@ -29,7 +32,16 @@ class ProfileWOtgType extends AbstractType
             ->add('lastname', null, ['label' => false, 'attr' => ['placeholder' => 'Прізвище']])
             ->add('middlename', null, ['label' => false, 'attr' => ['placeholder' => 'По-батькові']])
             ->add('address', null, ['label' => 'Адреса'])
-            ->add('url', null, ['label' => 'Посилання на сайт'])
+            ->add('url', null, ['label' => 'Посилання на сайт',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Будь ласка, введіть пароль',
+                    ]),
+                    new Url([
+                        'message' => 'Будь ласка, введіть посилання на сайт',
+                    ]),
+                ],
+                ])
             ->add('phone', null, ['label' => 'Телефон'])
             ->add('localGoverment', null,['label' => 'Назва органу влади'])
             ->add('oblast',EntityType::class, [

@@ -16,9 +16,27 @@
         <div class="col-12 col-md-7 col-lg-6 auth-main-col text-center p-5">
             <div class="d-flex flex-column align-content-end">
                 <div class="app-auth-body mx-auto">
-{#                     {% if errors %}#}
-{#                     <div class="alert alert-danger">{{ registrationForm.error.messageKey|trans(error.messageData, 'security') }}</div>#}
-{#                     {% endif %}#}
+                    {# {% if errors %} #}
+                    {# <div class="alert alert-danger">{{ registrationForm.error.messageKey|trans(error.messageData, 'security') }}</div> #}
+                    {# {% endif %} #}
+                    {% if not registrationForm.vars.valid %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {# Loop through every form item #}
+                                {% for child in registrationForm.children %}
+                                    {# Display the errors of the form item #}
+                                    {% for error in child.vars.errors %}
+                                        <li>{{ error.message }}</li>
+                                    {% endfor %}
+                                    {% for childs in child %}
+                                        {% for error in childs.vars.errors %}
+                                            <li>{{ error.message }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
                     <div class="app-auth-branding mb-4"><a class="app-logo" href="{{ path('homepage') }}">
                             {# <img class="logo-icon me-2" src="/images/app-logo1.svg" alt="logo"> #}
                             <svg xmlns="http://www.w3.org/2000/svg" width="215" height="215" fill="currentColor"
