@@ -1,8 +1,15 @@
 import Swal from "sweetalert2";
+import {toastFire} from "./swal-area";
 
 export let swal_person = () => {
     fetch('/dr_profile/')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(Promise.reject.bind(Promise));
+                //   throw new Error(response.statusText)
+            }
+            return (response.json())
+        })
         .then((data) => {
             Swal.fire({
                 title: 'Профіль користувача',
@@ -55,7 +62,7 @@ export let swal_person = () => {
                             )
                         })
                 },
-            //    allowOutsideClick: () => !Swal.isLoading()
+                //    allowOutsideClick: () => !Swal.isLoading()
             })
             //     .then((result) => {
             //     if (result.isConfirmed) {
@@ -65,6 +72,6 @@ export let swal_person = () => {
             //         })
             //     }
             // })
-        })
+        }).catch(error => toastFire(error))
 }
 

@@ -69,7 +69,11 @@ class DrawenAreaController extends AbstractController
                 $user = $tokenStorage->getToken()->getUser();
                 $cond = (array)$user->getProfile();
                 $profile = $cond ? $user->getProfile() : new Profile();
-                $form = $this->createForm(ProfileType::class, $profile);
+              //  $form = $this->createForm(ProfileType::class, $profile);
+                $form = $this->createFormBuilder($profile)
+                    ->add('url')
+                    ->getForm()
+                ;
                 $form->handleRequest($request);
                 if ($form->isSubmitted() && $form->isValid()) {
                     $user->setProfile($profile);
@@ -79,7 +83,8 @@ class DrawenAreaController extends AbstractController
                     return new JsonResponse(['success' => true]);
                 }
 
-                return new JsonResponse(['content' => $this->render('statement/modals/swal_person.html.twig', ['profileForm' => $form->createView()])->getContent()]);
+                return new JsonResponse(['content' => $this->render('statement/modals/swal_person.html.twig',
+                    ['profile'=>$profile,'profileForm' => $form->createView()])->getContent()]);
             } catch (Exception $exception) {
                 return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
@@ -111,9 +116,9 @@ class DrawenAreaController extends AbstractController
             }
             $profile = $this->getUser()->getProfile();
             if ($profile) {
-                $form->get('firstname')->setData($profile->getFirstname());
-                $form->get('lastname')->setData($profile->getLastname());
-                $form->get('middlename')->setData($profile->getMiddlename());
+//                $form->get('firstname')->setData($profile->getFirstname());
+//                $form->get('lastname')->setData($profile->getLastname());
+//                $form->get('middlename')->setData($profile->getMiddlename());
                 $form->get('address')->setData($profile->getAddress());
                 $form->get('link')->setData($profile->getUrl());
             }

@@ -28,10 +28,10 @@ class DrawnAreaType extends AbstractType
         $this->entityManager = $options['entity_manager'];
         $builder
             ->add('localGoverment', null, ['attr'=>['class'=>'form-field__input'], 'label' => 'Орган влади, який прийняв рішення', 'label_attr'=>['class'=>'form-field__label']])
-            ->add('firstname', null, ['label' => false, 'attr' => ['placeholder' => 'Ім\'я', 'class'=>'form-field__input']])
-            ->add('lastname', null, ['label' => false, 'attr' => ['placeholder' => 'Прізвище', 'class'=>'form-field__input']])
-            ->add('middlename', null, ['label' => false, 'attr' => ['placeholder' => 'По-батькові', 'class'=>'form-field__input']])
-            //          ->add('createdAt')
+//            ->add('firstname', null, ['label' => false, 'attr' => ['placeholder' => 'Ім\'я', 'class'=>'form-field__input']])
+//            ->add('lastname', null, ['label' => false, 'attr' => ['placeholder' => 'Прізвище', 'class'=>'form-field__input']])
+//            ->add('middlename', null, ['label' => false, 'attr' => ['placeholder' => 'По-батькові', 'class'=>'form-field__input']])
+//            //          ->add('createdAt')
             ->add('documentsType', null, ['label' => 'Назва документа', 'attr'=>['class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
             ->add('address', null, ['label' => 'Орієнтовне місце розташування (адреса)', 'attr'=>['class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
 //            ->add('use', ChoiceType::class, ['label'=>'Вид використання',

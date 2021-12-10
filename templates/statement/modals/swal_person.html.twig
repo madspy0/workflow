@@ -2,11 +2,11 @@
     {{ form_start(profileForm,{'attr': {'id': 'form_person_edit'}}) }}
     <div class="row">
         <div class="col">
-            {{ form_row(profileForm.lastname) }}
+            {{ profile.lastname }}
 
-            {{ form_row(profileForm.firstname) }}
+            {{ profile.firstname }}
 
-            {{ form_row(profileForm.middlename) }}
+            {{ profile.middlename }}
         </div>
         <div class="col">
             Статистичнi данi
@@ -14,10 +14,11 @@
     </div>
     <div class="row">
         <div class="col">
-            {{ form_row(profileForm.address) }}
+            {{ profile.address }}
+            {{ profile.oblast }}
         </div>
         <div class="col">
-            {{ form_row(profileForm.phone) }}
+            {{ profile.phone }}
         </div>
     </div>
     <div class="row">

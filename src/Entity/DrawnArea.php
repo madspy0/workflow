@@ -30,20 +30,20 @@ class DrawnArea
      */
     private $localGoverment;
 
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private $firstname;
-
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private $lastname;
-
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private $middlename;
+//    /**
+//     * @ORM\Column(type="string", length=64)
+//     */
+//    private $firstname;
+//
+//    /**
+//     * @ORM\Column(type="string", length=64)
+//     */
+//    private $lastname;
+//
+//    /**
+//     * @ORM\Column(type="string", length=64)
+//     */
+//    private $middlename;
 
     /**
      * @return mixed
@@ -232,41 +232,41 @@ class DrawnArea
         return $this;
     }
 
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname): self
-    {
-        $this->firstname = $firstname;
-
-        return $this;
-    }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(string $lastname): self
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
-    public function getMiddlename(): ?string
-    {
-        return $this->middlename;
-    }
-
-    public function setMiddlename(string $middlename): self
-    {
-        $this->middlename = $middlename;
-
-        return $this;
-    }
+//    public function getFirstname(): ?string
+//    {
+//        return $this->firstname;
+//    }
+//
+//    public function setFirstname(string $firstname): self
+//    {
+//        $this->firstname = $firstname;
+//
+//        return $this;
+//    }
+//
+//    public function getLastname(): ?string
+//    {
+//        return $this->lastname;
+//    }
+//
+//    public function setLastname(string $lastname): self
+//    {
+//        $this->lastname = $lastname;
+//
+//        return $this;
+//    }
+//
+//    public function getMiddlename(): ?string
+//    {
+//        return $this->middlename;
+//    }
+//
+//    public function setMiddlename(string $middlename): self
+//    {
+//        $this->middlename = $middlename;
+//
+//        return $this;
+//    }
 
     public function getCreatedAt(): ?DateTimeImmutable
     {
