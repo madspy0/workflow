@@ -23,7 +23,7 @@ import {Feature} from "ol";
 import {WKT} from "ol/format";
 import {getArea} from "ol/sphere";
 import * as olControl from 'ol/control';
-import {Draw, Modify, Select} from "ol/interaction";
+import {Draw, Modify, Snap,  Select} from "ol/interaction";
 
 import {swal_person} from "./swal_person";
 import {addInteractions} from "./add-interactions";
@@ -485,7 +485,7 @@ let rmInteractionsOverlays = () => {
         map.removeOverlay(overlay);
     });
     map.getInteractions().forEach(function (interaction) {
-        if ((interaction instanceof Draw) || (interaction instanceof Select) || (interaction instanceof Modify)) {
+        if ((interaction instanceof Draw) || (interaction instanceof Select) || (interaction instanceof Modify) || (interaction instanceof Snap)) {
             interaction.setActive(false);
         }
     }, this);

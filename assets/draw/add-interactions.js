@@ -1,4 +1,4 @@
-import {Modify, Select} from "ol/interaction";
+import {Modify, Select, Snap} from "ol/interaction";
 import {formatArea, map, plants} from "./draw_map";
 import {pointerMove} from "ol/events/condition";
 import {redirect} from "../redirect";
@@ -50,32 +50,6 @@ export function addInteractions() {
     const modifyInteraction = new Modify({
         //    source: plants.getSource(),
         features: selectClick.getFeatures(),
-        // insertVertexCondition: function () {
-        //     // prevent new vertices to be added to the polygons
-        //     return (selectClick
-        //         .getFeatures()
-        //         .getArray()[0].get('status') !== 'created')
-        //     // &&
-        //     // !selectClick
-        //     // .getFeatures()
-        //     // .getArray()
-        //     // .every(function (feature) {
-        //     //     return feature
-        //     //         .getGeometry()
-        //     //         .getType()
-        //     //         .match(/Polygon/);
-        //     // });
-        // },
-        // features: featureModify,
-        // insertVertexCondition: () => {
-        //     return (feature.get('status') === "created")
-        // }
-        // insertVertexCondition: () => {
-        //     // prevent new vertices to be added to the polygons
-        //     return !selectClick.getFeatures().getArray().every(function(feature) {
-        //         return feature.getGeometry().getType().match(/Polygon/);
-        //     });
-        // }
     });
     modifyInteraction.setActive(false)
     modifyInteraction.on('modifystart', function (e) {
@@ -91,7 +65,12 @@ export function addInteractions() {
         selectMove.setActive(true)
         document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(e.features.getArray()[0].getGeometry());
     })
-    map.getInteractions().extend([selectClick, selectMove, modifyInteraction]);
+
+    const snapInteraction = new Snap({
+        features: selectClick.getFeatures(),
+    });
+    snapInteraction.setActive(false)
+    map.getInteractions().extend([selectClick, selectMove, modifyInteraction, snapInteraction]);
 
     createInfoTooltip();
     selectClick.on('select', function (e) {

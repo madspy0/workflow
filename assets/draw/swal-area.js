@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import {Modify, Select} from "ol/interaction";
+import {Modify, Select, Snap} from "ol/interaction";
 import {formatArea, itemStyles, map} from "./draw_map";
 import {WKT} from "ol/format";
 import {categoryForm} from "./category-form";
@@ -36,10 +36,14 @@ export function toastFire(error) {
 }
 
 export async function swalArea(feature) {
-    let modifyInteraction
+    let modifyInteraction;
+    let snapInteraction;
     map.getInteractions().forEach(f => {
         if (f instanceof Modify) {
             modifyInteraction = f
+        }
+        if (f instanceof Snap) {
+            snapInteraction = f
         }
     })
     let selected_center = getCenter(feature.getGeometry().getExtent());
@@ -49,8 +53,10 @@ export async function swalArea(feature) {
     map.getView().fit(feature.getGeometry(), {padding: [15, 565, 15, 15], duration: 500})
     if (feature.get('status') === 'created') {
         modifyInteraction.setActive(true)
+        snapInteraction.setActive(true)
     } else {
         modifyInteraction.setActive(false)
+        snapInteraction.set(false)
     }
     // RIGHT SIDEBAR
     let reqUrl;
