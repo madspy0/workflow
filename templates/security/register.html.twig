@@ -55,10 +55,13 @@
                                 {{ form_widget(registrationForm.email,{'label': false, 'attr':{'placeholder': 'Email'}}) }}
                             </div>
                             <div class="col mb-3">
-                                {{ form_widget(registrationForm.plainPassword, {
-                                    label: false,
-                                    'attr':{'placeholder': 'Пароль'}
-                                }) }}
+                                <div class="input-group">
+                                    {{ form_widget(registrationForm.plainPassword, {
+                                        label: false,
+                                        'attr':{'placeholder': 'Пароль'}
+                                    }) }}
+                                    <span class="input-group-text" id="toggle-pass"><i id="toggle-pass-icon" class="bi bi-eye-slash"></i></span>
+                                </div>
                             </div>
                         </div>
                         {{ form_row(registrationForm.profile.lastname) }}
