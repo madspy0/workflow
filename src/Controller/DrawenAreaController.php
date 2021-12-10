@@ -71,7 +71,7 @@ class DrawenAreaController extends AbstractController
                 $profile = $cond ? $user->getProfile() : new Profile();
               //  $form = $this->createForm(ProfileType::class, $profile);
                 $form = $this->createFormBuilder($profile)
-                    ->add('url')
+                    ->add('url',null,['label'=>'Посилання на сайт'])
                     ->getForm()
                 ;
                 $form->handleRequest($request);

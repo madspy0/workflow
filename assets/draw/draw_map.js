@@ -28,7 +28,7 @@ import {Draw, Modify, Snap,  Select} from "ol/interaction";
 import {swal_person} from "./swal_person";
 import {addInteractions} from "./add-interactions";
 import DrawButtonsControl from './draw_buttons_control';
-import {swalArea} from "./swal-area";
+import {swalArea, toastFire} from "./swal-area";
 import {addInteractionMeasure} from "./add-interaction-measure";
 import {autocomplete} from '@algolia/autocomplete-js';
 import {MousePosition, OverviewMap, ScaleLine} from "ol/control";
@@ -541,10 +541,16 @@ let dAutocomplete = autocomplete({
                 sourceId: 'towns',
                 getItems() {
                     return fetch('/dr_search/?q=' + query)
-                        .then(response => response.json())
+                        .then(response => {
+                            if (!response.ok) {
+                                return response.json().then(Promise.reject.bind(Promise));
+                                //   throw new Error(response.statusText)
+                            }
+                            return (response.json())
+                        })
                         .then(data => {
                             return data;
-                        });
+                        }).catch(error => toastFire(error));
                 },
                 onSelect({item}) {
                     dAutocomplete.setQuery(item.nameUa)
