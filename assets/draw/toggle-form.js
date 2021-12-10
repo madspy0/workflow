@@ -14,6 +14,8 @@ export function toggle_form(form) {
 function toggle_elements(elements) {
     let length = elements.length;
     while(length--) {
-        elements[length].disabled = !elements[length].disabled;
+        if(elements[length].id !== "drawn_area_link") {
+            elements[length].disabled = !elements[length].disabled;
+        }
     }
 }

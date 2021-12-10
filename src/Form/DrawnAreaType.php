@@ -17,6 +17,8 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Url;
 
 class DrawnAreaType extends AbstractType
 {
@@ -27,13 +29,13 @@ class DrawnAreaType extends AbstractType
     {
         $this->entityManager = $options['entity_manager'];
         $builder
-            ->add('localGoverment', null, ['attr'=>['class'=>'form-field__input'], 'label' => 'Орган влади, який прийняв рішення', 'label_attr'=>['class'=>'form-field__label']])
+            ->add('localGoverment', null, ['attr' => ['class' => 'form-field__input'], 'label' => 'Орган влади, який прийняв рішення', 'label_attr' => ['class' => 'form-field__label']])
 //            ->add('firstname', null, ['label' => false, 'attr' => ['placeholder' => 'Ім\'я', 'class'=>'form-field__input']])
 //            ->add('lastname', null, ['label' => false, 'attr' => ['placeholder' => 'Прізвище', 'class'=>'form-field__input']])
 //            ->add('middlename', null, ['label' => false, 'attr' => ['placeholder' => 'По-батькові', 'class'=>'form-field__input']])
 //            //          ->add('createdAt')
-            ->add('documentsType', null, ['label' => 'Назва документа', 'attr'=>['class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
-            ->add('address', null, ['label' => 'Орієнтовне місце розташування (адреса)', 'attr'=>['class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
+            ->add('documentsType', null, ['label' => 'Назва документа', 'attr' => ['class' => 'form-field__input'], 'label_attr' => ['class' => 'form-field__label']])
+            ->add('address', null, ['label' => 'Орієнтовне місце розташування (адреса)', 'attr' => ['class' => 'form-field__input'], 'label_attr' => ['class' => 'form-field__label']])
 //            ->add('use', ChoiceType::class, ['label'=>'Вид використання',
 //                'choices' => [
 //                    'First choice' => 'вибір',
@@ -45,7 +47,7 @@ class DrawnAreaType extends AbstractType
                 'choice_label' => 'title',
                 'placeholder' => 'Оберіть категорію',
             ])
-            ->add('numberSolution', null, ['label' => 'Номер документа', 'attr'=>['class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
+            ->add('numberSolution', null, ['label' => 'Номер документа', 'attr' => ['class' => 'form-field__input'], 'label_attr' => ['class' => 'form-field__label']])
             ->add('solutedAt', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Дата документа',
@@ -53,10 +55,21 @@ class DrawnAreaType extends AbstractType
                 'input_format' => 'dd-MM-yyyy',
                 'format' => 'dd-MM-yyyy',
                 'html5' => false,
-                'attr'=>['autocomplete'=>'off', 'class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
+                'attr' => ['autocomplete' => 'off', 'class' => 'form-field__input'], 'label_attr' => ['class' => 'form-field__label']])
 //            ->add('publishedAt')
-            ->add('area', null, ['label' => 'Площа', 'attr' => ['readonly' => 'true', 'class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
-            ->add('link', null, ['label' => 'Посилання на сайт', 'attr'=>['class'=>'form-field__input'], 'label_attr'=>['class'=>'form-field__label']])
+            ->add('area', null, ['label' => 'Площа', 'attr' => ['readonly' => 'true', 'class' => 'form-field__input'], 'label_attr' => ['class' => 'form-field__label']])
+            ->add('link', null, ['label' => 'Посилання на сайт',
+                'attr' => ['class' => 'form-field__input'],
+                'label_attr' => ['class' => 'form-field__label'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Будь ласка, введіть пароль',
+                    ]),
+                    new Url([
+                        'message' => 'Будь ласка, введіть посилання на сайт',
+                    ]),
+                ]
+            ])
 //            ->add('status', ChoiceType::class, ['label' => 'Статус',
 //                'choices' => [
 //                    'Внесено' => 'draft',
@@ -117,7 +130,7 @@ class DrawnAreaType extends AbstractType
     {
         $pf = mb_convert_encoding('&#x00B2;', 'UTF-8', 'HTML-ENTITIES');
 //        if ($area > 10000) {
-            $output = round(($area / 10000) * 100) / 100 . ' Га';
+        $output = round(($area / 10000) * 100) / 100 . ' Га';
 //        } else {
 //            $output = round($area * 100) / 100 . ' м ' . $pf;
 //        }

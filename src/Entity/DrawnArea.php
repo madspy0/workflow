@@ -10,9 +10,11 @@ use App\Entity\User as PortalUser;
 use App\Validator\ContainsGeom;
 use App\Validator\Boards;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=DrawnAreaRepository::class)
+ * @Gedmo\Loggable
  * @ORM\HasLifecycleCallbacks()
  */
 class DrawnArea
@@ -94,6 +96,7 @@ class DrawnArea
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Versioned
      */
     private $link;
 
@@ -119,6 +122,7 @@ class DrawnArea
     private $archivedAt;
     /**
      * @ORM\Column(type="string", length=64)
+     * @Gedmo\Versioned
      * @Groups({"geoms"})
      */
     private $status;
