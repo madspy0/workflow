@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -19,20 +20,18 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
-class ProfileWOtgType extends AbstractType
+class ProfileFormType extends AbstractType
 {
-    private $entityManager;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->entityManager = $options['entity_manager'];
         $builder
             ->setAction('/dr_profile')
             ->add('firstname', null, ['label' => false, 'attr' => ['placeholder' => 'Ім\'я']])
             ->add('lastname', null, ['label' => false, 'attr' => ['placeholder' => 'Прізвище']])
             ->add('middlename', null, ['label' => false, 'attr' => ['placeholder' => 'По-батькові']])
             ->add('address', null, ['label' => 'Адреса'])
-            ->add('url', null, ['label' => 'Посилання на сайт',
+            ->add('url', UrlType::class, ['label' => 'Посилання на сайт',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Будь ласка, введіть пароль',
@@ -41,44 +40,27 @@ class ProfileWOtgType extends AbstractType
                         'message' => 'Будь ласка, введіть посилання на сайт',
                     ]),
                 ],
-                ])
+            ])
             ->add('phone', null, ['label' => 'Телефон'])
-            ->add('localGoverment', null,['label' => 'Назва органу влади'])
-            ->add('oblast',EntityType::class, [
+            ->add('localGoverment', null, ['label' => 'Назва органу влади'])
+            ->add('oblast', EntityType::class, [
                 'label' => false,
                 'class' => DzkAdminObl::class,
                 'choice_label' => 'nameRgn',
                 'placeholder' => 'Область',
                 'required' => true
             ])
- //           ->add('otg', HiddenType::class
-//                EntityType::class,связать их по id
-//                [
-//                'class' => DzkAdminOtg::class,
-//                'choice_label' => 'name_rgn',
-//                'label' => false,
-//                'placeholder' => 'Назва органу влади',
-//                'attr'=>['class'=>'form-control']
-//                // 'multiple' => true,
-//                // 'expanded' => true,
-//            ]
-//            )
+            ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
+                $profile = $event->getData();
+                $form = $event->getForm();
+                dump($profile);
+                if (!$profile) {
+                    return;
+                }
 
-//            ->add('ecpFile', VichFileType::class, [
-//                'required' => false,
-//                'allow_delete' => true,
-////                'delete_label' => '...',
-////                'download_uri' => '...',
-////                'download_label' => '...',
-//                'asset_helper' => true,
-//            ]);
-//            ->add('save', SubmitType::class, [
-//                'label' => 'Зберегти',
-//                'attr' => ['class' => 'save'],
-//            ])
-        //    ->add('users')
-        ;
-  //      $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
+                $profile['url'] = 'aaa';
+                $event->setData($profile);
+            });
     }
 
 //    function onPreSubmit(FormEvent $event)
@@ -94,7 +76,6 @@ class ProfileWOtgType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Profile::class,
             'csrf_protection' => false,
-            'entity_manager' => null,
         ]);
     }
 }

@@ -17,7 +17,7 @@ if (!!profilePhone) {
         placeholder: "_"
     }).mask(document.getElementById("registration_form_email"));
     Inputmask({
-        mask: "http[s]://*{1,30}.*{1,30}[.*{1,30}]{1,10}",
+        mask: "\\http[s]://a{+}",
     //    autoUnmask : true,
         placeholder: "_"
     }).mask(document.getElementById("registration_form_profile_url"));
