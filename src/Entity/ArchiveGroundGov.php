@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ArchiveGroundGovRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=ArchiveGroundGovRepository::class)
  */
@@ -19,7 +19,15 @@ class ArchiveGroundGov
 
     /**
      * @ORM\Column(type="string", length=25)
+     *
+     * @Assert\Length(
+     *      min = 22,
+     *      max = 22,
+     *      minMessage = "Неправильно введено кадастровий номер",
+     *      maxMessage = "Неправильно введено кадастровий номер"
+     * )
      */
+
     private $cadnum;
 
     /**
