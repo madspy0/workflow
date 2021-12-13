@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=UsePlantSubCategoryRepository::class)
+ * @ORM\Table (name="dzk_land_subcategory")
  */
 class UsePlantSubCategory
 {
@@ -18,12 +19,13 @@ class UsePlantSubCategory
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=510)
+     * @ORM\Column(type="string", length=510, name="name")
      */
     private $title;
 
     /**
      * @ORM\ManyToOne(targetEntity=UsePlantCategory::class, inversedBy="usePlantSubCategories")
+     * @ORM\JoinColumn(name="id_category", referencedColumnName="id")
      */
     private $category;
 

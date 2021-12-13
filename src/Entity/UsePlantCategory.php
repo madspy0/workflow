@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=UsePlantCategoryRepository::class)
+ * @ORM\Table (name="dzk_land_category")
  */
 class UsePlantCategory
 {
@@ -20,7 +21,7 @@ class UsePlantCategory
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, name="name")
      */
     private $title;
 

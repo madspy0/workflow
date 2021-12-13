@@ -18,7 +18,7 @@ class ArchiveGroundGov
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=21)
+     * @ORM\Column(type="string", length=25)
      */
     private $cadnum;
 

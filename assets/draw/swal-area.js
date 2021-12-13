@@ -10,6 +10,7 @@ import {Collection} from "ol";
 import {dropPlane} from "./drop-plane";
 import {swal_person} from "./swal_person";
 import {getCenter} from "ol/extent";
+import Inputmask from "inputmask";
 
 function clearBeforeClose(modify) {
     map.getInteractions().forEach(f => {
@@ -84,26 +85,33 @@ export async function swalArea(feature) {
                         showConfirmButton: false,
                         showCloseButton: true,
                         customClass: {
-                            htmlContainer: 'swalarea_html'
+                            htmlContainer: 'swalarea_html',
+                            title: 'swalarea_title',
+                            container: 'swalarea_container'
                         },
                         showCancelButton: true,
-                        cancelButtonText: 'Вiдмiнити',
+                        cancelButtonText: 'Вихід',
                         willOpen: () => {
 
                             Swal.getActions().insertAdjacentHTML('afterbegin', data.buttons);
 
-                            categoryForm();
-                            if (feature.get('status') !== 'created') {
-                                toggle_form(document.drawn_area)
+
+                            if (feature.get('status') === 'created') {
+                                //    toggle_form(document.drawn_area)
+                                categoryForm();
+
+                                document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(feature.getGeometry());
+                                document.getElementById('drawn_area_area').value = formatArea(feature.getGeometry());
+
+                                new Litepicker({
+                                    element: document.getElementById('drawn_area_solutedAt'),
+                                    autoRefresh: true,
+                                    lang: "uk-UA",
+                                    format: "DD-MM-YYYY",
+                                    maxDate: Date.now()
+                                });
+
                             }
-                            document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(feature.getGeometry());
-                            document.getElementById('drawn_area_area').value = formatArea(feature.getGeometry());
-                            new Litepicker({
-                                element: document.getElementById('drawn_area_solutedAt'),
-                                autoRefresh: true,
-                                lang: "uk-UA",
-                                format: "DD-MM-YYYY"
-                            });
                             // document.getElementById('dr_close').addEventListener('click', () => {
                             //     Swal.clickCancel()
                             // })
@@ -122,7 +130,7 @@ export async function swalArea(feature) {
                                     icon: "warning",
                                     showCancelButton: true,
                                     confirmButtonText: 'Відобразити',
-                                    cancelButtonText: 'Вiдмiнити',
+                                    cancelButtonText: 'Вихід',
                                     willClose: () => {
                                         clearBeforeClose();
                                     }
@@ -173,23 +181,30 @@ export async function swalArea(feature) {
                                                 showCloseButton: true,
                                                 showCancelButton: true,
                                                 confirmButtonText: 'Архівувати',
-                                                cancelButtonText: 'Вiдмiнити',
+                                                cancelButtonText: 'Вихід',
                                                 willClose: () => {
                                                     clearBeforeClose();
                                                 },
                                                 //    buttonsStyling: false,
                                                 willOpen: () => {
+                                                    let cadnum = document.getElementById("archive_ground_gov_cadnum");
+                                                    new Inputmask({
+                                                        mask: "9{10}:9{2}:9{3}:9{4}",
+                                                        placeholder: "_"
+                                                    }).mask(cadnum);
                                                     new Litepicker({
                                                         element: document.getElementById('archive_ground_gov_registrationAt'),
                                                         autoRefresh: true,
                                                         lang: "uk-UA",
-                                                        format: "DD-MM-YYYY"
+                                                        format: "DD-MM-YYYY",
+                                                        maxDate: Date.now()
                                                     });
                                                     new Litepicker({
                                                         element: document.getElementById('archive_ground_documentDate'),
                                                         autoRefresh: true,
                                                         lang: "uk-UA",
-                                                        format: "DD-MM-YYYY"
+                                                        format: "DD-MM-YYYY",
+                                                        maxDate: Date.now()
                                                     });
                                                     let groundForm = document.archive_ground;
                                                     let groundGovForm = document.archive_ground_gov;
@@ -308,7 +323,6 @@ export async function swalArea(feature) {
                                 }
                                 return response.json()
                             }).then(data => {
-                                // console.log(data.error)
                                 if (data.id) {
                                     feature.set('number', data.id);
                                     feature.set('appl', data.appl);

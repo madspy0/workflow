@@ -112,13 +112,13 @@ class DrawenAreaController extends AbstractController
                 $drawnArea->setAuthor($this->getUser());
                 $em->persist($drawnArea);
                 $em->flush();
-                return new JsonResponse(['success' => true, 'id' => $drawnArea->getId(), 'appl' => $drawnArea->getLastname() . ' ' . $drawnArea->getFirstname()]);
+                return new JsonResponse(['success' => true, 'id' => $drawnArea->getId(),
+                    'appl' => $drawnArea->getNumberSolution(). ' ' .$drawnArea->getSolutedAt()->format('d-m-Y').' '.
+                    round(($drawnArea->getArea() / 10000) * 100) / 100 . ' Га'
+                ]);
             }
             $profile = $this->getUser()->getProfile();
             if ($profile) {
-//                $form->get('firstname')->setData($profile->getFirstname());
-//                $form->get('lastname')->setData($profile->getLastname());
-//                $form->get('middlename')->setData($profile->getMiddlename());
                 $form->get('address')->setData($profile->getAddress());
                 $form->get('link')->setData($profile->getUrl());
             }
@@ -144,6 +144,15 @@ class DrawenAreaController extends AbstractController
         try {
             if ($drawnArea->getAuthor() !== $this->getUser()) {
                 throw new AccessDeniedException('Немає доступу до об\'єкту', Response::HTTP_NOT_ACCEPTABLE);
+            }
+            if($drawnArea->getStatus()!=='created') {
+                $content = $this->renderView(
+                    'statement/modals/swal_area_info.html.twig',
+                    ['drawnArea' => $drawnArea]
+                );
+                $buttons = $this->renderView(
+                    'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
+                return new JsonResponse(['content' => $content, 'buttons' => $buttons]);
             }
             $form = $this->createForm(DrawnAreaType::class, $drawnArea, [
                 'entity_manager' => $em,

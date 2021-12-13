@@ -3,7 +3,7 @@
 <label for="formGovCheck">У разі державної реєстрації</label>
     {{ form_start(formGov) }}
     <div class="row">
-        <div class="col">{{ form_row(formGov.cadnum) }}</div>
+        <div class="col">{{ form_label(formGov.cadnum) }}{{ form_widget(formGov.cadnum) }}</div>
         <div class="col">{{ form_row(formGov.registrationAt) }}</div>
     </div>
 {{ form_end(formGov) }}

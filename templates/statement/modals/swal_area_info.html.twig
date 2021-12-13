@@ -1,0 +1,99 @@
+<div class="container">
+    <fieldset>
+        <legend><span>Інформація про Розпорядчий документ</span></legend>
+
+        <dl class="row text-start">
+            <dt class="col-sm-4 ">
+                Орган влади, який прийняв рішення
+            </dt>
+            <dd class="col-sm-8">
+                {{ drawnArea.localGoverment }}
+            </dd>
+        </dl>
+        <dl class="row text-start">
+            <dt class="col-sm-4 ">
+                Назва документа
+            </dt>
+            <dd class="col-sm-8">
+                {{ drawnArea.documentsType }}
+            </dd>
+        </dl>
+        <dl class="row text-start">
+            <dt class="col-sm-4 ">
+                Номер документа
+            </dt>
+            <dd class="col-sm-8">
+                {{ drawnArea.numberSolution }}
+            </dd>
+        </dl>
+        <dl class="row text-start">
+            <dt class="col-sm-4 ">
+                Дата документа
+            </dt>
+            <dd class="col-sm-8">
+                {{ drawnArea.solutedAt| format_datetime('long','none', locale='uk') }}
+            </dd>
+        </dl>
+        <dl class="row text-start">
+            <dt class="col-sm-4 ">
+                Посилання на сайт
+            </dt>
+            <dd class="col-sm-8">
+                <a href="{{ drawnArea.link }}">{{ drawnArea.link }}</a>
+            </dd>
+        </dl>
+    </fieldset>
+    <fieldset>
+        <legend><span>Інформація про земельну дилянку</span></legend>
+        <dl class="row text-start">
+            <dt class="col-sm-4 ">
+                Адреса
+            </dt>
+            <dd class="col-sm-8">
+                {{ drawnArea.address }}
+            </dd>
+        </dl>
+        <dl class="row text-start">
+            <dt class="col-sm-4 ">
+                Цільове призначення
+            </dt>
+            <dd class="col-sm-8">
+                {{ drawnArea.useCategory.title }}
+                <figcaption>{{ drawnArea.useSubCategory.title }}</figcaption>
+            </dd>
+        </dl>
+    </fieldset>
+    <fieldset>
+        <legend><span>Статус</span></legend>
+        <div class="row align-items-start">
+            <div class="col" id="col-area">
+                <dl class="row">
+                    <dt class="col-sm-4 text-start">Статус:</dt>
+                    <dd class="col-sm-8">{{ drawnArea.status|trans }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-4 text-start">Площа:</dt>
+                    <dd class="col-sm-8">{{ (((drawnArea.area /10000)*100)/100)|round(4) }}  Га</dd>
+                </dl>
+            </div>
+            <div class="col">
+                <dl class="row">
+                    <dt class="col-sm-6 text-start">Створення:</dt>
+                    <dd class="col-sm-6">{{ drawnArea.createdAt| format_datetime('short','short', locale='uk') }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-6 text-start">Редагування:</dt>
+                    <dd class="col-sm-6">{% if(drawnArea.updatedAt) %} {{ drawnArea.updatedAt| format_datetime('short','short', locale='uk') }} {% endif %}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-6 text-start">Відображення на ПКК:</dt>
+                    <dd class="col-sm-6 ">{% if(drawnArea.publishedAt) %} {{ drawnArea.publishedAt| format_datetime('short','short', locale='uk') }} {% endif %}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-6 text-start">Перенесення в архів:</dt>
+                    <dd class="col-sm-6">{% if(drawnArea.archivedAt) %} {{ drawnArea.archivedAt| format_datetime('short','short', locale='uk') }} {% endif %}</dd>
+                </dl>
+            </div>
+        </div>
+    </fieldset>
+</div>

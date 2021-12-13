@@ -28,8 +28,8 @@
 	position: relative;
 	background: #fff;
 	@include border-radius(0.25rem);
-	
-	
+
+
 	&.border-left-decoration {
 		border-left: 3px solid $theme-color-primary;
 	}
@@ -42,35 +42,35 @@
 		left: 0;
 		top: 0;
 	}
-	
+
 	.app-card-header {
 		border-bottom: 1px solid $theme-border-color;
 	}
-	
+
 	.app-card-title {
 		font-size: 1.125rem;
 		margin-bottom: 0;
 	}
-	
+
 	.card-header-action {
-		font-size: 0.875rem;		
+		font-size: 0.875rem;
 		a:hover {
 			text-decoration: underline;
 		}
-		
+
 	}
-	
+
 	.form-select-holder {
 		display: inline-block;
 	}
-	
+
 	.btn-close {
 		padding: 1rem;
 		&:focus {
 			@include box-shadow(none);
 		}
 	}
-	
+
 }
 
 
@@ -79,20 +79,20 @@
 	.stats-type {
 		font-size: 0.875rem;
 		color: $theme-text-color-light;
-		text-transform: uppercase;		
+		text-transform: uppercase;
 	}
-	
+
 	.stats-figure {
 	    font-size: 2rem;
 	    color: $theme-text-color-primary;
 	}
-	
+
 	.stats-meta {
 		font-size: 0.875rem;
 		color: $theme-text-color-light;
-		
+
 	}
-	
+
 }
 
 .app-card-progress-list {
@@ -102,7 +102,7 @@
 		&:hover {
 			.title {
 				color: $theme-text-color-primary;
-				
+
 			}
 		}
 		&:last-child {
@@ -117,9 +117,9 @@
 			font-size: 0.875rem;
 			color: $theme-text-color-light;
 		}
-		
+
 	}
-	
+
 	.item-link-mask {
 		position: absolute;
 		width: 100%;
@@ -135,14 +135,14 @@
 
 .app-card-stats-table {
 	.table {
-		font-size: 0.875rem;		
+		font-size: 0.875rem;
 	}
 	.meta {
 		color: $theme-text-color-light;
 		font-weight: 500;
 		font-size: 0.875rem;
 	}
-	
+
 	.stat-cell {
 		text-align: right;
 	}
@@ -150,7 +150,7 @@
 }
 
 .app-card-basic {
-	
+
 	height: 100%;
 
 
@@ -172,13 +172,13 @@
 		font-size: 1rem;
 		text-align: center;
 		@include border-radius(50%);
-		
+
 		&.icon-holder-mono {
 			background: $theme-bg-light;
 			color: $theme-text-color-light;
 		}
-		
-		svg {			
+
+		svg {
 			width: 24px;
 			height: 24px;
 		}
@@ -198,11 +198,11 @@
 			z-index: 10;
 			right: 0.75rem;
 			top: 0.75rem;
-			
+
 			&:hover {
 				background: $theme-bg-light;
 			}
-			
+
 			.dropdown-menu {
 				font-size: 0.8125rem;
 			}
@@ -220,10 +220,10 @@
         text-align: center;
         position: relative;
         height: 112px;
-        
-       
-        
-        
+
+
+
+
         .app-card-thumb {
 	        overflow: hidden;
 	        position: absolute;
@@ -250,7 +250,7 @@
             right: 0.5rem;
             top: 0.5rem;
         }
-        
+
         .icon-holder {
             font-size: 40px;
             display: inline-block;
@@ -281,7 +281,7 @@
         }
 
     }
-    
+
     .app-doc-title {
 	    font-size: 0.875rem;
 	    a {
@@ -295,7 +295,7 @@
 		    white-space: nowrap;
 		}
     }
-    
+
     .app-doc-meta {
 	    font-size: 0.75rem;
     }
@@ -316,12 +316,12 @@
 
 .app-card-orders-table {
 	.table {
-		font-size: 0.875rem;	
+		font-size: 0.875rem;
 		.cell {
 			border-color: $theme-border-color;
 			color: $theme-text-color-secondary;
 			vertical-align: middle;
-		}	
+		}
 	}
 	.cell{
 		span {
@@ -331,15 +331,15 @@
 			display: block;
 			color: $theme-text-color-light;
 			font-size: 0.75rem;
-			
+
 		}
 	}
-	
+
 	.btn-sm {
 		padding: 0.125rem 0.5rem;
 		font-size: 0.75rem;
 	}
-	
+
 	.truncate {
 		max-width: 250px;
 		display: inline-block;
@@ -363,7 +363,7 @@
 			border-bottom: 2px solid $theme-color-primary;
 			&:hover {
 				background: none;
-				
+
 			}
 		}
 		&:hover {
@@ -371,16 +371,16 @@
 			color: $theme-color-primary;
 		}
 	}
-	
+
 }
 
 .app-pagination {
 	.pagination {
-		font-size: 0.875rem;		
+		font-size: 0.875rem;
 		.page-link {
 			color: $theme-text-color-secondary;
 			padding: 0.25rem 0.5rem
-			
+
 		}
 		.page-item {
 			&.active {
@@ -402,7 +402,7 @@
 
 
 .app-card-accordion {
-	
+
 	.app-card-title {
 		font-size: 1.125rem;
 	}
@@ -410,11 +410,11 @@
 	.faq-accordion {
 		.accordion-item {
 			@include border-radius(0);
-			border: none;	
-			border-bottom: 1px solid $theme-border-color;	
+			border: none;
+			border-bottom: 1px solid $theme-border-color;
 			&:last-child {
 				border-bottom: none;
-			}	
+			}
 		}
 		.accordion-header {
 			border: none;
@@ -429,13 +429,13 @@
 			font-size: 1rem;
 			text-decoration: none;
 			color: $theme-color-primary;
-			
+
 
 			&:after {
 				display: none;
 			}
 		}
-		
+
 		.accordion-body {
 			padding-left: 0;
 			padding-right: 0;
@@ -451,14 +451,14 @@
 	height: 100%;
 	.item {
 		font-size: 0.875rem;
-		
+
 		.profile-image {
 			width: 60px;
 			height: 60px;
 		}
 
 		.item-label {
-			
+
 		}
 		.btn-sm {
 			padding: 0.125rem 0.5rem;
@@ -476,16 +476,16 @@
 	.section-intro {
 		font-size: 0.875rem;
 	}
-	
+
 }
 
 .app-card-settings {
 	font-size: 1rem;
-	
+
 	.form-label {
-		font-weight: bold;		
+		font-weight: bold;
 	}
-	
+
 	.form-control {
 		font-size: 1rem;
 	}
@@ -493,7 +493,7 @@
 
 .app-404-page {
 	padding-top: 2rem;
-	
+
 	.page-title {
 		font-size: 3rem;
 		line-height: 0.8;
@@ -520,7 +520,7 @@
 			font-size: 0.65rem;
 			text-transform: uppercase;
 		}
-		
+
 	}
 	.profile-image {
 		width: 60px;
@@ -528,22 +528,22 @@
 	}
 	.notification-title {
 		font-size: 1.125rem;
-		
+
 	}
-	
+
 	.notification-content {
 		font-size: 0.875rem;
 	}
-	
+
 	.notification-meta {
 		font-size: 0.75rem;
 		color: $theme-text-color-light;
 	}
-	
+
 	.action-link {
 		font-size: 0.875rem;
 	}
-	
+
 	.app-card-footer {
 		background: mix($theme-bg-light, white, 50%);
 	}
@@ -551,7 +551,7 @@
 
 
 // X-Large devices (large desktops, 1200px and up)
-@media (min-width: 1200px) { 	
+@media (min-width: 1200px) {
 	.table-search-form {
 		.form-control {
 			min-width: 300px;

@@ -34,6 +34,8 @@ import {autocomplete} from '@algolia/autocomplete-js';
 import {MousePosition, OverviewMap, ScaleLine} from "ol/control";
 import {createStringXY} from "ol/coordinate";
 import {Point} from "ol/geom";
+import Overlay from "ol/Overlay";
+import {unByKey} from "ol/Observable";
 
 export const itemStyles = {
     'created': new Style({
@@ -79,7 +81,7 @@ export const formatArea = function (polygon) {
     let output;
   //  if (area > 10000) {
  //       output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км \u00B2';
-        output = Math.round((area / 10000) * 100) / 100 + ' ' + 'Га';
+        output = (area / 10000).toFixed(4) + ' ' + 'Га';
     // } else {
     //     output = Math.round(area * 100) / 100 + ' ' + 'м \u00B2';
     // }
@@ -87,12 +89,7 @@ export const formatArea = function (polygon) {
 };
 const formatLoadArea = function (area) {
     let output;
- //   if (area > 10000) {
-        output = Math.round((area / 10000) * 100) / 100 + ' ' + 'Га';
- //       output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км \u00B2';
- //    } else {
- //        output = Math.round(area * 100) / 100 + ' ' + 'м \u00B2';
- //    }
+    output = (area / 10000).toFixed(4) + ' ' + 'Га';
     return output;
 }
 const source = new VectorSource({
@@ -170,7 +167,7 @@ const allPlants = new TileLayer({
     maxZoom: 17,
     transitionEffect: 'resize',
     source: new TileWMSSource({
-        url: 'http://192.168.33.17:8080/geoserver/dd/wms',
+        url: '/ddsource',
         params: {
             'LAYERS': 'ddraw_parcel_all',
             'VERSION': '1.1.1',
@@ -446,11 +443,56 @@ let draw = new Draw({
         }),
     }),
 });
+let measureTooltip;
+let measureTooltipElement;
+function createMeasureTooltip() {
+    if (measureTooltipElement) {
+        measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+    }
+    measureTooltipElement = document.createElement('div');
+    measureTooltipElement.className = 'ol-tooltip ol-tooltip-measure';
+    measureTooltip = new Overlay({
+        element: measureTooltipElement,
+        offset: [0, -15],
+        positioning: 'bottom-center',
+        stopEvent: false,
+        insertFirst: false,
+    });
+    map.addOverlay(measureTooltip);
+}
+let sketch;
+let listener;
+draw.on('drawstart', function (evt) {
+    // set sketch
+    sketch = evt.feature;
+    createMeasureTooltip();
+    /** @type {import("../src/ol/coordinate.js").Coordinate|undefined} */
+    let tooltipCoord = evt.coordinate;
+
+    listener = sketch.getGeometry().on('change', function (evt) {
+        const geom = evt.target;
+        let output;
+        output = formatArea(geom);
+        tooltipCoord = geom.getInteriorPoint().getCoordinates();
+        measureTooltipElement.innerHTML = output;
+        measureTooltip.setPosition(tooltipCoord);
+    });
+});
 draw.on('drawend', function (evt) {
     evt.preventDefault();
     let feature = evt.feature;
     feature.set('number', 'new');
     feature.set('status', 'created');
+    feature.set('appl','доданий')
+    // measureTooltipElement.className = 'ol-tooltip ol-tooltip-static';
+    // measureTooltip.setOffset([0, -7]);
+    // unset sketch
+    sketch = null;
+    // unset tooltip so that a new one can be created
+    measureTooltipElement = null;
+    map.removeOverlay(measureTooltip)
+    createMeasureTooltip();
+    unByKey(listener);
     swalArea(feature)
 })
 draw.setProperties({name: 'drawer'})
@@ -471,15 +513,16 @@ map.addControl(new DrawButtonsControl());
 map.addControl(layerSwitcher);
 
 let elem_coords = document.getElementById('coord');
-let cc = elem_coords.dataset.cc.split(',');
-if (cc.length === 2) {
-    map.getView().setCenter(cc);
-    map.getView().setZoom(elem_coords.dataset.z);
-    plants.setVisible(true);
-    let edit_buttons = document.getElementsByClassName('btn-edit');
-    edit_buttons[0].dispatchEvent(new Event("click"));
+if(!!elem_coords) {
+    let cc = elem_coords.dataset.cc.split(',');
+    if (cc.length === 2) {
+        map.getView().setCenter(cc);
+        map.getView().setZoom(elem_coords.dataset.z);
+        plants.setVisible(true);
+        let edit_buttons = document.getElementsByClassName('btn-edit');
+        edit_buttons[0].dispatchEvent(new Event("click"));
+    }
 }
-
 let rmInteractionsOverlays = () => {
     map.getOverlays().getArray().slice(0).forEach(function (overlay) {
         map.removeOverlay(overlay);
@@ -510,11 +553,13 @@ if (!!document.getElementById('profile_flag')) {
         swal_person()
     }, 1000)
 }
-document.getElementById('profile_button').addEventListener('click', function (e) {
-    e.preventDefault()
-    //  my_modal(true)
-    swal_person()
-})
+if(document.getElementById('profile_button')) {
+    document.getElementById('profile_button').addEventListener('click', function (e) {
+        e.preventDefault()
+        //  my_modal(true)
+        swal_person()
+    })
+}
 let dAutocomplete = autocomplete({
     container: '#searchbox',
     translations: {

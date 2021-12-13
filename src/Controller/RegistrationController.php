@@ -78,7 +78,7 @@ class RegistrationController extends AbstractController
 //                'download_uri' => '/register/file',
                 'download_label' => false,
                 'asset_helper' => true,
-                'label' => false
+                'label' => false,
             ])
             ->add('download', SubmitType::class, ['label' => 'Завантажити'])
             ->getForm();

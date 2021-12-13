@@ -51,6 +51,7 @@ import Swal from "sweetalert2";
         let feature = evt.feature;
         feature.set('number', 'new');
         feature.set('status', 'created')
+        feature.set('appl','доданий')
         // map.getInteractions().forEach(f => {
         //     if(f instanceof Select) {
         //         f.setActive(false)

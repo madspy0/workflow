@@ -1,32 +1,56 @@
 <div class="container">
-    {{ form_start(profileForm,{'attr': {'id': 'form_person_edit'}}) }}
-    <div class="row">
-        <div class="col">
+
+    <dl class="row text-start">
+        <dt class="col-sm-4">
+            Прізвище
+        </dt>
+        <dd class="col-sm-8">
             {{ profile.lastname }}
+        </dd>
+    </dl>
 
+    <dl class="row text-start">
+        <dt class="col-sm-4">
+            Ім'я
+        </dt>
+        <dd class="col-sm-8">
             {{ profile.firstname }}
+        </dd>
+    </dl>
 
+    <dl class="row text-start">
+        <dt class="col-sm-4">
+            По-батькові
+        </dt>
+        <dd class="col-sm-8">
             {{ profile.middlename }}
-        </div>
-        <div class="col">
-            Статистичнi данi
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
+        </dd>
+    </dl>
+
+    <dl class="row text-start">
+        <dt class="col-sm-4">
+            Адреса
+        </dt>
+        <dd class="col-sm-8">
             {{ profile.address }}
             {{ profile.oblast }}
-        </div>
-        <div class="col">
+        </dd>
+    </dl>
+
+    <dl class="row text-start">
+        <dt class="col-sm-4">
+            Телефон
+        </dt>
+        <dd class="col-sm-8">
             {{ profile.phone }}
-        </div>
-    </div>
+        </dd>
+    </dl>
+{#            Статистичнi данi#}
+
     <div class="row">
         <div class="col">
-            {{ form_row(profileForm.url) }}
+            {{ form(profileForm,{'attr': {'id': 'form_person_edit'}}) }}
         </div>
     </div>
-</div>
-{{ form_end(profileForm) }}
 </div>
 
