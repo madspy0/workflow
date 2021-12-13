@@ -39,10 +39,10 @@ class DrawnAreaRepository extends ServiceEntityRepository
     {
         $stmt = $this->getEntityManager()
             ->getConnection()
-            ->prepare('select aa_check_obl(ST_GeomFromText(\'' . $geom . '\')) != 0 as is_valid');
+            ->prepare('select aa_check_obl2(ST_GeomFromText(\'' . $geom . '\')) as is_oblast');
         $stmt->execute();
         $result = $stmt->fetchAll();
-        return $result[0]['is_valid'];
+        return $result[0]['is_oblast'];
     }
     // /**
     //  * @return DrawnArea[] Returns an array of DrawnArea objects
