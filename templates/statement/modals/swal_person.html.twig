@@ -32,8 +32,10 @@
             Адреса
         </dt>
         <dd class="col-sm-8">
-            {{ profile.address }}
-            {{ profile.oblast }}
+            <div>{{ profile.address }}</div>
+            {% if profile.oblast.nameRgn is defined %}
+                <div>{{ profile.oblast.nameRgn }} обл.</div>
+            {% endif %}
         </dd>
     </dl>
 
