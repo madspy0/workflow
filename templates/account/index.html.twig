@@ -45,7 +45,7 @@
                                         </thead>
                                         <tbody>
                                         {% for currentUser in users %}
-                                            {% if 'ROLE_EDITOR' in currentUser.getRoles(true) %}
+                                            {% if ('ROLE_EDITOR' in currentUser.getRoles(true)) or ('ROLE_WAIT' in currentUser.getRoles(true)) %}
                                             <tr>
                                                 <td class="cell">#{{ currentUser.id }}</td>
                                                 <td class="cell"><span class="truncate">{{ currentUser.email }}</span>
