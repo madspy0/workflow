@@ -50,6 +50,10 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         {
             return new RedirectResponse('/register/file/download');
         }
+        if(in_array('ROLE_ACCOUNT', $token->getRoleNames()))
+        {
+            return new RedirectResponse('/account/');
+        }
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }

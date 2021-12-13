@@ -10,7 +10,6 @@ function areaButtonsControl(e) {
             Swal.clickCancel();
             break;
         case 'dr_publ':
-            //console.log(Swal.getHtmlContainer().getElementsByClassName('btn'), e.target.value)
             drawPublish(e.target.value);
             break;
         //    Swal.clickConfirm();

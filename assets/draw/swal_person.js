@@ -28,13 +28,11 @@ export let swal_person = () => {
                                     url = new URL(item[1]);
                                 } catch (ev) {
                                     if (ev instanceof TypeError) {
-
                                         throw new Error('Введіть посилання на сайт');
                                     }
                                 }
                             }
                             if (item[1] === "") {
-
                                 throw new Error('Значення поля ' + item[0] + ' не може бути порожнім');
                             }
                         }
