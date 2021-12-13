@@ -655,3 +655,9 @@ const setActive = (el, active) => {
         }
     }
 )
+
+document.getElementById('profile_button').addEventListener('click', function (e) {
+    e.preventDefault()
+    //  my_modal(true)
+    swal_person()
+})
