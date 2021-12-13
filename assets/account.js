@@ -5,7 +5,6 @@ import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
 import '@fortawesome/fontawesome-free/js/brands'
 import './scss/portal.scss';
-import {swal_person} from "./draw/swal_person";
 
 let account_buttons = document.getElementsByClassName('account-button')
 Array.from(account_buttons).forEach(b=>{
@@ -63,9 +62,5 @@ Array.from(auth_buttons).forEach(b=>{
     })
 })
 
-document.getElementById('profile_button').addEventListener('click', function (e) {
-    e.preventDefault()
-    //  my_modal(true)
-    swal_person()
-})
+
 
