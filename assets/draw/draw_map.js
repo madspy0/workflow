@@ -110,7 +110,7 @@ const source = new VectorSource({
         xhr.onload = function () {
             if (xhr.status === 200) {
                 let geoms = JSON.parse(xhr.response);
-                let status_dict = {'created': 'створений', 'published': 'опублікований', 'archived': 'архівований'}
+                let status_dict = {'created': 'створений', 'published': 'відображений', 'archived': 'архівований'}
                 let formatedDate = (date) => {
                     let current_datetime = new Date(date)
                     return current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds()
