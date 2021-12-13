@@ -32,7 +32,6 @@ class BoardsValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, 'string');
         }
         $repository = $this->em->getRepository(DrawnArea::class);
-        dump($user->getProfile()->getOblast()->getKoatuu2());
         if($repository->inBoard($value) != $user->getProfile()->getOblast()->getKoatuu2()) {
             //    dump($this->context->getPropertyPath('geom'));
             $this->context->buildViolation($constraint->message)
