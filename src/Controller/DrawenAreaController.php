@@ -277,7 +277,10 @@ class DrawenAreaController extends AbstractController
             $archiveGround->setDrawnArea($drawnArea);
             $form = $this->createForm(ArchiveGroundType::class, $archiveGround);
             $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->isSubmitted()) {
+                if (!$form->isValid()) {
+                    throw  new Exception("Заповнюйте поля точно", 412);
+                }
                 $drawnAreaFlowStateMachine->apply($drawnArea, 'to_archive');
                 $drawnArea->setArchivedAt(new DateTimeImmutable('now'));
                 $em->persist($drawnArea);
@@ -290,7 +293,11 @@ class DrawenAreaController extends AbstractController
             $archiveGroundGov->setDrawnArea($drawnArea);
             $formGov = $this->createForm(ArchiveGroundGovType::class, $archiveGroundGov);
             $formGov->handleRequest($request);
-            if ($formGov->isSubmitted() && $formGov->isValid()) {
+            if ($formGov->isSubmitted()) {
+                if (!$formGov->isValid()) {
+                    throw  new Exception("Заповнюйте поля точно", 412);
+                    // throw new HttpException(412, $this->getErrorsFromForm($form)[0]);
+                }
                 $drawnAreaFlowStateMachine->apply($drawnArea, 'to_archive');
                 $drawnArea->setArchivedAt(new DateTimeImmutable('now'));
                 $em->persist($drawnArea);
@@ -306,7 +313,7 @@ class DrawenAreaController extends AbstractController
                 ]);
             return new JsonResponse(['content' => $content]);
         } catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->json(['error' => $exception->getMessage()], 412);
         }
     }
 

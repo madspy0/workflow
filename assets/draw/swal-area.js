@@ -6,9 +6,7 @@ import {categoryForm} from "./category-form";
 import {getArea} from "ol/sphere";
 import Litepicker from "litepicker";
 import {toggle_form} from "./toggle-form";
-import {Collection} from "ol";
 import {dropPlane} from "./drop-plane";
-import {swal_person} from "./swal_person";
 import {getCenter} from "ol/extent";
 import Inputmask from "inputmask";
 
@@ -190,7 +188,7 @@ export async function swalArea(feature) {
                                                     let cadnum = document.getElementById("archive_ground_gov_cadnum");
                                                     new Inputmask({
                                                         mask: "9{10}:9{2}:9{3}:9{4}",
-                                                        placeholder: "_"
+                                                        placeholder: " "
                                                     }).mask(cadnum);
                                                     new Litepicker({
                                                         element: document.getElementById('archive_ground_gov_registrationAt'),
@@ -230,7 +228,8 @@ export async function swalArea(feature) {
                                                             : new FormData(document.archive_ground)
                                                     }).then(response => {
                                                         if (!response.ok) {
-                                                            throw new Error(response.statusText)
+                                                            return response.json().then(Promise.reject.bind(Promise));
+                                                            //   throw new Error(response.statusText)
                                                         }
                                                         return response.json()
                                                     }).then((data) => {
@@ -243,7 +242,7 @@ export async function swalArea(feature) {
                                                     })
                                                         .catch(error => {
                                                             Swal.showValidationMessage(
-                                                                `Request failed: ${error}`
+                                                                `Помилка запиту: ${error.error}`
                                                             )
                                                         })
                                                 }
@@ -259,18 +258,18 @@ export async function swalArea(feature) {
                         },
                         showClass: {
                             popup: `
-      animate__animated
-      animate__lightSpeedInRight
-      animate__fadeInRight
-      animate__faster
-    `
+                              animate__animated
+                              animate__lightSpeedInRight
+                              animate__fadeInRight
+                              animate__faster
+                            `
                         },
                         hideClass: {
                             popup: `
-      animate__animated
-      animate__fadeOutRight
-      animate__faster
-    `
+                              animate__animated
+                              animate__fadeOutRight
+                              animate__faster
+                            `
                         },
                         grow: 'column',
                         width: 550,

@@ -9,13 +9,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=UsePlantCategoryRepository::class)
- * @ORM\Table (name="dzk_land_category")
+ * @ORM\Table (name="public.dzk_land_category")
  */
 class UsePlantCategory
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(type="integer")
      */
     private $id;

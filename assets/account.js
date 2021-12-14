@@ -4,6 +4,14 @@ import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
 import '@fortawesome/fontawesome-free/js/brands'
 import './scss/portal.scss';
+import 'tablesort/tablesort.css';
+const Tablesort = require('tablesort')
+window.Tablesort = Tablesort
+require('tablesort/src/sorts/tablesort.date.js')
+require('tablesort/src/sorts/tablesort.dotsep.js')
+require('tablesort/src/sorts/tablesort.filesize.js')
+require('tablesort/src/sorts/tablesort.monthname.js')
+require('tablesort/src/sorts/tablesort.number.js')
 
 let account_buttons = document.getElementsByClassName('account-button')
 Array.from(account_buttons).forEach(b=>{
@@ -61,5 +69,8 @@ Array.from(auth_buttons).forEach(b=>{
     })
 })
 
-
+let account_table = document.getElementById('account_table');
+if(!!account_table) {
+    new Tablesort(account_table);
+}
 

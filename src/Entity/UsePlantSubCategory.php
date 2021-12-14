@@ -7,13 +7,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=UsePlantSubCategoryRepository::class)
- * @ORM\Table (name="dzk_land_subcategory")
+ * @ORM\Table (name="public.dzk_land_subcategory")
  */
 class UsePlantSubCategory
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(type="integer")
      */
     private $id;

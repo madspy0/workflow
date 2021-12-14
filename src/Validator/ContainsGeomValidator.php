@@ -8,7 +8,6 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\DevelopmentApplication;
 
 class ContainsGeomValidator extends ConstraintValidator
 {

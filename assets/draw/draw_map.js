@@ -224,7 +224,7 @@ let cadastreSource = new TileWMSSource({
 
 let cadastre = new TileLayer({
     source: cadastreSource,
-    visible: 0,
+    visible: 1,
     title: 'Кадастровий поділ',
     maxZoom: 17,
     transition: 300,

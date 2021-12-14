@@ -23,6 +23,7 @@
         "@algolia/autocomplete-js": "^1.5.0",
         "@algolia/autocomplete-theme-classic": "^1.5.0",
         "@popperjs/core": "^2.10.1",
+        "bootstrap-icons": "^1.7.2",
         "inputmask": "^5.0.6",
         "js-year-calendar": "^2.0.0",
         "litepicker": "^2.0.11",
@@ -31,6 +32,7 @@
         "ol": "^6.6.1",
         "ol-layerswitcher": "^3.8.3",
         "sweetalert": "^2.1.2",
-        "sweetalert2": "^11.1.10"
+        "sweetalert2": "^11.1.10",
+        "tablesort": "^5.3.0"
     }
 }

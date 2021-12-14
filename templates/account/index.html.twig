@@ -29,13 +29,14 @@
                         <div class="app-card app-card-orders-table shadow-sm mb-5">
                             <div class="app-card-body">
                                 <div class="table-responsive">
-                                    <table class="table app-table-hover mb-0 text-left">
+                                    <table class="table app-table-hover mb-0 text-left" id="account_table">
                                         <thead>
                                         <tr>
-                                            <th class="cell"></th>
+                                            <th class="cell" data-sort-default></th>
                                             <th class="cell">e-mail</th>
                                             <th class="cell">Користувач</th>
-                                            <th class="cell">Дата підключення</th>
+                                            <th class="cell">Область</th>
+                                            <th class="cell" data-sort-default>Дата підключення</th>
                                             <th class="cell">Дата останнього відвідування</th>
                                             <th class="cell">Ліміт</th>
                                             <th class="cell">Активні</th>
@@ -46,78 +47,75 @@
                                         <tbody>
                                         {% for currentUser in users %}
                                             {% if ('ROLE_EDITOR' in currentUser.getRoles(true)) or ('ROLE_WAIT' in currentUser.getRoles(true)) %}
-                                            <tr>
-                                                <td class="cell">#{{ currentUser.id }}</td>
-                                                <td class="cell"><span class="truncate">{{ currentUser.email }}</span>
-                                                </td>
-                                                <td class="cell">
-                                                    {% if currentUser.profile.lastname is defined %}
-                                                        {{ currentUser.profile.lastname }} {{ currentUser.profile.firstname }} {{ currentUser.profile.middlename }}
-                                                    {% endif %}
-                                                </td>
-                                                <td class="cell">
+                                                <tr>
+                                                    <td class="cell">#{{ currentUser.id }}</td>
+                                                    <td class="cell"><span
+                                                                class="truncate">{{ currentUser.email }}</span>
+                                                    </td>
+                                                    <td class="cell">
+                                                        {% if currentUser.profile.lastname is defined %}
+                                                            {{ currentUser.profile.lastname }} {{ currentUser.profile.firstname }} {{ currentUser.profile.middlename }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="cell">
+                                                        {% if(currentUser.profile.oblast is not null) %}
+                                                            <span>{{ currentUser.profile.oblast.nameRgn }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="cell">
                                                     <span>
                                                         {% if(currentUser.currentAt is not null) %}
                                                             {% set firstLog = repo.getLogEntries(currentUser)|last %}
                                                             {{ firstLog.loggedAt| format_datetime('short','short', locale='uk') }}
                                                         {% endif %}
                                                     </span>
-                                                </td>
-                                                <td class="cell"><span>
-                                                        {% if(currentUser.currentAt is not null) %}
-                                                            {{ currentUser.currentAt | format_datetime('short','short', locale='uk') }}
-                                                        {% endif %}
-                                                    </span>
-                                                </td>
-                                                <td class="cell"><span class="badge bg-success">Нi</span></td>
-                                                {# <td class="cell"><div class="form-check form-switch"><input type="checkbox"{% if user.isDisabled %} checked{% endif %} class="form-check-input"></div></td> #}
-                                                <td class="cell"><span>
-                                                        <button class="account-button {% if currentUser.isDisabled %} active{% endif %}"
-                                                                value="{{ currentUser.id }}">
-{# <span class="icon-text"> #}
-                                                            {# <svg class="icon icon--is-spinning" aria-hidden="true" viewBox="0 0 16 16"><title>Loading</title><g #}
-                                                            {# stroke-width="1" fill="currentColor" stroke="currentColor"><path d="M.5,8a7.5,7.5,0,1,1,1.91,5" #}
-                                                            {# fill="none" stroke="currentColor" #}
-                                                            {# stroke-linecap="round" #}
-                                                            {# stroke-linejoin="round"></path></g> #}
-                                                            {# </svg> #}
-                                                            {# </span> #}
-                                                        </button>
-                                                    </span></td>
-                                                <td class="cell"><span class="badge bg-success">Так</span></td>
-                                                <td class="cell">
-                                                    {% if 'ROLE_EDITOR' in currentUser.getRoles(true) %}
-                                                        <span class="badge bg-success">Так</span>
-                                                    {% else %}
-                                                        {% if ((currentUser.profile != null) and (currentUser.profile.ecp.size != null) and ('ROLE_WAIT' in currentUser.getRoles(true))) %}
-                                                            <button class="btn-sm btn-warning auth-button"
-                                                                    href="{{ path('account_authorize', {'user':currentUser.id}) }}"
-                                                                    value="{{ currentUser.id }}">Авторизовати
-                                                            </button>
+                                                    </td>
+                                                    <td class="cell"><span>
+                                                {% if(currentUser.currentAt is not null) %}
+                                                    {{ currentUser.currentAt | format_datetime('short','short', locale='uk') }}
+                                                {% endif %}
+                                                </span>
+                                                    </td>
+                                                    <td class="cell"><span class="badge bg-success">Hi</span></td>
+                                                    <td class="cell"><span>
+                                                <button class="account-button {% if currentUser.isDisabled %} active{% endif %}"
+                                                        value="{{ currentUser.id }}">
+                                                </button>
+                                                </span></td>
+                                                    <td class="cell"><span class="badge bg-success">Так</span></td>
+                                                    <td class="cell">
+                                                        {% if 'ROLE_EDITOR' in currentUser.getRoles(true) %}
+                                                            <span class="badge bg-success">Так</span>
                                                         {% else %}
-                                                            {% if ('ROLE_WAIT' in currentUser.getRoles(true)) %}
-                                                                <span class="badge bg-warning">Hi</span>
+                                                            {% if ((currentUser.profile != null) and (currentUser.profile.ecp.size != null) and ('ROLE_WAIT' in currentUser.getRoles(true))) %}
+                                                                <button class="btn-sm btn-warning auth-button"
+                                                                        href="{{ path('account_authorize', {'user':currentUser.id}) }}"
+                                                                        value="{{ currentUser.id }}">Авторизовати
+                                                                </button>
+                                                            {% else %}
+                                                                {% if ('ROLE_WAIT' in currentUser.getRoles(true)) %}
+                                                                    <span class="badge bg-warning">Hi</span>
+                                                                {% endif %}
                                                             {% endif %}
                                                         {% endif %}
-                                                    {% endif %}
-                                                </td>
-                                                <td class="cell">
-                                                    {% if ((currentUser.profile != null) and (currentUser.profile.ecp.size != null) and ('ROLE_EDITOR' not in currentUser.getRoles(true))) %}
-                                                        <a class="btn-sm app-btn-secondary"
-                                                           href="{{ path('account_show_file', {'user':currentUser.id}) }}">Файл</a>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
+                                                    </td>
+                                                    <td class="cell">
+                                                        {% if ((currentUser.profile != null) and (currentUser.profile.ecp.size != null) and ('ROLE_EDITOR' not in currentUser.getRoles(true))) %}
+                                                            <a class="btn-sm app-btn-secondary"
+                                                               href="{{ path('account_show_file', {'user':currentUser.id}) }}">Файл</a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
                                             {% endif %}
                                         {% endfor %}
                                         </tbody>
                                     </table>
-                                </div><!--//table-responsive-->
+                                </div>
 
-                            </div><!--//app-card-body-->
-                        </div><!--//app-card-->
+                            </div>
+                        </div>
 
-                    </div><!--//tab-pane-->
+                    </div>
                 </div>
             </div>
         </div>
