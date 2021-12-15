@@ -2,8 +2,10 @@ import Swal from "sweetalert2";
 import {toastFire} from "./swal-area";
 
 export let swal_person = () => {
+    document.body.style.cursor = "progress";
     fetch('/dr_profile/')
         .then(response => {
+            document.body.style.cursor = "default";
             if (!response.ok) {
                 return response.json().then(Promise.reject.bind(Promise));
                 //   throw new Error(response.statusText)
@@ -56,7 +58,7 @@ export let swal_person = () => {
                         })
                         .catch(error => {
                             Swal.showValidationMessage(
-                                `Request failed: ${error}`
+                                `Помилка запиту: ${error.error}`
                             )
                         })
                 },

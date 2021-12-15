@@ -111,10 +111,9 @@
                                         </tbody>
                                     </table>
                                 </div>
-
                             </div>
                         </div>
-
+                        {% include "/statement/pagination.html.twig" with {'next': next, 'previous': previous, 'all': users, 'url':'account_index'} %}
                     </div>
                 </div>
             </div>

@@ -9,7 +9,7 @@ use App\Entity\Profile;
 use App\Form\ArchiveGroundType;
 use App\Form\ArchiveGroundGovType;
 use App\Form\DrawnAreaType;
-use App\Form\ProfileType;
+use App\Form\ProfileTypeOLD;
 use App\Repository\DrawnAreaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -69,7 +69,7 @@ class DrawenAreaController extends AbstractController
                 $user = $tokenStorage->getToken()->getUser();
                 $cond = (array)$user->getProfile();
                 $profile = $cond ? $user->getProfile() : new Profile();
-              //  $form = $this->createForm(ProfileType::class, $profile);
+              //  $form = $this->createForm(ProfileTypeOLD::class, $profile);
                 $form = $this->createFormBuilder($profile)
                     ->add('url',null,['label'=>'Посилання на сайт'])
                     ->getForm()
@@ -259,6 +259,11 @@ class DrawenAreaController extends AbstractController
     public
     function allGeoms(DrawnAreaRepository $repository, SerializerInterface $serializer, Request $request): Response
     {
+//        $h = $request->headers->all();
+//        if (array_key_exists('content-type',$h)&&(("application/json" !== $h['content-type'][0]))) {
+//
+//            return new JsonResponse(['error' => "Ви повинні увійти, щоб отримати доступ"], Response::HTTP_NOT_ACCEPTABLE);
+//        }
         try {
             $geoms = $serializer->serialize($repository->findBy(['author' => $this->getUser()]), 'json', ['groups' => 'geoms']);
             return new Response($geoms);//$this->json($geoms, Response::HTTP_OK);

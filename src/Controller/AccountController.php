@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,24 +16,25 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Vich\UploaderBundle\Handler\DownloadHandler;
 
-/**
- * @Route("/account", name="account")
- */
 class AccountController extends AbstractController
 {
     /**
-     * @Route("/", name="_index")
+     * @Route("/account", name="account_index")
      */
-    public function index(UserRepository $repository, EntityManagerInterface $em): Response
+    public function index(UserRepository $repository, Request $request, EntityManagerInterface $em): Response
     {
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $repository->getPaginator($offset);
         return $this->render('account/index.html.twig', [
-            'users' => $repository->findAll(),
-            'repo' => $em->getRepository('Gedmo\Loggable\Entity\LogEntry')
+            'users' => $paginator,
+            'repo' => $em->getRepository('Gedmo\Loggable\Entity\LogEntry'),
+            'previous' => $offset - UserRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + UserRepository::PAGINATOR_PER_PAGE),
         ]);
     }
 
     /**
-     * @Route("/enable/{user}", name="_enable")
+     * @Route("/account/enable/{user}", name="account_enable")
      */
     public function enable(User $user, EntityManagerInterface $em, MailerInterface $mailer): JsonResponse
     {
@@ -61,7 +63,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/file/{user}", name="_show_file")
+     * @Route("/account/file/{user}", name="account_show_file")
      */
     public function showFile(User $user, DownloadHandler $downloadHandler)
     {
@@ -69,7 +71,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/authorize/{user}", name="_authorize")
+     * @Route("/account/authorize/{user}", name="account_authorize")
      */
     public function authorize(User $user, EntityManagerInterface $em, MailerInterface $mailer): JsonResponse
     {

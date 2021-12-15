@@ -64,11 +64,12 @@ export async function swalArea(feature) {
     } else {
         reqUrl = '/dr_upd/' + feature.get('number')
     }
-
+    document.body.style.cursor = 'progress'
     await fetch(reqUrl, {
         headers: new Headers({'content-type': 'application/json'}),
     })
         .then(response => {
+            document.body.style.cursor = "default";
             if (!response.ok) {
                 return response.json().then(Promise.reject.bind(Promise));
                 //   throw new Error(response.statusText)
@@ -134,10 +135,12 @@ export async function swalArea(feature) {
                                     }
                                 }).then(willPubl => {
                                     if (willPubl.isConfirmed) {
+                                        document.body.style.cursor = "progress";
                                         fetch('/dr_publ/' + feature.get('number'), {
                                             headers: new Headers({'content-type': 'application/json'}),
                                         })
                                             .then(response => {
+                                                document.body.style.cursor = "default";
                                                 if (!response.ok) {
                                                     return response.json().then(Promise.reject.bind(Promise));
                                                     //   throw new Error(response.statusText)
@@ -159,10 +162,12 @@ export async function swalArea(feature) {
                             })
                             document.getElementById('dr_arch').addEventListener('click', (e) => {
                                 e.preventDefault()
+                                document.body.style.cursor = "progress";
                                 fetch('/dr_archground/' + feature.get('number'), {
                                     headers: new Headers({'content-type': 'application/json'}),
                                 })
                                     .then(response => {
+                                        document.body.style.cursor = "default";
                                         if (!response.ok) {
                                             return response.json().then(Promise.reject.bind(Promise));
                                             //   throw new Error(response.statusText)
@@ -220,13 +225,14 @@ export async function swalArea(feature) {
                                                 },
                                                 preConfirm: () => {
                                                     let checkGov = document.getElementById('formGovCheck')
-
+                                                    document.body.style.cursor = "progress";
                                                     return fetch('/dr_archground/' + feature.get('number'), {
                                                         method: "POST",
                                                         body: checkGov.checked ?
                                                             new FormData(document.archive_ground_gov)
                                                             : new FormData(document.archive_ground)
                                                     }).then(response => {
+                                                        document.body.style.cursor = "default";
                                                         if (!response.ok) {
                                                             return response.json().then(Promise.reject.bind(Promise));
                                                             //   throw new Error(response.statusText)
@@ -316,6 +322,7 @@ export async function swalArea(feature) {
                                 method: 'POST',
                                 body: formData
                             }).then(response => {
+                                document.body.style.cursor = "default";
                                 if (!response.ok) {
                                     return response.json().then(Promise.reject.bind(Promise));
                                     //   throw new Error(response.statusText)
