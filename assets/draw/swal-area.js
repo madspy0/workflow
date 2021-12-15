@@ -163,7 +163,8 @@ export async function swalArea(feature) {
                             })
                             document.getElementById('dr_arch').addEventListener('click', (e) => {
                                 e.preventDefault()
-                                if(!feature.get('published') || (new Date(feature.get('published')) < (Date.now() -1))) {
+                                let publdate = new Date(feature.get('published'));
+                                if(Date.now() - publdate.getTime() < 24 * 3600 * 1000 ) {
                                     Swal.fire({
                                         toast: true,
                                         position: 'top-right',

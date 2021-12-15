@@ -6,6 +6,8 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Doctrine\DBAL\Exception as DoctrineException;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -33,12 +35,14 @@ class RegistrationController extends AbstractController
                              UserAuthenticatorInterface  $authenticator,
                              LoginFormAuthenticator      $formAuthenticator): Response
     {
+
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user, ['entity_manager' => $this->getDoctrine()->getManager()]);
+        $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
+            //    try {
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -53,10 +57,25 @@ class RegistrationController extends AbstractController
                 $formAuthenticator,
                 $request);
             return $this->redirectToRoute('app_register_access_file');
+            //          }
+//            catch (DoctrineException $exception)
+//            {
+//                return $this->render('security/register.html.twig', [
+//                    'registrationForm' => $form->createView(),
+//                    'errors' => $exception
+//                ]);
+//            }
+//            catch (Exception $exception)
+//            {
+//                return $this->render('security/register.html.twig', [
+//                    'registrationForm' => $form->createView()
+//        //          ,  'errors' => $exception
+//                ]);
+//            }
         }
-
         return $this->render('security/register.html.twig', [
-            'registrationForm' => $form->createView(),
+            'registrationForm' => $form->createView()
+            //    ,'errors' => []
         ]);
     }
 
@@ -66,7 +85,8 @@ class RegistrationController extends AbstractController
      *
      * @throws TransportExceptionInterface
      */
-    public function accessFile(Request $request, EntityManagerInterface $em, MailerInterface $mailer): Response
+    public
+    function accessFile(Request $request, EntityManagerInterface $em, MailerInterface $mailer): Response
     {
         $profile = $this->getUser()->getProfile();
         $form = $this->createFormBuilder($profile)
@@ -91,13 +111,14 @@ class RegistrationController extends AbstractController
             $flashBag->set('user-register-notice', 'Дякуємо за реєстрацію! Повідомлення про активацію облікового запису буде доставлено на Вашу пошту');
 
             $email = (new TemplatedEmail())
-                ->from(new Address('sokolskiy@dzk.gov.ua', '"Drawer mail bot"'))
+                ->from(new Address('no-answer@dzk.gov.ua', '"Drawer mail bot"'))
                 ->to('sokolskiy@dzk.gov.ua')
                 ->subject('Нова реєстрація ' . $this->getUser()->getEmail())
                 ->htmlTemplate('email/registrationToAccount.html.twig');
             $context['user'] = $this->getUser();
             $email->context($context);
             $mailer->send($email);
+
             return $this->redirectToRoute('app_login');
         }
         return $this->render('security/access-file.html.twig', ['form' => $form->createView()]);
@@ -106,7 +127,8 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register/file/download", name="app_register_access_file_download")
      **/
-    public function accessFileDownload(): BinaryFileResponse
+    public
+    function accessFileDownload(): BinaryFileResponse
     {
         return (new BinaryFileResponse($this->getParameter('kernel.project_dir') . '/assets/docs/granting_access.docx'));
     }
