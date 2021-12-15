@@ -113,8 +113,9 @@ class DrawenAreaController extends AbstractController
                 $em->persist($drawnArea);
                 $em->flush();
                 return new JsonResponse(['success' => true, 'id' => $drawnArea->getId(),
-                    'appl' => $drawnArea->getNumberSolution(). ' ' .$drawnArea->getSolutedAt()->format('d-m-Y').' '.
-                    round(($drawnArea->getArea() / 10000) * 100) / 100 . ' Га'
+                    'appl' => '<div>'.$drawnArea->getNumberSolution(). '</div><div>' .$drawnArea->getSolutedAt()->format('d-m-Y').'</div><div>'.
+                    round(($drawnArea->getArea() / 10000) * 100) / 100 . ' Га</div>',
+                    'published' => $drawnArea->getPublishedAt()
                 ]);
             }
             $profile = $this->getUser()->getProfile();

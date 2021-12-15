@@ -112,6 +112,7 @@ class DrawnArea
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"geoms"})
      */
     private $publishedAt;
 

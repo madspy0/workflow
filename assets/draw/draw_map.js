@@ -124,6 +124,7 @@ const source = new VectorSource({
                         // <div>' + item.status + '</div>',
                         number: item.id,
                         status: item.status,
+                        published: item.publishedAt
                     });
                     //      feature.setStyle(itemStyles[item.status]);
                     source.addFeature(feature);

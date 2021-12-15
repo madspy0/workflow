@@ -151,6 +151,7 @@ export async function swalArea(feature) {
                                                 if (data.success) {
                                                     feature.set('status', 'published');
                                                     feature.setStyle(itemStyles['published']);
+                                                    feature.set('published', Date.now() )
                                                     clearBeforeClose();
                                                     Swal.close()
                                                 }
@@ -162,6 +163,19 @@ export async function swalArea(feature) {
                             })
                             document.getElementById('dr_arch').addEventListener('click', (e) => {
                                 e.preventDefault()
+                                if(!feature.get('published') || (new Date(feature.get('published')) < (Date.now() -1))) {
+                                    Swal.fire({
+                                        toast: true,
+                                        position: 'top-right',
+                                        iconColor: 'red',
+                                        showConfirmButton: false,
+                                        timer: 1500,
+                                        timerProgressBar: true,
+                                        icon: 'error',
+                                        title: 'Переміщення до архіву допускається не раніше ніж через 24 години після відображення на Кадастровій карті'
+                                    })
+                                    return;
+                                }
                                 document.body.style.cursor = "progress";
                                 fetch('/dr_archground/' + feature.get('number'), {
                                     headers: new Headers({'content-type': 'application/json'}),
