@@ -96,7 +96,6 @@ class DrawnArea
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Gedmo\Versioned
      */
     private $link;
 
@@ -146,6 +145,7 @@ class DrawnArea
     /**
      * @ORM\Column(type="geometry")
      * @Groups({"geoms"})
+     * @Gedmo\Versioned
      * @Assert\NotBlank(message="Намалюйте план ділянки")
      * @ContainsGeom(message="Геометрія не є валідною")
      * @Boards(message="Не в межах області")
