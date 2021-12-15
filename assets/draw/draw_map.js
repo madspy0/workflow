@@ -630,7 +630,7 @@ let dAutocomplete = autocomplete({
 });
 const copyright = document.createElement('div');
 copyright.style = 'position:absolute; bottom:0;width:100%;'
-copyright.innerHTML = '<div class="container text-center py-2"><small class="copyright" style="background-color: #f8f8f888">Держгеокадастр &copy;2021</small></div>'
+copyright.innerHTML = '<div class="container text-center py-2"><small class="copyright" style="background-color: #f8f8f888">Держгеокадастр &copy;2021 версія 1.01</small></div>'
 document.body.append(copyright)
 const setActive = (el, active) => {
     const formField = el.parentNode.parentNode
