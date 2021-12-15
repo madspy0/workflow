@@ -169,7 +169,7 @@ export async function swalArea(feature) {
                                         position: 'top-right',
                                         iconColor: 'red',
                                         showConfirmButton: false,
-                                        timer: 1500,
+                                        timer: 3500,
                                         timerProgressBar: true,
                                         icon: 'error',
                                         title: 'Переміщення до архіву допускається не раніше ніж через 24 години після відображення на Кадастровій карті'
