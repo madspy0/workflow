@@ -36,6 +36,7 @@ import {createStringXY} from "ol/coordinate";
 import {Point} from "ol/geom";
 import Overlay from "ol/Overlay";
 import {unByKey} from "ol/Observable";
+import Swal from "sweetalert2";
 
 export const itemStyles = {
     'created': new Style({
@@ -554,6 +555,15 @@ if (!!document.getElementById('profile_flag')) {
         swal_person()
     }, 1000)
 }
+
+setTimeout(() => {Swal.fire({
+    title: 'Програмний модуль працює в режимі дослідної експлуатації.',
+    html: '<a href="/docs/ІнструкціяКористувач_1.01_15.12.21.docx">Інструкція користувача</a>',
+    showCancelButton: true,
+    showConfirmButton: false,
+    cancelButtonText: 'Зрозуміло',
+})},1500)
+
 if(document.getElementById('profile_button')) {
     document.getElementById('profile_button').addEventListener('click', function (e) {
         e.preventDefault()

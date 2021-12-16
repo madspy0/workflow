@@ -9,10 +9,12 @@ if (!!document.getElementById('isDisable')) {
 let profilePhone = document.getElementById('registration_form_profile_phone');
 if (!!profilePhone) {
     Inputmask({mask: "+380 (99) 999-99-99", placeholder: " "}).mask(profilePhone);
-    Inputmask({
-        mask: "*{1,30}@*{1,30}.*{1,30}[.*{1,30}]{1,30}",
-        placeholder: " "
-    }).mask(document.getElementById("registration_form_email"));
+    // Inputmask({
+    //     mask: "*{1,30}@*{1,30}.*{1,30}[.*{1,30}]{1,30}",
+    //     placeholder: " "
+    // }).mask(document.getElementById("registration_form_email"));
+
+
 //    Inputmask({
 //        mask: "\\http[s]://*{+}",
     //    autoUnmask : true,
