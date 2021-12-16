@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\DrawnAreaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Jsor\Doctrine\PostGIS\Types\PostGISType;
 use DateTimeImmutable;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\User as PortalUser;
@@ -14,6 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=DrawnAreaRepository::class)
+ * @ORM\Table(indexes={@ORM\Index(fields={"geom"}, flags={"spartial"}) })
  * @Gedmo\Loggable
  * @ORM\HasLifecycleCallbacks()
  */
@@ -144,7 +146,7 @@ class DrawnArea
     }
 
     /**
-     * @ORM\Column(type="geometry")
+     * @ORM\Column(type=PostGISType::GEOMETRY)
      * @Groups({"geoms"})
      * @Gedmo\Versioned
      * @Assert\NotBlank(message="Намалюйте план ділянки")
