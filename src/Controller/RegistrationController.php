@@ -110,15 +110,17 @@ class RegistrationController extends AbstractController
             $flashBag->get('user-register-notice'); // gets message and clears type
             $flashBag->set('user-register-notice', 'Дякуємо за реєстрацію! Повідомлення про активацію облікового запису буде доставлено на Вашу пошту');
 
-            $email = (new TemplatedEmail())
-                ->from(new Address('no-answer@dzk.gov.ua', '"Drawer mail bot"'))
-                ->to('sokolskiy@dzk.gov.ua')
-                ->subject('Нова реєстрація ' . $this->getUser()->getEmail())
-                ->htmlTemplate('email/registrationToAccount.html.twig');
-            $context['user'] = $this->getUser();
-            $email->context($context);
-            $mailer->send($email);
-
+            $addresses = ['osadchy@land.gov.ua','portal@dzk.gov.ua','sokolskiy@dzk.gov.ua'];
+            foreach ($addresses as $eadress) {
+                $email = (new TemplatedEmail())
+                    ->from(new Address('no-answer@dzk.gov.ua', '"Drawer mail bot"'))
+                    ->to($eadress)
+                    ->subject('Нова реєстрація ' . $this->getUser()->getEmail())
+                    ->htmlTemplate('email/registrationToAccount.html.twig');
+                $context['user'] = $this->getUser();
+                $email->context($context);
+                $mailer->send($email);
+            }
             return $this->redirectToRoute('app_login');
         }
         return $this->render('security/access-file.html.twig', ['form' => $form->createView()]);
