@@ -40,35 +40,3 @@ fos_elastica:
                     analyzer: autocomplete
                 nameObl: ~
                 district: ~
-
-        otg:
-            settings:
-                number_of_shards: 1
-                analysis:
-                    filter:
-                        autocomplete_filter:
-                            type: "edge_ngram"
-                            min_gram: 1
-                            max_gram: 10
-                    analyzer:
-                        autocomplete:
-                            type: custom
-                            tokenizer: lowercase
-                            filter:
-                                - autocomplete_filter
-
-            finder: ~
-            serializer:
-                groups: [otgOut]
-            persistence:
-                elastica_to_model_transformer:
-                    ignore_missing: true
-                # the driver can be orm, mongodb or phpcr
-                driver: orm
-                model: App\Entity\DzkAdminOtg
-                listener: ~
-                provider: ~
-            properties:
-                name_otg:
-                    type: text
-                    analyzer: autocomplete

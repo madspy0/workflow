@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\DevelopmentApplicationRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -11,6 +12,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
@@ -57,7 +59,7 @@ class AccountController extends AbstractController
             $em->persist($user);
             $em->flush();
             return new JsonResponse(['status' => $status], 200);
-        } catch (Exception $exception) {
+        } catch (TransportExceptionInterface $exception) {
             return $this->json(['error' => $exception->getMessage()], $exception->getCode());
         }
     }
@@ -72,11 +74,21 @@ class AccountController extends AbstractController
 
     /**
      * @Route("/account/authorize/{user}", name="account_authorize")
+     *
+     * @throws TransportExceptionInterface
      */
     public function authorize(User $user, EntityManagerInterface $em, MailerInterface $mailer): JsonResponse
     {
         try {
             $user->setRoles(['ROLE_EDITOR']);
+            $email = (new TemplatedEmail())
+                ->from(new Address('sokolskiy@dzk.gov.ua', 'Drawer mail bot'))
+                ->to($user->getEmail())
+                ->subject('Підтвердження реєстрації')
+                ->htmlTemplate('email/enableAccount.html.twig');
+            $context['user'] = $user;
+            $email->context($context);
+            $mailer->send($email);
             $em->persist($user);
             $em->flush();
             return new JsonResponse(['status' => 'ok'], 200);

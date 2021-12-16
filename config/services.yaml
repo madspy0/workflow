@@ -28,7 +28,6 @@ services:
         public: true
         arguments:
             - '@fos_elastica.finder.town'
-            - '@fos_elastica.finder.otg'
 #App\EventListener\LoginSubscriber:
 #    tags:
 #        - { name: 'kernel.event_listener', event: 'security.interactive_login' }

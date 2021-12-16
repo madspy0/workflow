@@ -48,7 +48,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     {
         if(in_array('ROLE_WAIT', $token->getRoleNames()))
         {
-            return new RedirectResponse('/register/file/download');
+            return new RedirectResponse('/register/file');
         }
         if(in_array('ROLE_ACCOUNT', $token->getRoleNames()))
         {

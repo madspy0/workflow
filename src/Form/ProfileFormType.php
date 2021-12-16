@@ -49,18 +49,7 @@ class ProfileFormType extends AbstractType
                 'choice_label' => 'nameRgn',
                 'placeholder' => 'Область',
                 'required' => true
-            ])
-            ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
-                $profile = $event->getData();
-                $form = $event->getForm();
-                dump($profile);
-                if (!$profile) {
-                    return;
-                }
-
-                $profile['url'] = 'aaa';
-                $event->setData($profile);
-            });
+            ]);
     }
 
 //    function onPreSubmit(FormEvent $event)
