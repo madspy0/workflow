@@ -31,6 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="json")
+     * @Gedmo\Versioned
      */
     private $roles = [];
 
@@ -52,6 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="boolean")
+     * @Gedmo\Versioned
      */
     private bool $isDisabled = false;
 

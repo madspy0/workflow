@@ -36,8 +36,10 @@
                                             <th class="cell">e-mail</th>
                                             <th class="cell">Користувач</th>
                                             <th class="cell">Область</th>
-                                            <th class="cell" data-sort-default>Дата підключення</th>
-                                            <th class="cell">Дата останнього відвідування</th>
+                                            <th class="cell" data-sort-default>Дата реєстрації</th>
+                                            <th class="cell">Дата авторизації</th>
+                                            <th class="cell">Дата останньої дії відвідувача</th>
+                                            <th class="cell">Дата останньої дії менеджера</th>
                                             <th class="cell">Ліміт</th>
                                             <th class="cell">Активні</th>
                                             <th class="cell">Авторизований</th>
@@ -64,17 +66,40 @@
                                                     </td>
                                                     <td class="cell">
                                                     <span>
+                                                        {# registration #}
                                                         {% if(currentUser.currentAt is not null) %}
                                                             {% set firstLog = repo.getLogEntries(currentUser)|last %}
                                                             {{ firstLog.loggedAt| format_datetime('short','short', locale='uk') }}
                                                         {% endif %}
                                                     </span>
                                                     </td>
-                                                    <td class="cell"><span>
+                                                    <td class="cell">
+                                                    <span>
+                                                        {# авторизації #}
+                                                        {% set authlog = repo.getLogEntries(currentUser)|filter(v => (v.data.roles is defined) and ('ROLE_EDITOR' in v.data.roles) ) %}
+                                                        {% set authlog  = authlog | last %}
+
+                                                        {% if authlog %}
+                                                            {{ authlog.loggedAt| format_datetime('short','short', locale='uk') }}
+                                                        {% endif %}
+                                                    </span>
+                                                    </td>
+                                                    <td class="cell">
+                                                        <span>
                                                 {% if(currentUser.currentAt is not null) %}
                                                     {{ currentUser.currentAt | format_datetime('short','short', locale='uk') }}
                                                 {% endif %}
-                                                </span>
+                                                     </span>
+                                                    </td>
+                                                    <td class="cell">
+                                                        <span>
+                                                           {#  manager #}
+                                                            {% set manlog = repo.getLogEntries(currentUser)|filter(v => (v.data.isDisabled is defined)) | first  %}
+                                                            {% set mlngt = manlog | length %}
+                                                            {% if (mlngt) > 0 %}
+                                                                {{ manlog.loggedAt| format_datetime('short','short', locale='uk') }}
+                                                            {% endif %}
+                                                        </span>
                                                     </td>
                                                     <td class="cell"><span class="badge bg-success">Hi</span></td>
                                                     <td class="cell"><span>
