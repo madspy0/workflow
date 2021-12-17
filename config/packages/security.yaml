@@ -50,6 +50,6 @@ security:
     - { path: ^/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/register/file, roles: ROLE_WAIT }
-    - { path: ^/account, roles: ROLE_ACCOUNT }
+    - { path: ^/account, roles: [ROLE_ACCOUNT, ROLE_ADMIN] }
     - { path: ^/dr_otg, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/, roles: ROLE_EDITOR }
+    - { path: ^/, roles: [ROLE_EDITOR, ROLE_ADMIN] }
