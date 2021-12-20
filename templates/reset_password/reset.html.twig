@@ -33,7 +33,7 @@
                     <div class="auth-form-container text-start">
                         {{ form_start(resetForm) }}
                         {{ form_row(resetForm.plainPassword) }}
-                        <button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-callback="onLoginSubmit">Встановити пароль</button>
+                        <button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto g-recaptcha" data-sitekey="{{ recaptchaSite }}" data-callback="onLoginSubmit">Встановити пароль</button>
                         {{ form_end(resetForm) }}
                     </div>
                 </div><!--//auth-body-->

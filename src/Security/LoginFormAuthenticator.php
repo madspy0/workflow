@@ -42,7 +42,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             throw new Exception('recaptcha_error');
         }
         $client = HttpClient::create();
-        $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify?secret=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe&response='.$recaptchaResponse);
+        $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify?secret='.$this->getParameter('recaptcha.secret').'&response='.$recaptchaResponse);
         $jsonResponse = json_decode($response->getContent());
         if($jsonResponse->success !== true) {
             throw new Exception('recaptcha_error');

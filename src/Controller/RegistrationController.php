@@ -50,7 +50,7 @@ class RegistrationController extends AbstractController
                 throw new Exception('recaptcha_error');
             }
             $client = HttpClient::create();
-            $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify?secret=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe&response='.$recaptchaResponse);
+            $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify?secret='.$this->getParameter('recaptcha.secret').'&response='.$recaptchaResponse);
             $jsonResponse = json_decode($response->getContent());
             if($jsonResponse->success !== true) {
                 throw new Exception('recaptcha_error');
@@ -86,7 +86,8 @@ class RegistrationController extends AbstractController
 //            }
         }
         return $this->render('security/register.html.twig', [
-            'registrationForm' => $form->createView()
+            'registrationForm' => $form->createView(),
+            'recaptchaSite' => $this->getParameter('recaptcha.site')
             //    ,'errors' => []
         ]);
     }

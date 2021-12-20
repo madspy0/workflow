@@ -54,7 +54,7 @@ class ResetPasswordController extends AbstractController
 //            throw new Exception('recaptcha_error');
 //        }
 //        $client = HttpClient::create();
-//        $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify?secret=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe&response='.$recaptchaResponse);
+//        $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify?secret='.$this->getParameter('recaptcha.secret').'&response='.$recaptchaResponse);
 //        $jsonResponse = json_decode($response->getContent());
 //        if($jsonResponse->success !== true) {
 //            throw new Exception('recaptcha_error');
@@ -68,6 +68,7 @@ class ResetPasswordController extends AbstractController
 
         return $this->render('reset_password/request.html.twig', [
             'requestForm' => $form->createView(),
+            'recaptchaSite' => $this->getParameter('recaptcha.site')
         ]);
     }
 
@@ -134,7 +135,7 @@ class ResetPasswordController extends AbstractController
                 throw new Exception('recaptcha_error');
             }
             $client = HttpClient::create();
-            $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify?secret=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe&response='.$recaptchaResponse);
+            $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify?secret='.$this->getParameter('recaptcha.secret').'&response='.$recaptchaResponse);
             $jsonResponse = json_decode($response->getContent());
             if($jsonResponse->success !== true) {
                 throw new Exception('recaptcha_error');
@@ -159,6 +160,7 @@ class ResetPasswordController extends AbstractController
 
         return $this->render('reset_password/reset.html.twig', [
             'resetForm' => $form->createView(),
+            'recaptchaSite' => $this->getParameter('recaptcha.site')
         ]);
     }
 
