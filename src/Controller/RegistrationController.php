@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Doctrine\DBAL\Exception as DoctrineException;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -28,6 +29,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      *
+     * @throws Exception
      */
     public function register(Request                     $request,
                              UserPasswordHasherInterface $userPasswordHasher,
@@ -43,6 +45,16 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             //    try {
+            $recaptchaResponse = $request->get('g-recaptcha-response');
+            if(!$recaptchaResponse) {
+                throw new Exception('recaptcha_error');
+            }
+            $client = HttpClient::create();
+            $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify?secret=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe&response='.$recaptchaResponse);
+            $jsonResponse = json_decode($response->getContent());
+            if($jsonResponse->success !== true) {
+                throw new Exception('recaptcha_error');
+            }
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,

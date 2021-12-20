@@ -2,6 +2,8 @@
 
 namespace App\Security;
 
+use Exception;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,8 +31,23 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         $this->urlGenerator = $urlGenerator;
     }
 
+    /**
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws Exception
+     */
     public function authenticate(Request $request): PassportInterface
     {
+        $recaptchaResponse = $request->get('g-recaptcha-response');
+        if(!$recaptchaResponse) {
+            throw new Exception('recaptcha_error');
+        }
+        $client = HttpClient::create();
+        $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify?secret=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe&response='.$recaptchaResponse);
+        $jsonResponse = json_decode($response->getContent());
+        if($jsonResponse->success !== true) {
+            throw new Exception('recaptcha_error');
+        }
+
         $email = $request->request->get('email', '');
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);

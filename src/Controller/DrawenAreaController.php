@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -38,7 +39,7 @@ class DrawenAreaController extends AbstractController
      * @Route("/", name="homepage")
      * @Route("/dr_map", name="drawen.draw_map")
      */
-    public function drawMap(Request $request): Response
+    public function drawMap(Request $request, FlashBagInterface $flashBag): Response
     {
         $form = $this->createForm(DrawnAreaType::class, new DrawnArea(), ['action' => $this->generateUrl('drawen.draw_add')]);
         $cc = $request->query->get('cc');
@@ -53,8 +54,13 @@ class DrawenAreaController extends AbstractController
             $cc = null;
             $z = null;
         }
+        $instruct = 0;
+        if(!$flashBag->has('instruct_message')) {
+            $flashBag->add('instruct_message', 'true');
+            $instruct = 1;
+        }
         return $this->render('statement/draw_map.html.twig', ['form' => $form->createView(),
-            'cc' => $cc, 'z' => $z]);
+            'cc' => $cc, 'z' => $z, 'instruct'=>$instruct]);
     }
 
     /**

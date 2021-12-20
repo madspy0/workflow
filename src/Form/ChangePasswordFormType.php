@@ -21,20 +21,20 @@ class ChangePasswordFormType extends AbstractType
                     'attr' => ['autocomplete' => 'new-password'],
                     'constraints' => [
                         new NotBlank([
-                            'message' => 'Please enter a password',
+                            'message' => 'Будь ласка, введіть пароль',
                         ]),
                         new Length([
                             'min' => 6,
-                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            'minMessage' => 'Ваш пароль має містити щонайменше {{ limit }} символів',
                             // max length allowed by Symfony for security reasons
                             'max' => 4096,
                         ]),
                     ],
-                    'label' => 'New password',
+                    'label' => 'Новий пароль',
                 ],
                 'second_options' => [
                     'attr' => ['autocomplete' => 'new-password'],
-                    'label' => 'Repeat Password',
+                    'label' => 'Повторіть пароль',
                 ],
                 'invalid_message' => 'The password fields must match.',
                 // Instead of being set onto the object directly,

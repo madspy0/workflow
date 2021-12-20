@@ -1,22 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
-
+{% block title %}Скинути пароль{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onLoginSubmit(token) {
+            let form = document.getElementById('requestpassform');
+            form.submit();
+        }
+    </script>
+{% endblock %}
 {% block body %}
-    {% for flashError in app.flashes('reset_password_error') %}
-        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
-    {% endfor %}
-    <h1>Reset your password</h1>
+<body  class="app app-reset-password p-0">
+<form method="post" id="requestpassform">
+    <div class="row g-0 app-auth-wrapper">
+        <div class="col-12 col-md-7 col-lg-6 auth-main-col text-center p-5">
+            <div class="d-flex flex-column align-content-end">
+                <div class="app-auth-body mx-auto">
+                    {% for flashError in app.flashes('reset_password_error') %}
+                        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+                    {% endfor %}
+                    <div class="app-auth-branding mb-4"><a class="app-logo" href="{{ path('homepage') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="215" height="215" fill="currentColor" class="bi bi-compass" viewBox="0 0 16 16">
+                                <path d="M8 16.016a7.5 7.5 0 0 0 1.962-14.74A1 1 0 0 0 9 0H7a1 1 0 0 0-.962 1.276A7.5 7.5 0 0 0 8 16.016zm6.5-7.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                                <path d="m6.94 7.44 4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z"/>
+                            </svg>
+                        </a></div>
 
-    {{ form_start(requestForm) }}
-        {{ form_row(requestForm.email) }}
-        <div>
-            <small>
-                Enter your email address and we will send you a
-                link to reset your password.
-            </small>
-        </div>
+                    <h2 class="auth-heading text-center mb-5">Скинути пароль</h2>
+                    <div class="auth-form-container text-start">
+                        {{ form_start(requestForm,{'attr':{'class': 'auth-form resetpass-form'}}) }}
+                            <div class="email mb-3">
+                                {{ form_row(requestForm.email,{'label':'Eлектронна адреса'}) }}
+                            </div><!--//form-group-->
 
-        <button class="btn btn-primary">Send password reset email</button>
-    {{ form_end(requestForm) }}
+                            <div class="text-center">
+                                <button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-callback="onLoginSubmit">Скинути пароль</button>
+                            </div>
+                        {{ form_end(requestForm)  }}
+
+                        <div class="auth-option text-center pt-5"><a class="app-link" href="{{ path('app_login') }}" >Вхід</a> <span class="px-2">|</span> <a class="app-link" href="{{ path('app_register') }}" >Реєстрація</a></div>
+                    </div><!--//auth-form-container-->
+
+                </div><!--//auth-body-->
+
+                <footer class="app-auth-footer">
+                    <div class="container text-center py-3">
+                        <small class="copyright">Держгеокадастр &copy;2021</small>
+                    </div>
+                </footer><!--//app-auth-footer-->
+            </div><!--//flex-column-->
+        </div><!--//auth-main-col-->
+        <div class="col-12 col-md-5 col-lg-6 auth-background-col">
+            <div class="auth-background-holder">
+            </div>
+            <div class="auth-background-mask"></div>
+        </div><!--//auth-background-col-->
+    </div><!--//row-->
+</form>
+</body>
 {% endblock %}

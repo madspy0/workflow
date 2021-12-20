@@ -3,8 +3,10 @@ import Inputmask from "inputmask";
 //const bootstrap = require('bootstrap');
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-if (!!document.getElementById('isDisable')) {
-    Swal.fire('Дякуємо за реєстрацію! Повідомлення про активацію облікового запису буде доставлено на Вашу пошту');
+let elemisDisable = document.getElementById('isDisable');
+if (!!elemisDisable) {
+    Swal.fire(elemisDisable.getAttribute('data-txt'));
+  //  Swal.fire('Дякуємо за реєстрацію! Повідомлення про активацію облікового запису буде доставлено на Вашу пошту');
 }
 let profilePhone = document.getElementById('registration_form_profile_phone');
 if (!!profilePhone) {

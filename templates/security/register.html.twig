@@ -8,7 +8,14 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     {{ encore_entry_script_tags('login') }}
+    <script>
+        function onLoginSubmit(token) {
+            let form = document.forms.registration_form;
+            form.submit();
+        }
+    </script>
 {% endblock %}
 {% block body %}
     <body class="app app-signup p-0">
@@ -91,7 +98,7 @@
                             </div>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto">Зареєструватися
+                            <button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-callback="onLoginSubmit">Зареєструватися
                             </button>
                         </div>
                         {{ form_end(registrationForm) }}

@@ -556,13 +556,17 @@ if (!!document.getElementById('profile_flag')) {
     }, 1000)
 }
 
-setTimeout(() => {Swal.fire({
-    title: 'Програмний модуль працює в режимі дослідної експлуатації.',
-    html: '<a href="/docs/ІнструкціяКористувач_1.01_15.12.21.docx">Інструкція користувача</a>',
-    showCancelButton: true,
-    showConfirmButton: false,
-    cancelButtonText: 'Зрозуміло',
-})},1500)
+if (!!document.getElementById('instruct_flag')) {
+    setTimeout(() => {
+        Swal.fire({
+            title: 'Програмний модуль працює в режимі дослідної експлуатації.',
+            html: '<a href="/docs/ІнструкціяКористувач_1.01_15.12.21.docx">Інструкція користувача</a>',
+            showCancelButton: true,
+            showConfirmButton: false,
+            cancelButtonText: 'Зрозуміло',
+        })
+    }, 1500)
+}
 
 if(document.getElementById('profile_button')) {
     document.getElementById('profile_button').addEventListener('click', function (e) {
