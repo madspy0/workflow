@@ -10,6 +10,7 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('login') }}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 {% endblock %}
 
 {% block body %}
@@ -82,13 +83,14 @@
             </div>
             <div class="auth-background-mask"></div>
             <div class="auth-background-overlay p-3 p-lg-5">
-{#                <div class="d-flex flex-column align-content-end">#}
-{#                    <div class="h-100"></div>#}
+                <div class="d-flex flex-column align-content-end">
+                    <div class="h-100"></div>
 {#                    <div class="overlay-content p-3 p-lg-4 rounded">#}
 {#                        <h5 class="mb-3 overlay-title">Explore Portal Admin Template</h5>#}
 {#                        <div>Portal is a free Bootstrap 5 admin dashboard template. You can download and view the template license <a href="https://themes.3rdwavemedia.com/bootstrap-templates/admin-dashboard/portal-free-bootstrap-admin-dashboard-template-for-developers/">here</a>.</div>#}
 {#                    </div>#}
-{#                </div>#}
+                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                </div>
             </div><!--//auth-background-overlay-->
         </div><!--//auth-background-col-->
         <input type="hidden" name="_csrf_token"
