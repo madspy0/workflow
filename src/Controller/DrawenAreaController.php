@@ -259,21 +259,14 @@ class DrawenAreaController extends AbstractController
         }
     }
     /**
-     * @Route("/drawen_geoms", name="drawen.all_geoms", methods={"GET"})
+     * @Route("/drawen_geoms", name="drawen.all_geoms", methods={"GET"}, condition="request.isXmlHttpRequest()")
      */
-
-    // , condition="request.isXmlHttpRequest()"
     public
     function allGeoms(DrawnAreaRepository $repository, SerializerInterface $serializer, Request $request): Response
     {
-//        $h = $request->headers->all();
-//        if (array_key_exists('content-type',$h)&&(("application/json" !== $h['content-type'][0]))) {
-//
-//            return new JsonResponse(['error' => "Ви повинні увійти, щоб отримати доступ"], Response::HTTP_NOT_ACCEPTABLE);
-//        }
         try {
             $geoms = $serializer->serialize($repository->findBy(['author' => $this->getUser()]), 'json', ['groups' => 'geoms']);
-            return new Response($geoms);//$this->json($geoms, Response::HTTP_OK);
+            return JsonResponse::fromJsonString($geoms, Response::HTTP_OK, ['Access-Control-Allow-Origin'=> 'same-origin']);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

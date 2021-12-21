@@ -3,6 +3,8 @@
 namespace App\Security;
 
 use Exception;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +19,8 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -25,10 +29,12 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     public const LOGIN_ROUTE = 'app_login';
 
     private $urlGenerator;
+    private $params;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator, ContainerBagInterface $params)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->params=$params;
     }
 
     /**
@@ -42,7 +48,10 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             throw new Exception('recaptcha_error');
         }
         $client = HttpClient::create();
-        $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify?secret='.$this->getParameter('recaptcha.secret').'&response='.$recaptchaResponse);
+        try {
+            $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify?secret=' . $this->params->get('recaptcha.secret') . '&response=' . $recaptchaResponse);
+        } catch (NotFoundExceptionInterface|ContainerExceptionInterface|TransportExceptionInterface $e) {
+        }
         $jsonResponse = json_decode($response->getContent());
         if($jsonResponse->success !== true) {
             throw new Exception('recaptcha_error');

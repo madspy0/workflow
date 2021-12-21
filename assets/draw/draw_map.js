@@ -23,7 +23,7 @@ import {Feature} from "ol";
 import {WKT} from "ol/format";
 import {getArea} from "ol/sphere";
 import * as olControl from 'ol/control';
-import {Draw, Modify, Snap,  Select} from "ol/interaction";
+import {Draw, Modify, Snap, Select} from "ol/interaction";
 
 import {swal_person} from "./swal_person";
 import {addInteractions} from "./add-interactions";
@@ -80,9 +80,9 @@ export const defaultStyle = new Style({
 export const formatArea = function (polygon) {
     const area = getArea(polygon);
     let output;
-  //  if (area > 10000) {
- //       output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км \u00B2';
-        output = (area / 10000).toFixed(4) + ' ' + 'Га';
+    //  if (area > 10000) {
+    //       output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'км \u00B2';
+    output = (area / 10000).toFixed(4) + ' ' + 'Га';
     // } else {
     //     output = Math.round(area * 100) / 100 + ' ' + 'м \u00B2';
     // }
@@ -93,52 +93,97 @@ const formatLoadArea = function (area) {
     output = (area / 10000).toFixed(4) + ' ' + 'Га';
     return output;
 }
+const fetchLoader = function (extent, resolution, projection, success, failure) {
+    document.body.style.cursor = "progress";
+    fetch('/drawen_geoms', {
+        credentials: 'same-origin',
+        method: "get",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+        .then(response => {
+            document.body.style.cursor = "default";
+            if (!response.ok) {
+                return response.json().then(Promise.reject.bind(Promise));
+                //   throw new Error(response.statusText)
+            }
+            return (response.json())
+        })
+        .then(data => {
+            let status_dict = {'created': 'створений', 'published': 'відображений', 'archived': 'архівований'}
+            let formatedDate = (date) => {
+                let current_datetime = new Date(date)
+                return current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds()
+            }
+            data.forEach(function (item, index) {
+                let feature = new Feature({
+                    geometry: new WKT().readGeometry(item.geom),
+                    appl: '<div>' + item.numberSolution +
+                        '</div><div> ' + formatedDate(item.createdAt) +
+                        '</div><div> ' + formatLoadArea(item.area) + '</div>',
+                    // <div>' + item.status + '</div>',
+                    number: item.id,
+                    status: item.status,
+                    published: item.publishedAt
+                });
+                //      feature.setStyle(itemStyles[item.status]);
+                source.addFeature(feature);
+            });
+        })
+        .catch(error => {
+            console.error(`Error when removing: ${error}`);
+        });
+}
+
+// const xhrLoader = function (extent, resolution, projection, success, failure) {
+//     // var proj = projection.getCode();
+//     // var url = 'https://ahocevar.com/geoserver/wfs?service=WFS&' +
+//     //     'version=1.1.0&request=GetFeature&typename=osm:water_areas&' +
+//     //     'outputFormat=application/json&srsname=' + proj + '&' +
+//     //     'bbox=' + extent.join(',') + ',' + proj;
+//     let xhr = new XMLHttpRequest();
+//     xhr.open("GET", '/drawen_geoms', false);
+//     let onError = function () {
+//         source.removeLoadedExtent(extent);
+//         failure();
+//     }
+//     xhr.onerror = onError;
+//     xhr.onload = function () {
+//         if (xhr.status === 200) {
+//             let geoms = JSON.parse(xhr.response);
+//             let status_dict = {'created': 'створений', 'published': 'відображений', 'archived': 'архівований'}
+//             let formatedDate = (date) => {
+//                 let current_datetime = new Date(date)
+//                 return current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds()
+//             }
+//             geoms.forEach(function (item, index) {
+//                 let feature = new Feature({
+//                     geometry: new WKT().readGeometry(item.geom),
+//                     appl: '<div>' + item.numberSolution +
+//                         '</div><div> ' + formatedDate(item.createdAt) +
+//                         '</div><div> ' + formatLoadArea(item.area) + '</div>',
+//                     // <div>' + item.status + '</div>',
+//                     number: item.id,
+//                     status: item.status,
+//                     published: item.publishedAt
+//                 });
+//                 //      feature.setStyle(itemStyles[item.status]);
+//                 source.addFeature(feature);
+//             });
+//             // let features = source.getFormat().readFeatures(xhr.responseText);
+//             // source.addFeatures(features);
+//             success();
+//         } else {
+//             onError();
+//         }
+//     }
+//     xhr.send();
+// }
 const source = new VectorSource({
     //format: new GeoJSON(),
-    loader: function (extent, resolution, projection, success, failure) {
-        // var proj = projection.getCode();
-        // var url = 'https://ahocevar.com/geoserver/wfs?service=WFS&' +
-        //     'version=1.1.0&request=GetFeature&typename=osm:water_areas&' +
-        //     'outputFormat=application/json&srsname=' + proj + '&' +
-        //     'bbox=' + extent.join(',') + ',' + proj;
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", '/drawen_geoms');
-        let onError = function () {
-            source.removeLoadedExtent(extent);
-            failure();
-        }
-        xhr.onerror = onError;
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                let geoms = JSON.parse(xhr.response);
-                let status_dict = {'created': 'створений', 'published': 'відображений', 'archived': 'архівований'}
-                let formatedDate = (date) => {
-                    let current_datetime = new Date(date)
-                    return current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds()
-                }
-                geoms.forEach(function (item, index) {
-                    let feature = new Feature({
-                        geometry: new WKT().readGeometry(item.geom),
-                        appl: '<div>' + item.numberSolution +
-                            '</div><div> ' + formatedDate(item.createdAt) +
-                            '</div><div> ' + formatLoadArea(item.area) + '</div>',
-                        // <div>' + item.status + '</div>',
-                        number: item.id,
-                        status: item.status,
-                        published: item.publishedAt
-                    });
-                    //      feature.setStyle(itemStyles[item.status]);
-                    source.addFeature(feature);
-                });
-                // let features = source.getFormat().readFeatures(xhr.responseText);
-                // source.addFeatures(features);
-                success();
-            } else {
-                onError();
-            }
-        }
-        xhr.send();
-    },
+    loader: fetchLoader,
 //    strategy: bbox
 });
 
@@ -447,6 +492,7 @@ let draw = new Draw({
 });
 let measureTooltip;
 let measureTooltipElement;
+
 function createMeasureTooltip() {
     if (measureTooltipElement) {
         measureTooltipElement.parentNode.removeChild(measureTooltipElement);
@@ -462,6 +508,7 @@ function createMeasureTooltip() {
     });
     map.addOverlay(measureTooltip);
 }
+
 let sketch;
 let listener;
 draw.on('drawstart', function (evt) {
@@ -485,7 +532,7 @@ draw.on('drawend', function (evt) {
     let feature = evt.feature;
     feature.set('number', 'new');
     feature.set('status', 'created');
-    feature.set('appl','доданий')
+    feature.set('appl', 'доданий')
     // measureTooltipElement.className = 'ol-tooltip ol-tooltip-static';
     // measureTooltip.setOffset([0, -7]);
     // unset sketch
@@ -515,7 +562,7 @@ map.addControl(new DrawButtonsControl());
 map.addControl(layerSwitcher);
 
 let elem_coords = document.getElementById('coord');
-if(!!elem_coords) {
+if (!!elem_coords) {
     let cc = elem_coords.dataset.cc.split(',');
     if (cc.length === 2) {
         map.getView().setCenter(cc);
@@ -568,7 +615,7 @@ if (!!document.getElementById('instruct_flag')) {
     }, 1500)
 }
 
-if(document.getElementById('profile_button')) {
+if (document.getElementById('profile_button')) {
     document.getElementById('profile_button').addEventListener('click', function (e) {
         e.preventDefault()
         //  my_modal(true)
