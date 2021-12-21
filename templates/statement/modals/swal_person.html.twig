@@ -1,54 +1,78 @@
 <div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <dl class="row text-start">
+                <dt class="col-sm-4">
+                    Прізвище
+                </dt>
+                <dd class="col-sm-8">
+                    {{ profile.lastname }}
+                </dd>
+            </dl>
 
-    <dl class="row text-start">
-        <dt class="col-sm-4">
-            Прізвище
-        </dt>
-        <dd class="col-sm-8">
-            {{ profile.lastname }}
-        </dd>
-    </dl>
+            <dl class="row text-start">
+                <dt class="col-sm-4">
+                    Ім'я
+                </dt>
+                <dd class="col-sm-8">
+                    {{ profile.firstname }}
+                </dd>
+            </dl>
 
-    <dl class="row text-start">
-        <dt class="col-sm-4">
-            Ім'я
-        </dt>
-        <dd class="col-sm-8">
-            {{ profile.firstname }}
-        </dd>
-    </dl>
+            <dl class="row text-start">
+                <dt class="col-sm-4">
+                    По-батькові
+                </dt>
+                <dd class="col-sm-8">
+                    {{ profile.middlename }}
+                </dd>
+            </dl>
 
-    <dl class="row text-start">
-        <dt class="col-sm-4">
-            По-батькові
-        </dt>
-        <dd class="col-sm-8">
-            {{ profile.middlename }}
-        </dd>
-    </dl>
+            <dl class="row text-start">
+                <dt class="col-sm-4">
+                    Адреса
+                </dt>
+                <dd class="col-sm-8">
+                    <div>{{ profile.address }}</div>
+                    {% if profile.oblast.nameRgn is defined %}
+                        <div>{{ profile.oblast.nameRgn }} обл.</div>
+                    {% endif %}
+                </dd>
+            </dl>
 
-    <dl class="row text-start">
-        <dt class="col-sm-4">
-            Адреса
-        </dt>
-        <dd class="col-sm-8">
-            <div>{{ profile.address }}</div>
-            {% if profile.oblast.nameRgn is defined %}
-                <div>{{ profile.oblast.nameRgn }} обл.</div>
-            {% endif %}
-        </dd>
-    </dl>
-
-    <dl class="row text-start">
-        <dt class="col-sm-4">
-            Телефон
-        </dt>
-        <dd class="col-sm-8">
-            {{ profile.phone }}
-        </dd>
-    </dl>
-{#            Статистичнi данi#}
-
+            <dl class="row text-start">
+                <dt class="col-sm-4">
+                    Телефон
+                </dt>
+                <dd class="col-sm-8">
+                    {{ profile.phone }}
+                </dd>
+            </dl>
+        </div>
+        <div class="col-sm-4" id="statistic">
+            <h6>Статистичнi данi</h6>
+            <dl class="row text-start">
+                <dt class="col-sm-5">
+                    Внесено ділянок
+                </dt>
+                <dd class="col-sm-7">
+                    {{ profile.users.drawnAreas.count }}
+                </dd>
+            </dl>
+            {% set fullArea = 0 %}
+            {% for area in profile.users.drawnAreas %}
+                {% set fullArea = fullArea + area.area %}
+            {% endfor %}
+            <dl class="row text-start">
+                <dt class="col-sm-5">
+                    Загальна площа
+                </dt>
+                <dd class="col-sm-7">
+                    {{ (((fullArea /10000)*100)/100)|round(4) }}  Га
+                </dd>
+            </dl>
+        </div>
+    </div>
     <div class="row">
         <div class="col">
             {{ form(profileForm,{'attr': {'id': 'form_person_edit'}}) }}

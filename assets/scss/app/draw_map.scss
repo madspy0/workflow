@@ -155,7 +155,7 @@ $modal-fade-transform: scale(.8);
   margin-top: 0;
   padding-right: 0;
 }
-#col-area {
+#col-area, #statistic {
   background-color: #e9ecef;
   padding-top: 10px;
 }
@@ -285,8 +285,8 @@ $modal-fade-transform: scale(.8);
   }
   .row {
     --bs-gutter-x: .5rem;
-    margin-right: .5rem;
-    margin-left: .5rem;
+    margin-right: .1rem;
+    margin-left: .1rem;
   }
 
   $primary-color: #158da2;
@@ -417,4 +417,10 @@ $modal-fade-transform: scale(.8);
 .swalarea_container {
   height: initial !important;
   bottom: auto !important;
+}
+#statistic {
+  dt {
+    font-size: .7725rem;
+    margin-bottom: .5rem;
+  }
 }

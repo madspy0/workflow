@@ -194,7 +194,7 @@ class DrawnArea
     private $documentsType;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="drawnAreas" )
      */
     private $author;
 

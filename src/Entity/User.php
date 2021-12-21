@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -46,6 +48,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $profile;
 
+    /**
+     * @ORM\OneToMany(targetEntity="DrawnArea", mappedBy="author", fetch="EXTRA_LAZY")
+     */
+    private $drawnAreas;
+
+    /**
+     * @return Collection
+     */
+    public function getDrawnAreas(): Collection
+    {
+        return $this->drawnAreas;
+    }
+
+    public function __construct() {
+        $this->drawnAreas = new ArrayCollection();
+    }
 //    /**
 //     * @ORM\Column(type="boolean")
 //     */

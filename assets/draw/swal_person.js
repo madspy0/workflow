@@ -19,6 +19,11 @@ export let swal_person = () => {
                 showCancelButton: true,
                 confirmButtonText: 'Зберегти',
                 cancelButtonText: 'Вихід',
+                customClass: {
+                    htmlContainer: 'swalarea_html',
+                    title: 'swalarea_title',
+                    // container: 'swalarea_container'
+                },
                 preConfirm: () => {
                     let form = document.getElementById('form_person_edit');
                     let formData = new FormData(form);
