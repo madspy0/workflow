@@ -6,6 +6,7 @@ use App\Entity\DzkAdminObl;
 use App\Entity\DzkAdminOtg;
 use App\Entity\Profile;
 use App\Entity\UsePlantCategory;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -46,6 +47,10 @@ class ProfileFormType extends AbstractType
             ->add('oblast', EntityType::class, [
                 'label' => false,
                 'class' => DzkAdminObl::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->select('partial o.{id, nameRgn}');
+                },
                 'choice_label' => 'nameRgn',
                 'placeholder' => 'Область',
                 'required' => true

@@ -19,32 +19,16 @@ class DzkAdminOblRepository extends ServiceEntityRepository
         parent::__construct($registry, DzkAdminObl::class);
     }
 
-    // /**
-    //  * @return DzkAdminObl[] Returns an array of DzkAdminObl objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getNameRgn($oblast)
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.id = :oblast_id')
+            ->setParameter('oblast_id', $oblast)
+            ->select('Partial o.{id, nameRgn}')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getOneOrNullResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?DzkAdminObl
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

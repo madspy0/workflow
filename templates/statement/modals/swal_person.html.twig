@@ -34,9 +34,7 @@
                 </dt>
                 <dd class="col-sm-8">
                     <div>{{ profile.address }}</div>
-                    {% if profile.oblast.nameRgn is defined %}
-                        <div>{{ profile.oblast.nameRgn }} обл.</div>
-                    {% endif %}
+                    <div>{{ nameRgn }} обл.</div>
                 </dd>
             </dl>
 
@@ -56,19 +54,15 @@
                     Внесено ділянок
                 </dt>
                 <dd class="col-sm-7">
-                    {{ profile.users.drawnAreas.count }}
+                    {{ areacount }}
                 </dd>
             </dl>
-            {% set fullArea = 0 %}
-            {% for area in profile.users.drawnAreas %}
-                {% set fullArea = fullArea + area.area %}
-            {% endfor %}
             <dl class="row text-start">
                 <dt class="col-sm-5">
                     Загальна площа
                 </dt>
                 <dd class="col-sm-7">
-                    {{ (((fullArea /10000)*100)/100)|round(4) }}  Га
+                    {{ fullarea }}  Га
                 </dd>
             </dl>
         </div>

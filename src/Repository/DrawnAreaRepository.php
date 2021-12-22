@@ -44,32 +44,28 @@ class DrawnAreaRepository extends ServiceEntityRepository
         $result = $stmt->fetchAll();
         return $result[0]['is_oblast'];
     }
-    // /**
-    //  * @return DrawnArea[] Returns an array of DrawnArea objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?DrawnArea
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countAreaByUser($user)
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+//        return $this->createQueryBuilder('da')
+//            ->andWhere('da.author = :user')
+//            ->setParameter('user', $user)
+//            ->select('SUM( CAST(da.area as decimal) ) as fullArea')
+//            ->getQuery()
+//            ->getOneOrNullResult();
+        $conn = $this->getEntityManager()
+            ->getConnection();
+        $sql = '
+            SELECT SUM(CAST(da.area as decimal)) as fullarea
+            FROM drawn_area da
+            INNER JOIN public.user uzer ON uzer.id = da.author_id
+            WHERE da.author_id = :user
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(array('user' => $user->getId()));
+        return $stmt->fetch();
     }
-    */
 }

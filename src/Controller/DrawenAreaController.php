@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Entity\ArchiveGround;
 use App\Entity\ArchiveGroundGov;
 use App\Entity\DrawnArea;
+use App\Entity\DzkAdminObl;
 use App\Entity\Profile;
 use App\Form\ArchiveGroundType;
 use App\Form\ArchiveGroundGovType;
 use App\Form\DrawnAreaType;
 use App\Form\ProfileTypeOLD;
 use App\Repository\DrawnAreaRepository;
+use App\Repository\DzkAdminOblRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -69,7 +71,7 @@ class DrawenAreaController extends AbstractController
     public function profile(Request $request, EntityManagerInterface $em, TokenStorageInterface $tokenStorage): Response
     {
         {
-            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+            // $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
             try {
                 $user = $tokenStorage->getToken()->getUser();
@@ -88,9 +90,16 @@ class DrawenAreaController extends AbstractController
                     $em->flush();
                     return new JsonResponse(['success' => true]);
                 }
-
+                $fullArea = $em->getRepository(DrawnArea::class)->countAreaByUser($user);
+                $obl = $em->getRepository(DzkAdminObl::class)->getNameRgn($profile->getOblast()->getId());
                 return new JsonResponse(['content' => $this->render('statement/modals/swal_person.html.twig',
-                    ['profile'=>$profile,'profileForm' => $form->createView()])->getContent()]);
+                    [
+                        'profile'=>$profile,
+                        'fullarea' => round(((($fullArea['fullarea'] /10000)*100)/100), 4),
+                        'nameRgn' => $obl->getNameRgn(),
+                        'areacount' => $user->getDrawnAreas()->count(),
+                        'profileForm' => $form->createView()])->getContent(),
+                    ]);
             } catch (Exception $exception) {
                 return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
