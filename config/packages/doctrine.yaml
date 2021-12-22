@@ -8,8 +8,10 @@ doctrine:
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
-#        dql:
-#            string_functions:
+#        default_entity_manager: default
+        dql:
+            string_functions:
+                to_number: App\DQL\DqlToNumber
 #                ST_IsValid: Jsor\Doctrine\PostGIS\Functions\ST_IsValid
         auto_mapping: true
         mappings:

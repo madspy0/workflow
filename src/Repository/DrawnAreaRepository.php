@@ -54,8 +54,9 @@ class DrawnAreaRepository extends ServiceEntityRepository
 //        return $this->createQueryBuilder('da')
 //            ->andWhere('da.author = :user')
 //            ->setParameter('user', $user)
-//            ->select('SUM( CAST(da.area as decimal) ) as fullArea')
+//            ->select('SUM( TO_NUMBER(da.area) ) as fullArea')
 //            ->getQuery()
+//            ->execute()
 //            ->getOneOrNullResult();
         $conn = $this->getEntityManager()
             ->getConnection();
@@ -95,8 +96,36 @@ class DrawnAreaRepository extends ServiceEntityRepository
             documentsType
             } 
         from App\Entity\DrawnArea da where da.id = :id")
-        ->setParameter('id', $id);
+            ->setParameter('id', $id);
         return $q->getSingleResult();
     }
 
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function getPartialObjDto($id)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->select(
+                            'da.id',
+                            'da.localGoverment',
+                            'da.createdAt',
+                            'da.updatedAt',
+                            'da.address',
+                            'da.link',
+                            'da.numberSolution',
+                            'da.solutedAt',
+                            'da.publishedAt',
+                            'da.archivedAt',
+                            'da.status',
+                            'da.area',
+                            'da.documentsType'
+            )
+                            ->from(DrawnArea::class, 'da')
+                            ->where('da.id = :id')
+            ->setParameter('id', $id);
+
+            return $queryBuilder->getQuery()->getSingleResult()->hydrateSingleResultAs(DrawnArea::class);
+    }
 }
