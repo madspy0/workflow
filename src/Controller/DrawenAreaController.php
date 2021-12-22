@@ -57,12 +57,12 @@ class DrawenAreaController extends AbstractController
             $z = null;
         }
         $instruct = 0;
-        if(!$flashBag->has('instruct_message')) {
+        if (!$flashBag->has('instruct_message')) {
             $flashBag->add('instruct_message', 'true');
             $instruct = 1;
         }
         return $this->render('statement/draw_map.html.twig', ['form' => $form->createView(),
-            'cc' => $cc, 'z' => $z, 'instruct'=>$instruct]);
+            'cc' => $cc, 'z' => $z, 'instruct' => $instruct]);
     }
 
     /**
@@ -77,11 +77,10 @@ class DrawenAreaController extends AbstractController
                 $user = $tokenStorage->getToken()->getUser();
                 $cond = (array)$user->getProfile();
                 $profile = $cond ? $user->getProfile() : new Profile();
-              //  $form = $this->createForm(ProfileTypeOLD::class, $profile);
+                //  $form = $this->createForm(ProfileTypeOLD::class, $profile);
                 $form = $this->createFormBuilder($profile)
-                    ->add('url',null,['label'=>'Посилання на сайт'])
-                    ->getForm()
-                ;
+                    ->add('url', null, ['label' => 'Посилання на сайт'])
+                    ->getForm();
                 $form->handleRequest($request);
                 if ($form->isSubmitted() && $form->isValid()) {
                     $user->setProfile($profile);
@@ -92,18 +91,18 @@ class DrawenAreaController extends AbstractController
                 }
                 $fullArea = $em->getRepository(DrawnArea::class)->countAreaByUser($user);
                 $obl = "";
-                if($profile->getOblast()) {
+                if ($profile->getOblast()) {
                     $obl = $em->getRepository(DzkAdminObl::class)->getNameRgn($profile->getOblast()->getId());
                     $obl = $obl->getNameRgn();
                 }
                 return new JsonResponse(['content' => $this->render('statement/modals/swal_person.html.twig',
                     [
-                        'profile'=>$profile,
-                        'fullarea' => round(((($fullArea['fullarea'] /10000)*100)/100), 4),
+                        'profile' => $profile,
+                        'fullarea' => round(((($fullArea['fullarea'] / 10000) * 100) / 100), 4),
                         'nameRgn' => $obl,
                         'areacount' => $user->getDrawnAreas()->count(),
                         'profileForm' => $form->createView()])->getContent(),
-                    ]);
+                ]);
             } catch (Exception $exception) {
                 return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
@@ -132,8 +131,8 @@ class DrawenAreaController extends AbstractController
                 $em->persist($drawnArea);
                 $em->flush();
                 return new JsonResponse(['success' => true, 'id' => $drawnArea->getId(),
-                    'appl' => '<div>'.$drawnArea->getNumberSolution(). '</div><div>' .$drawnArea->getSolutedAt()->format('d-m-Y').'</div><div>'.
-                    round(($drawnArea->getArea() / 10000) * 100) / 100 . ' Га</div>',
+                    'appl' => '<div>' . $drawnArea->getNumberSolution() . '</div><div>' . $drawnArea->getSolutedAt()->format('d-m-Y') . '</div><div>' .
+                        round(($drawnArea->getArea() / 10000) * 100) / 100 . ' Га</div>',
                     'published' => $drawnArea->getPublishedAt()
                 ]);
             }
@@ -159,49 +158,58 @@ class DrawenAreaController extends AbstractController
     /**
      * @Route("/dr_upd/{id}", name="drawen.draw_upd")
      */
-    public function upd(Request $request, EntityManagerInterface $em, DrawnArea $drawnArea): Response
+    public function upd($id, Request $request, EntityManagerInterface $em, DrawnAreaRepository $drawnAreaRepository, DzkAdminOblRepository $dzkAdminOblRepository): Response
     {
+        //dump($drawnAreaRepository->getPartialObj($id));
         try {
+            $drawnArea = $drawnAreaRepository->getPartialObj($id);
+            $drawnArea->setGeom(null);
             if ($drawnArea->getAuthor() !== $this->getUser()) {
                 throw new AccessDeniedException('Немає доступу до об\'єкту', Response::HTTP_NOT_ACCEPTABLE);
             }
-            if($drawnArea->getStatus()!=='created') {
+            if ($drawnArea->getStatus() !== 'created') {
                 $content = $this->renderView(
                     'statement/modals/swal_area_info.html.twig',
-                    ['drawnArea' => $drawnArea]
+                    [
+                        'drawnArea' => $drawnArea,
+                        'obl' => $dzkAdminOblRepository->getNameRgn($drawnArea->getAuthor()->getProfile()->getOblast()->getId())->getNameRgn()
+                    ]
                 );
                 $buttons = $this->renderView(
                     'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
                 return new JsonResponse(['content' => $content, 'buttons' => $buttons]);
             }
+            // перечитываем partial
+            $em->refresh($drawnArea);
             $form = $this->createForm(DrawnAreaType::class, $drawnArea, [
                 'entity_manager' => $em,
-                'action' => $this->generateUrl('drawen.draw_upd', ['id' => $drawnArea->getId()]),
+                'action' => $this->generateUrl('drawen.draw_upd', ['id' => $id]),
             ]);
             $form->handleRequest($request);
             if ($form->isSubmitted()) {
                 if (!$form->isValid()) {
                     throw  new Exception($this->getErrorsFromForm($form)[0], 412);
-                   // throw new HttpException(412, $this->getErrorsFromForm($form)[0]);
+                    // throw new HttpException(412, $this->getErrorsFromForm($form)[0]);
                 }
+                $em->persist($drawnArea);
+                $em->flush();
                 $this->addFlash(
                     'success',
                     ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
                 );
-                $em->persist($drawnArea);
-                $em->flush();
                 return new JsonResponse(['success' => true]);
             }
             $content = $this->renderView(
                 'statement/modals/swal_area.html.twig',
-                array('form' => $form->createView(), 'drawnArea' => $drawnArea)
+                array('form' => $form->createView(), 'drawnArea' => $drawnArea,
+                    'obl' => $dzkAdminOblRepository->getNameRgn($drawnArea->getAuthor()->getProfile()->getOblast()->getId())->getNameRgn()
+                )
             );
             $buttons = $this->renderView(
                 'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
             return new JsonResponse(['content' => $content, 'buttons' => $buttons]);
-        }
-        catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()], $exception->getCode());
+        } catch (Exception $exception) {
+            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
         }
     }
 
@@ -271,6 +279,7 @@ class DrawenAreaController extends AbstractController
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
     /**
      * @Route("/drawen_geoms", name="drawen.all_geoms", methods={"GET"}, condition="request.isXmlHttpRequest()")
      */
@@ -279,7 +288,7 @@ class DrawenAreaController extends AbstractController
     {
         try {
             $geoms = $serializer->serialize($repository->findBy(['author' => $this->getUser()]), 'json', ['groups' => 'geoms']);
-            return JsonResponse::fromJsonString($geoms, Response::HTTP_OK, ['Access-Control-Allow-Origin'=> 'same-origin']);
+            return JsonResponse::fromJsonString($geoms, Response::HTTP_OK, ['Access-Control-Allow-Origin' => 'same-origin']);
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

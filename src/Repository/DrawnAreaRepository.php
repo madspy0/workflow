@@ -18,6 +18,7 @@ class DrawnAreaRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, DrawnArea::class);
     }
+
     /**
      * Перевіряє валідність полігону
      *
@@ -68,4 +69,34 @@ class DrawnAreaRepository extends ServiceEntityRepository
         $stmt->execute(array('user' => $user->getId()));
         return $stmt->fetch();
     }
+
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function getPartialObj($id)
+    {
+        $q = $this->getEntityManager()->createQuery("select partial 
+            da.{
+            id,
+            localGoverment,
+            createdAt,
+            updatedAt,
+            address,
+            link,
+            numberSolution,
+            solutedAt,
+            publishedAt,
+            archivedAt,
+            status,
+            useCategory,
+            useSubCategory,
+            area,
+            documentsType
+            } 
+        from App\Entity\DrawnArea da where da.id = :id")
+        ->setParameter('id', $id);
+        return $q->getSingleResult();
+    }
+
 }
