@@ -61,7 +61,9 @@
                                                     </td>
                                                     <td class="cell">
                                                         {% if(currentUser.profile.oblast is not null) %}
-                                                            <span>{{ currentUser.profile.oblast.nameRgn }}</span>
+                                                            <span>
+                                                                {{ obls.getNameRgn(currentUser.profile.oblast.id).nameRgn }}
+                                                            </span>
                                                         {% endif %}
                                                     </td>
                                                     <td class="cell">

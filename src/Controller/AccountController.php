@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\DzkAdminObl;
 use App\Entity\User;
 use App\Repository\DevelopmentApplicationRepository;
 use App\Repository\UserRepository;
@@ -30,6 +31,7 @@ class AccountController extends AbstractController
         return $this->render('account/index.html.twig', [
             'users' => $paginator,
             'repo' => $em->getRepository('Gedmo\Loggable\Entity\LogEntry'),
+            'obls' => $em->getRepository(DzkAdminObl::class),
             'previous' => $offset - UserRepository::PAGINATOR_PER_PAGE,
             'next' => min(count($paginator), $offset + UserRepository::PAGINATOR_PER_PAGE),
         ]);
