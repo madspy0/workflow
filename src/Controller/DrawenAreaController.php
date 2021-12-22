@@ -92,11 +92,14 @@ class DrawenAreaController extends AbstractController
                 }
                 $fullArea = $em->getRepository(DrawnArea::class)->countAreaByUser($user);
                 $obl = $em->getRepository(DzkAdminObl::class)->getNameRgn($profile->getOblast()->getId());
+                if($obl) {
+                    $obl = $obl->getNameRgn();
+                }
                 return new JsonResponse(['content' => $this->render('statement/modals/swal_person.html.twig',
                     [
                         'profile'=>$profile,
                         'fullarea' => round(((($fullArea['fullarea'] /10000)*100)/100), 4),
-                        'nameRgn' => $obl->getNameRgn(),
+                        'nameRgn' => $obl,
                         'areacount' => $user->getDrawnAreas()->count(),
                         'profileForm' => $form->createView()])->getContent(),
                     ]);
