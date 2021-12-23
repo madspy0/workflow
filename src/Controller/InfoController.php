@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\City;
 use App\Entity\Region;
-use App\Entity\UsePlantSubCategory;
+// use App\Entity\UsePlantSubCategory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,28 +60,28 @@ class InfoController extends AbstractController
             return new JsonResponse(array('message' => $exception->getMessage()), Response::HTTP_BAD_REQUEST);
         }
     }
-
-    /**
-     * @Route("/sub", name="subcategories", methods={"GET"}, options={"expose"=true})
-     */
-    public function subcategories(Request $request): Response
-    {
-        try {
-            $subcategories = $this->getDoctrine()
-                ->getRepository(UsePlantSubCategory::class)
-                ->findBy(['category' => $request->get('category')],
-                    ['title' => 'ASC']);
-
-            $data = array();
-            foreach ($subcategories as $subcategory) {
-                $data[] = ['id' => $subcategory->getId(), 'name' => $subcategory->getTitle()];
-            }
-
-            return new JsonResponse($data, Response::HTTP_OK);
-
-        } catch (\Exception $exception) {
-
-            return new JsonResponse(array('message' => $exception->getMessage()), Response::HTTP_BAD_REQUEST);
-        }
-    }
+//
+//    /**
+//     * @Route("/sub", name="subcategories", methods={"GET"}, options={"expose"=true})
+//     */
+//    public function subcategories(Request $request): Response
+//    {
+//        try {
+//            $subcategories = $this->getDoctrine()
+//                ->getRepository(UsePlantSubCategory::class)
+//                ->findBy(['category' => $request->get('category')],
+//                    ['title' => 'ASC']);
+//
+//            $data = array();
+//            foreach ($subcategories as $subcategory) {
+//                $data[] = ['id' => $subcategory->getId(), 'name' => $subcategory->getTitle()];
+//            }
+//
+//            return new JsonResponse($data, Response::HTTP_OK);
+//
+//        } catch (\Exception $exception) {
+//
+//            return new JsonResponse(array('message' => $exception->getMessage()), Response::HTTP_BAD_REQUEST);
+//        }
+//    }
 }

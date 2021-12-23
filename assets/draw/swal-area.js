@@ -344,6 +344,13 @@ export async function swalArea(feature) {
                                 }
                                 return response.json()
                             }).then(data => {
+                            //    console.log(data).getElementsByTagName("div");
+                                if(data.area) {
+                                    let paragraphs = feature.get('appl').getElementsByTagName("div")
+                                    let lastParagraph = paragraphs[paragraphs.length-1];
+                                    lastParagraph.parentNode.removeChild(lastParagraph);
+                                    feature.set('appl', feature.get('appl')+ '<div>' + data.area + '</div>')
+                                }
                                 if (data.id) {
                                     feature.set('number', data.id);
                                     feature.set('appl', data.appl);

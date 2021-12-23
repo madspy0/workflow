@@ -146,7 +146,7 @@ class DrawnArea
     }
 
     /**
-     * @ORM\Column(type=PostGISType::GEOMETRY)
+     * @ORM\Column(type="geometry")
      * @Groups({"geoms"})
      * @Gedmo\Versioned
      * @Assert\NotBlank(message="Намалюйте план ділянки")
@@ -168,7 +168,7 @@ class DrawnArea
 
     /**
      * @Groups({"geoms"})
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="decimal", precision=32, scale=10)
      */
     private $area;
 
@@ -206,9 +206,7 @@ class DrawnArea
      * @ORM\OneToOne(targetEntity=ArchiveGroundGov::class, mappedBy="drawnArea", cascade={"persist", "remove"})
      */
     private $archiveGroundGov;
-    /**
-     * @return mixed
-     */
+
     public function getArea()
     {
         return $this->area;

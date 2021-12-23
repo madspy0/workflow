@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=UsePlantSubCategoryRepository::class)
- * @ORM\Table (name="public.dzk_land_subcategory")
+ * @ORM\Table(name="dzk_land_subcategory", schema="public")
  */
 class UsePlantSubCategory
 {

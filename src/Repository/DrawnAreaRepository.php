@@ -48,27 +48,27 @@ class DrawnAreaRepository extends ServiceEntityRepository
 
     /**
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
      */
     public function countAreaByUser($user)
     {
-//        return $this->createQueryBuilder('da')
-//            ->andWhere('da.author = :user')
-//            ->setParameter('user', $user)
-//            ->select('SUM( TO_NUMBER(da.area) ) as fullArea')
-//            ->getQuery()
-//            ->execute()
-//            ->getOneOrNullResult();
-        $conn = $this->getEntityManager()
-            ->getConnection();
-        $sql = '
-            SELECT SUM(CAST(da.area as decimal)) as fullarea
-            FROM drawn_area da
-            INNER JOIN public.user uzer ON uzer.id = da.author_id
-            WHERE da.author_id = :user
-            ';
-        $stmt = $conn->prepare($sql);
-        $stmt->execute(array('user' => $user->getId()));
-        return $stmt->fetch();
+        return $this->createQueryBuilder('da')
+            ->andWhere('da.author = :user')
+            ->setParameter('user', $user)
+            ->select('SUM( da.area ) as fullArea')
+            ->getQuery()
+            ->getSingleResult();
+//        $conn = $this->getEntityManager()
+//            ->getConnection();
+//        $sql = '
+//            SELECT SUM(CAST(da.area as decimal)) as fullarea
+//            FROM drawn_area da
+//            INNER JOIN public.user uzer ON uzer.id = da.author_id
+//            WHERE da.author_id = :user
+//            ';
+//        $stmt = $conn->prepare($sql);
+//        $stmt->execute(array('user' => $user->getId()));
+//        return $stmt->fetch();
     }
 
     /**
@@ -108,24 +108,24 @@ class DrawnAreaRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->select(
-                            'da.id',
-                            'da.localGoverment',
-                            'da.createdAt',
-                            'da.updatedAt',
-                            'da.address',
-                            'da.link',
-                            'da.numberSolution',
-                            'da.solutedAt',
-                            'da.publishedAt',
-                            'da.archivedAt',
-                            'da.status',
-                            'da.area',
-                            'da.documentsType'
+                'da.id',
+                'da.localGoverment',
+                'da.createdAt',
+                'da.updatedAt',
+                'da.address',
+                'da.link',
+                'da.numberSolution',
+                'da.solutedAt',
+                'da.publishedAt',
+                'da.archivedAt',
+                'da.status',
+                'da.area',
+                'da.documentsType'
             )
-                            ->from(DrawnArea::class, 'da')
-                            ->where('da.id = :id')
+            ->from(DrawnArea::class, 'da')
+            ->where('da.id = :id')
             ->setParameter('id', $id);
 
-            return $queryBuilder->getQuery()->getSingleResult()->hydrateSingleResultAs(DrawnArea::class);
+        return $queryBuilder->getQuery()->getSingleResult()->hydrateSingleResultAs(DrawnArea::class);
     }
 }

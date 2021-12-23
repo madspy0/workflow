@@ -98,7 +98,7 @@ class DrawenAreaController extends AbstractController
                 return new JsonResponse(['content' => $this->render('statement/modals/swal_person.html.twig',
                     [
                         'profile' => $profile,
-                        'fullarea' => round(((($fullArea['fullarea'] / 10000) * 100) / 100), 4),
+                        'fullArea' => round(((($fullArea['fullArea'] / 10000) * 100) / 100), 4),
                         'nameRgn' => $obl,
                         'areacount' => $user->getDrawnAreas()->count(),
                         'profileForm' => $form->createView()])->getContent(),
@@ -141,9 +141,14 @@ class DrawenAreaController extends AbstractController
                 $form->get('address')->setData($profile->getAddress());
                 $form->get('link')->setData($profile->getUrl());
             }
+            $obl = "";
+            if ($profile->getOblast()) {
+                $obl = $em->getRepository(DzkAdminObl::class)->getNameRgn($profile->getOblast()->getId());
+                $obl = $obl->getNameRgn();
+            }
             $content = $this->renderView(
                 'statement/modals/swal_area.html.twig',
-                array('form' => $form->createView(), 'drawnArea' => $drawnArea)
+                array('form' => $form->createView(), 'drawnArea' => $drawnArea, 'obl' => $obl)
             );
             $buttons = $this->renderView(
                 'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
@@ -197,7 +202,7 @@ class DrawenAreaController extends AbstractController
                     'success',
                     ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
                 );
-                return new JsonResponse(['success' => true]);
+                return new JsonResponse(['success' => true, 'area'=>$drawnArea->getArea()]);
             }
             $content = $this->renderView(
                 'statement/modals/swal_area.html.twig',
