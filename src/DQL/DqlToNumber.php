@@ -21,7 +21,7 @@ class DqlToNumber extends FunctionNode
     public function parse(\Doctrine\ORM\Query\Parser $parser) {
         $parser->match(Lexer::T_IDENTIFIER);
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
-        $this->field = $parser->StringPrimary();
+        $this->field = $parser->ScalarExpression();
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 }

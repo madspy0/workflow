@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=UsePlantCategoryRepository::class)
- * @ORM\Table (name="public.dzk_land_category")
+ * @ORM\Table(name="dzk_land_category", schema="public")
  */
 class UsePlantCategory
 {
