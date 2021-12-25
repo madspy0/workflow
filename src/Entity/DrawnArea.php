@@ -168,9 +168,9 @@ class DrawnArea
 
     /**
      * @Groups({"geoms"})
-     * @ORM\Column(type="decimal", precision=32, scale=10)
+     * @ORM\Column(type="float", precision=32, scale=10)
      */
-    private $area;
+    private ?float $area;
 
     /**
      * @return mixed
@@ -207,7 +207,10 @@ class DrawnArea
      */
     private $archiveGroundGov;
 
-    public function getArea()
+    /**
+     * @return float
+     */
+    public function getArea(): ?float
     {
         return $this->area;
     }

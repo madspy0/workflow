@@ -108,7 +108,7 @@ class DrawnAreaType extends AbstractType
     {
         $form = $event->getForm();
         $data = $event->getData();
-        $data->setArea($this->formatArea($data->getArea()));
+        //$data->setArea($this->formatArea($data->getArea()));
         $this->addElements($form, $data->getUseCategory());
     }
 
@@ -126,14 +126,8 @@ class DrawnAreaType extends AbstractType
         ));
     }
 
-    protected function formatArea($area)
+    protected function formatArea($area): float
     {
-        $pf = mb_convert_encoding('&#x00B2;', 'UTF-8', 'HTML-ENTITIES');
-//        if ($area > 10000) {
-        $output = round(($area / 10000) * 100) / 100 . ' Га';
-//        } else {
-//            $output = round($area * 100) / 100 . ' м ' . $pf;
-//        }
-        return $output;
+        return round(($area / 10000) * 100) / 100;
     }
 }

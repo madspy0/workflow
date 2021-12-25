@@ -88,7 +88,7 @@ export const formatArea = function (polygon) {
     // }
     return output;
 };
-const formatLoadArea = function (area) {
+export const formatLoadArea = function (area) {
     let output;
     output = (area / 10000).toFixed(4) + ' ' + 'Га';
     return output;
@@ -115,15 +115,16 @@ const fetchLoader = function (extent, resolution, projection, success, failure) 
             let status_dict = {'created': 'створений', 'published': 'відображений', 'archived': 'архівований'}
             let formatedDate = (date) => {
                 let current_datetime = new Date(date)
-                return current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds()
+                return current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear()
+                    // + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds()
             }
             data.forEach(function (item, index) {
                 let feature = new Feature({
                     geometry: new WKT().readGeometry(item.geom),
                     appl: '<div>' + item.numberSolution +
-                        '</div><div> ' + formatedDate(item.createdAt) +
-                        '</div><div> ' + formatLoadArea(item.area) + '</div>',
+                        '</div><div>' + formatedDate(item.createdAt) + '</div>',
                     // <div>' + item.status + '</div>',
+                    area: '<div>' + formatLoadArea(item.area) + '</div>',
                     number: item.id,
                     status: item.status,
                     published: item.publishedAt

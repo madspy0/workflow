@@ -43,7 +43,7 @@ class DrawenAreaController extends AbstractController
      */
     public function drawMap(Request $request, FlashBagInterface $flashBag): Response
     {
-        $form = $this->createForm(DrawnAreaType::class, new DrawnArea(), ['action' => $this->generateUrl('drawen.draw_add')]);
+       // $form = $this->createForm(DrawnAreaType::class, new DrawnArea(), ['action' => $this->generateUrl('drawen.draw_add')]);
         $cc = $request->query->get('cc');
         $temp = explode(',', $cc);
         if (count($temp) == 2) {
@@ -61,7 +61,8 @@ class DrawenAreaController extends AbstractController
             $flashBag->add('instruct_message', 'true');
             $instruct = 1;
         }
-        return $this->render('statement/draw_map.html.twig', ['form' => $form->createView(),
+        return $this->render('statement/draw_map.html.twig', [
+            //'form' => $form->createView(),
             'cc' => $cc, 'z' => $z, 'instruct' => $instruct]);
     }
 
@@ -131,8 +132,8 @@ class DrawenAreaController extends AbstractController
                 $em->persist($drawnArea);
                 $em->flush();
                 return new JsonResponse(['success' => true, 'id' => $drawnArea->getId(),
-                    'appl' => '<div>' . $drawnArea->getNumberSolution() . '</div><div>' . $drawnArea->getSolutedAt()->format('d-m-Y') . '</div><div>' .
-                        round(($drawnArea->getArea() / 10000) * 100) / 100 . ' Га</div>',
+                    'appl' => '<div>' . $drawnArea->getNumberSolution() . '</div><div>' . $drawnArea->getSolutedAt()->format('d-m-Y') . '</div>',
+                    'area' => $drawnArea->getArea(),
                     'published' => $drawnArea->getPublishedAt()
                 ]);
             }
@@ -165,10 +166,10 @@ class DrawenAreaController extends AbstractController
      */
     public function upd($id, Request $request, EntityManagerInterface $em, DrawnAreaRepository $drawnAreaRepository, DzkAdminOblRepository $dzkAdminOblRepository): Response
     {
-        //dump($drawnAreaRepository->getPartialObj($id));
         try {
             $drawnArea = $drawnAreaRepository->getPartialObj($id);
-            $drawnArea->setGeom(null);
+            //dump($drawnArea);
+            //$drawnArea->setGeom(null);
             if ($drawnArea->getAuthor() !== $this->getUser()) {
                 throw new AccessDeniedException('Немає доступу до об\'єкту', Response::HTTP_NOT_ACCEPTABLE);
             }
@@ -202,7 +203,7 @@ class DrawenAreaController extends AbstractController
                     'success',
                     ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
                 );
-                return new JsonResponse(['success' => true, 'area'=>$drawnArea->getArea()]);
+                return new JsonResponse(['success' => true, 'area'=>$drawnArea->getArea()], 200);
             }
             $content = $this->renderView(
                 'statement/modals/swal_area.html.twig',
@@ -214,7 +215,9 @@ class DrawenAreaController extends AbstractController
                 'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
             return new JsonResponse(['content' => $content, 'buttons' => $buttons]);
         } catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
+            return $this->json(['error' => $exception->getMessage()]
+            //    , $exception->getStatusCode()
+            );
         }
     }
 

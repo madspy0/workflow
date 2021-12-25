@@ -126,6 +126,7 @@ class DrawnAreaRepository extends ServiceEntityRepository
             ->where('da.id = :id')
             ->setParameter('id', $id);
 
-        return $queryBuilder->getQuery()->getSingleResult()->hydrateSingleResultAs(DrawnArea::class);
+        return $queryBuilder->getQuery()->getResult();
+            //->hydrateSingleResultAs(DrawnArea::class);
     }
 }

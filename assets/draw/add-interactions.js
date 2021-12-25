@@ -93,7 +93,7 @@ export function addInteractions() {
             let selected = selectMove.getFeatures().getArray()[0];
             if (selected != null) {
                 document.body.style.cursor = 'pointer';
-                let name = selected.get('appl');
+                let name = selected.get('appl') + selected.get('area');
                 let geom = selected.get('geometry');
                 if (geom) {
                     let tooltipCoord = geom.getInteriorPoint().getCoordinates();

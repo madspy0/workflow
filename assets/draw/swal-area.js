@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 import {Modify, Select, Snap} from "ol/interaction";
-import {formatArea, itemStyles, map} from "./draw_map";
+import {formatArea, formatLoadArea, itemStyles, map} from "./draw_map";
 import {WKT} from "ol/format";
 import {categoryForm} from "./category-form";
 import {getArea} from "ol/sphere";
@@ -344,22 +344,18 @@ export async function swalArea(feature) {
                                 }
                                 return response.json()
                             }).then(data => {
-                            //    console.log(data).getElementsByTagName("div");
                                 if(data.area) {
-                                    let paragraphs = feature.get('appl').getElementsByTagName("div")
-                                    let lastParagraph = paragraphs[paragraphs.length-1];
-                                    lastParagraph.parentNode.removeChild(lastParagraph);
-                                    feature.set('appl', feature.get('appl')+ '<div>' + data.area + '</div>')
+                                    feature.set('area',formatLoadArea(data.area))
                                 }
                                 if (data.id) {
                                     feature.set('number', data.id);
                                     feature.set('appl', data.appl);
-                                    clearBeforeClose()
-                                    Swal.close()
                                 }
+                                clearBeforeClose()
+                                Swal.close()
                             }).catch(error => {
                                 Swal.showValidationMessage(
-                                    `Помилка запиту: ${error.error}`
+                                    `Помилка запиту: ${error}`
                                 )
                             })
                         }
