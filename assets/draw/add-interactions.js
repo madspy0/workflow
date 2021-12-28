@@ -57,12 +57,14 @@ export function addInteractions() {
         selectMove.setActive(false)
         let sketch = e.features.getArray()[0];
         sketch.getGeometry().on('change', function (evt) {
-            document.getElementById('drawn_area_area').value = formatArea(evt.target);
+            let temp = formatArea(evt.target);
+            document.getElementById('drawn_area_area').value = temp;
         });
     })
     modifyInteraction.on("modifyend", function (e) {
         selectClick.setActive(true)
         selectMove.setActive(true)
+        e.features.getArray()[0].set('area',document.getElementById('drawn_area_area').value);
         document.getElementById('drawn_area_geom').value = new WKT().writeGeometry(e.features.getArray()[0].getGeometry());
     })
 

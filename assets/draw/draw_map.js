@@ -533,7 +533,8 @@ draw.on('drawend', function (evt) {
     let feature = evt.feature;
     feature.set('number', 'new');
     feature.set('status', 'created');
-    feature.set('appl', 'доданий')
+    feature.set('appl', '<div>доданий</div>');
+    feature.set('area',measureTooltip.element.textContent)
     // measureTooltipElement.className = 'ol-tooltip ol-tooltip-static';
     // measureTooltip.setOffset([0, -7]);
     // unset sketch
