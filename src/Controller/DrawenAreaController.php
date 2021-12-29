@@ -13,9 +13,13 @@ use App\Form\DrawnAreaType;
 use App\Form\ProfileTypeOLD;
 use App\Repository\DrawnAreaRepository;
 use App\Repository\DzkAdminOblRepository;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\Exception\RetryableException;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -24,6 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -41,8 +46,9 @@ class DrawenAreaController extends AbstractController
      * @Route("/", name="homepage")
      * @Route("/dr_map", name="drawen.draw_map")
      */
-    public function drawMap(Request $request, FlashBagInterface $flashBag): Response
+    public function drawMap(Request $request, SessionInterface  $seesion): Response
     {
+        $flashBag = $seesion->getBag('flashes');
        // $form = $this->createForm(DrawnAreaType::class, new DrawnArea(), ['action' => $this->generateUrl('drawen.draw_add')]);
         $cc = $request->query->get('cc');
         $temp = explode(',', $cc);
@@ -163,6 +169,7 @@ class DrawenAreaController extends AbstractController
 
     /**
      * @Route("/dr_upd/{id}", name="drawen.draw_upd")
+     * @throws DBALException
      */
     public function upd($id, Request $request, EntityManagerInterface $em, DrawnAreaRepository $drawnAreaRepository, DzkAdminOblRepository $dzkAdminOblRepository): Response
     {
@@ -214,10 +221,26 @@ class DrawenAreaController extends AbstractController
             $buttons = $this->renderView(
                 'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
             return new JsonResponse(['content' => $content, 'buttons' => $buttons]);
-        } catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()]
-            //    , $exception->getStatusCode()
-            );
+        }
+//        catch (DBALException $e) {
+//            $message = sprintf('DBALException [%i]: %s', $e->getCode(), $e->getMessage());
+//        } catch (PDOException $e) {
+//            $message = sprintf('PDOException [%i]: %s', $e->getCode(), $e->getMessage());
+//        }
+//        catch (RetryableException $e) {
+//            $e = FlattenException::create($e);
+//            return $this->json(['error' => $e->getMessage()]
+//                , $e->getStatusCode()
+//            );
+//        }
+
+        catch (\Throwable $exception) {
+            $exception = FlattenException::create($exception);
+            return $this->json(['error' => $exception->getStatusCode() == 404 ? 'Method not found' : 'Unknown error occurred'], $exception->getStatusCode());
+            //return Response::create($handler->getHtml($exception), $exception->getStatusCode(), $exception->getHeaders());
+//                $this->json(['error' => $exception->getMessage()]
+//                , $exception->getStatusCode()
+//            );
         }
     }
 
@@ -240,7 +263,8 @@ class DrawenAreaController extends AbstractController
             $em->flush();
             return new JsonResponse(['success' => true]);
         } catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            $exception = FlattenException::create($exception);
+            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
         }
     }
 
@@ -263,7 +287,8 @@ class DrawenAreaController extends AbstractController
             $em->flush();
             return new JsonResponse(['success' => true]);
         } catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            $exception = FlattenException::create($exception);
+            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
         }
     }
 
@@ -284,7 +309,8 @@ class DrawenAreaController extends AbstractController
             $em->flush();
             return new JsonResponse(['success' => true]);
         } catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            $exception = FlattenException::create($exception);
+            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
         }
     }
 
@@ -298,7 +324,8 @@ class DrawenAreaController extends AbstractController
             $geoms = $serializer->serialize($repository->findBy(['author' => $this->getUser()]), 'json', ['groups' => 'geoms']);
             return JsonResponse::fromJsonString($geoms, Response::HTTP_OK, ['Access-Control-Allow-Origin' => 'same-origin']);
         } catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            $exception = FlattenException::create($exception);
+            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
         }
     }
 
