@@ -10,35 +10,30 @@ use App\Entity\Profile;
 use App\Form\ArchiveGroundType;
 use App\Form\ArchiveGroundGovType;
 use App\Form\DrawnAreaType;
-use App\Form\ProfileTypeOLD;
 use App\Repository\DrawnAreaRepository;
 use App\Repository\DzkAdminOblRepository;
 use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Exception\ConnectionException;
-use Doctrine\DBAL\Exception\RetryableException;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
-
+use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\Exception\RetryableException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
 use DateTimeImmutable;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\ORM\ORMException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use Symfony\Component\Form\FormInterface;
+use Throwable;
 
 class DrawenAreaController extends AbstractController
 {
@@ -137,7 +132,8 @@ class DrawenAreaController extends AbstractController
                 $drawnArea->setAuthor($this->getUser());
                 $em->persist($drawnArea);
                 $em->flush();
-                return new JsonResponse(['success' => true, 'id' => $drawnArea->getId(),
+                return new JsonResponse(['success' => true,
+                    'id' => $drawnArea->getId(),
                     'appl' => '<div>' . $drawnArea->getNumberSolution() . '</div><div>' . $drawnArea->getSolutedAt()->format('d-m-Y') . '</div>',
                     'area' => $drawnArea->getArea(),
                     'published' => $drawnArea->getPublishedAt()
@@ -175,9 +171,7 @@ class DrawenAreaController extends AbstractController
     {
         try {
             $drawnArea = $drawnAreaRepository->getPartialObj($id);
-            //dump($drawnArea);
-            //$drawnArea->setGeom(null);
-            if ($drawnArea->getAuthor() !== $this->getUser()) {
+            if ($drawnArea->getAuthor() == $this->getUser()) {
                 throw new AccessDeniedException('Немає доступу до об\'єкту', Response::HTTP_NOT_ACCEPTABLE);
             }
             if ($drawnArea->getStatus() !== 'created') {
@@ -192,7 +186,7 @@ class DrawenAreaController extends AbstractController
                     'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
                 return new JsonResponse(['content' => $content, 'buttons' => $buttons]);
             }
-            // перечитываем partial
+            // partial
             $em->refresh($drawnArea);
             $form = $this->createForm(DrawnAreaType::class, $drawnArea, [
                 'entity_manager' => $em,
@@ -210,13 +204,17 @@ class DrawenAreaController extends AbstractController
                     'success',
                     ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
                 );
-                return new JsonResponse(['success' => true, 'area'=>$drawnArea->getArea()], 200);
+                return new JsonResponse(['success' => true, 'area'=>$drawnArea->getArea()]);
             }
             $content = $this->renderView(
                 'statement/modals/swal_area.html.twig',
-                array('form' => $form->createView(), 'drawnArea' => $drawnArea,
-                    'obl' => $dzkAdminOblRepository->getNameRgn($drawnArea->getAuthor()->getProfile()->getOblast()->getId())->getNameRgn()
-                )
+                [
+                    'form' => $form->createView(),
+                    'drawnArea' => $drawnArea,
+                    'obl' => $dzkAdminOblRepository
+                        ->getNameRgn($drawnArea->getAuthor()->getProfile()->getOblast()->getId())
+                        ->getNameRgn()
+                ]
             );
             $buttons = $this->renderView(
                 'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
@@ -234,9 +232,11 @@ class DrawenAreaController extends AbstractController
 //            );
 //        }
 
-        catch (\Throwable $exception) {
+        catch (Throwable $exception) {
             $exception = FlattenException::create($exception);
-            return $this->json(['error' => $exception->getStatusCode() == 404 ? 'Method not found' : 'Unknown error occurred'], $exception->getStatusCode());
+            dump($exception);
+            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
+            //return $this->json(['error' => $exception->getStatusCode() == 404 ? 'Method not found' : 'Unknown error occurred'], $exception->getStatusCode());
             //return Response::create($handler->getHtml($exception), $exception->getStatusCode(), $exception->getHeaders());
 //                $this->json(['error' => $exception->getMessage()]
 //                , $exception->getStatusCode()
@@ -379,7 +379,7 @@ class DrawenAreaController extends AbstractController
         }
     }
 
-    private function getErrorsFromForm(FormInterface $form)
+    private function getErrorsFromForm(FormInterface $form): array
     {
         $errors = array();
         foreach ($form->getErrors() as $error) {

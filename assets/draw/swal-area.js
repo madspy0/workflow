@@ -355,7 +355,7 @@ export async function swalArea(feature) {
                                 Swal.close()
                             }).catch(error => {
                                 Swal.showValidationMessage(
-                                    `Помилка запиту: ${error}`
+                                    `Помилка запиту: ${error.error}`
                                 )
                             })
                         }
