@@ -171,7 +171,7 @@ class DrawenAreaController extends AbstractController
     {
         try {
             $drawnArea = $drawnAreaRepository->getPartialObj($id);
-            if ($drawnArea->getAuthor() == $this->getUser()) {
+            if ($drawnArea->getAuthor() !== $this->getUser()) {
                 throw new AccessDeniedException('Немає доступу до об\'єкту', Response::HTTP_NOT_ACCEPTABLE);
             }
             if ($drawnArea->getStatus() !== 'created') {
@@ -234,8 +234,7 @@ class DrawenAreaController extends AbstractController
 
         catch (Throwable $exception) {
             $exception = FlattenException::create($exception);
-            dump($exception);
-            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
+            return $this->json(['error' => $exception->getMessage()], $exception->getCode());
             //return $this->json(['error' => $exception->getStatusCode() == 404 ? 'Method not found' : 'Unknown error occurred'], $exception->getStatusCode());
             //return Response::create($handler->getHtml($exception), $exception->getStatusCode(), $exception->getHeaders());
 //                $this->json(['error' => $exception->getMessage()]
