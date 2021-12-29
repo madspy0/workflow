@@ -45,10 +45,10 @@ export async function swalArea(feature) {
             snapInteraction = f
         }
     })
-    let selected_center = getCenter(feature.getGeometry().getExtent());
-    let resolution = map.getView().getResolution();
+    //let selected_center = getCenter(feature.getGeometry().getExtent());
+    //let resolution = map.getView().getResolution();
     //console.log(selected_center[0] - 550 * resolution, selected_center[1], resolution)
-    map.getView().setCenter([selected_center[0] - 550 * resolution, selected_center[1]])
+    //map.getView().setCenter([selected_center[0] - 550 * resolution, selected_center[1]])
     map.getView().fit(feature.getGeometry(), {padding: [15, 565, 15, 15], duration: 500})
     if (feature.get('status') === 'created') {
         modifyInteraction.setActive(true)
