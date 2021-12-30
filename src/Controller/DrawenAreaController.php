@@ -41,10 +41,10 @@ class DrawenAreaController extends AbstractController
      * @Route("/", name="homepage")
      * @Route("/dr_map", name="drawen.draw_map")
      */
-    public function drawMap(Request $request, SessionInterface  $seesion): Response
+    public function drawMap(Request $request, SessionInterface $seesion): Response
     {
         $flashBag = $seesion->getBag('flashes');
-       // $form = $this->createForm(DrawnAreaType::class, new DrawnArea(), ['action' => $this->generateUrl('drawen.draw_add')]);
+        // $form = $this->createForm(DrawnAreaType::class, new DrawnArea(), ['action' => $this->generateUrl('drawen.draw_add')]);
         $cc = $request->query->get('cc');
         $temp = explode(',', $cc);
         if (count($temp) == 2) {
@@ -105,8 +105,9 @@ class DrawenAreaController extends AbstractController
                         'areacount' => $user->getDrawnAreas()->count(),
                         'profileForm' => $form->createView()])->getContent(),
                 ]);
-            } catch (Exception $exception) {
-                return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            } catch (Throwable $exception) {
+                $exception = FlattenException::create($exception);
+                return $this->json(['error' => $exception->getMessage()], $exception->getCode());
             }
         }
     }
@@ -156,10 +157,9 @@ class DrawenAreaController extends AbstractController
             $buttons = $this->renderView(
                 'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
             return new JsonResponse(['content' => $content, 'buttons' => $buttons]);
-        } catch (HttpException $exception) {
-            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
-        } catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (Throwable $exception) {
+            $exception = FlattenException::create($exception);
+            return $this->json(['error' => $exception->getMessage()], $exception->getCode());
         }
     }
 
@@ -172,7 +172,7 @@ class DrawenAreaController extends AbstractController
         try {
             $drawnArea = $drawnAreaRepository->getPartialObj($id);
             if ($drawnArea->getAuthor() !== $this->getUser()) {
-                throw new AccessDeniedException('Немає доступу до об\'єкту', Response::HTTP_NOT_ACCEPTABLE);
+                throw new AccessDeniedException('Немає доступу до об\'єкту', Response::HTTP_FORBIDDEN);
             }
             if ($drawnArea->getStatus() !== 'created') {
                 $content = $this->renderView(
@@ -204,7 +204,7 @@ class DrawenAreaController extends AbstractController
                     'success',
                     ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
                 );
-                return new JsonResponse(['success' => true, 'area'=>$drawnArea->getArea()]);
+                return new JsonResponse(['success' => true, 'area' => $drawnArea->getArea()]);
             }
             $content = $this->renderView(
                 'statement/modals/swal_area.html.twig',
@@ -219,27 +219,11 @@ class DrawenAreaController extends AbstractController
             $buttons = $this->renderView(
                 'statement/modals/swal_area_buttons.html.twig', ['drawnArea' => $drawnArea]);
             return new JsonResponse(['content' => $content, 'buttons' => $buttons]);
-        }
-//        catch (DBALException $e) {
-//            $message = sprintf('DBALException [%i]: %s', $e->getCode(), $e->getMessage());
-//        } catch (PDOException $e) {
-//            $message = sprintf('PDOException [%i]: %s', $e->getCode(), $e->getMessage());
-//        }
-//        catch (RetryableException $e) {
-//            $e = FlattenException::create($e);
-//            return $this->json(['error' => $e->getMessage()]
-//                , $e->getStatusCode()
-//            );
-//        }
-
-        catch (Throwable $exception) {
+        } catch (Throwable $exception) {
             $exception = FlattenException::create($exception);
             return $this->json(['error' => $exception->getMessage()], $exception->getCode());
             //return $this->json(['error' => $exception->getStatusCode() == 404 ? 'Method not found' : 'Unknown error occurred'], $exception->getStatusCode());
             //return Response::create($handler->getHtml($exception), $exception->getStatusCode(), $exception->getHeaders());
-//                $this->json(['error' => $exception->getMessage()]
-//                , $exception->getStatusCode()
-//            );
         }
     }
 
@@ -250,7 +234,7 @@ class DrawenAreaController extends AbstractController
     {
         try {
             if ($drawnArea->getAuthor() !== $this->getUser()) {
-                throw new AccessDeniedException('Немає доступу до об\'єкту');
+                throw new AccessDeniedException('Немає доступу до об\'єкту', Response::HTTP_FORBIDDEN);
             }
             $this->addFlash(
                 'success',
@@ -261,35 +245,35 @@ class DrawenAreaController extends AbstractController
             $em->persist($drawnArea);
             $em->flush();
             return new JsonResponse(['success' => true]);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $exception = FlattenException::create($exception);
-            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
+            return $this->json(['error' => $exception->getMessage()], $exception->getCode());
         }
     }
 
-    /**
-     * @Route("/dr_arch/{drawnArea}", name="drawen.draw_arch", methods={"GET"}, options={"expose"=true})
-     */
-    public function arch(DrawnArea $drawnArea, EntityManagerInterface $em, WorkflowInterface $drawnAreaFlowStateMachine): Response
-    {
-        try {
-            if ($drawnArea->getAuthor() !== $this->getUser()) {
-                throw new AccessDeniedException('Немає доступу до об\'єкту');
-            }
-            $this->addFlash(
-                'success',
-                ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
-            );
-            $drawnAreaFlowStateMachine->apply($drawnArea, 'to_archive');
-            $drawnArea->setArchivedAt(new DateTimeImmutable('now'));
-            $em->persist($drawnArea);
-            $em->flush();
-            return new JsonResponse(['success' => true]);
-        } catch (Exception $exception) {
-            $exception = FlattenException::create($exception);
-            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
-        }
-    }
+//    /**
+//     * @Route("/dr_arch/{drawnArea}", name="drawen.draw_arch", methods={"GET"}, options={"expose"=true})
+//     */
+//    public function arch(DrawnArea $drawnArea, EntityManagerInterface $em, WorkflowInterface $drawnAreaFlowStateMachine): Response
+//    {
+//        try {
+//            if ($drawnArea->getAuthor() == $this->getUser()) {
+//                throw new AccessDeniedException('Немає доступу до об\'єкту', Response::HTTP_FORBIDDEN);
+//            }
+//            $this->addFlash(
+//                'success',
+//                ['Виправлену інформацію внесено', date("d-m-Y H:i:s")]
+//            );
+//            $drawnAreaFlowStateMachine->apply($drawnArea, 'to_archive');
+//            $drawnArea->setArchivedAt(new DateTimeImmutable('now'));
+//            $em->persist($drawnArea);
+//            $em->flush();
+//            return new JsonResponse(['success' => true]);
+//        } catch (Throwable $exception) {
+//            $exception = FlattenException::create($exception);
+//            return $this->json(['error' => $exception->getMessage()], $exception->getCode());
+//        }
+//    }
 
     /**
      * @Route("/dr_drop/{drawnArea}", name="drawen.draw_drop", methods={"GET"}, options={"expose"=true})
@@ -298,7 +282,7 @@ class DrawenAreaController extends AbstractController
     {
         try {
             if ($drawnArea->getAuthor() !== $this->getUser()) {
-                throw new AccessDeniedException('Немає доступу до об\'єкту');
+                throw new AccessDeniedException('Немає доступу до об\'єкту', Response::HTTP_FORBIDDEN);
             }
             $this->addFlash(
                 'success',
@@ -307,9 +291,9 @@ class DrawenAreaController extends AbstractController
             $em->remove($drawnArea);
             $em->flush();
             return new JsonResponse(['success' => true]);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $exception = FlattenException::create($exception);
-            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
+            return $this->json(['error' => $exception->getMessage()], $exception->getCode());
         }
     }
 
@@ -322,9 +306,9 @@ class DrawenAreaController extends AbstractController
         try {
             $geoms = $serializer->serialize($repository->findBy(['author' => $this->getUser()]), 'json', ['groups' => 'geoms']);
             return JsonResponse::fromJsonString($geoms, Response::HTTP_OK, ['Access-Control-Allow-Origin' => 'same-origin']);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $exception = FlattenException::create($exception);
-            return $this->json(['error' => $exception->getMessage()], $exception->getStatusCode());
+            return $this->json(['error' => $exception->getMessage()], $exception->getCode());
         }
     }
 
@@ -334,6 +318,9 @@ class DrawenAreaController extends AbstractController
     public function archGroundForm(DrawnArea $drawnArea, Request $request, EntityManagerInterface $em, WorkflowInterface $drawnAreaFlowStateMachine): JsonResponse
     {
         try {
+            if ($drawnArea->getAuthor() !== $this->getUser()) {
+                throw new AccessDeniedException('Немає доступу до об\'єкту', Response::HTTP_FORBIDDEN);
+            }
             $archiveGround = new ArchiveGround();
             $archiveGround->setDrawnArea($drawnArea);
             $form = $this->createForm(ArchiveGroundType::class, $archiveGround);
@@ -373,8 +360,8 @@ class DrawenAreaController extends AbstractController
                     'formGov' => $formGov->createView()
                 ]);
             return new JsonResponse(['content' => $content]);
-        } catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()], 412);
+        } catch (Throwable $exception) {
+            return $this->json(['error' => $exception->getMessage()], $exception->getCode());
         }
     }
 

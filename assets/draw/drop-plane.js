@@ -42,7 +42,7 @@ export async function dropPlane(feature) {
                         Swal.close();
                     }
                 })
-                .catch(error => toastFire(error))
+                .catch(error => toastFire(error, false))
         }
     })
 }

@@ -18,7 +18,7 @@ function clearBeforeClose(modify) {
     })
 }
 
-export function toastFire(error) {
+export function toastFire(error, rel = true) {
     Swal.fire({
         toast: true,
         position: 'top-right',
@@ -28,10 +28,14 @@ export function toastFire(error) {
         timerProgressBar: true,
         icon: 'error',
         title: error.error
-    }).then(
-        setTimeout(() => {
-            window.location.reload()
-        }, 2000))
+    }).then(() => {
+            if(rel) {
+                setTimeout(() => {
+                    window.location.reload()
+                }, 2000)
+            }
+        }
+    )
 }
 
 export async function swalArea(feature) {
@@ -151,12 +155,12 @@ export async function swalArea(feature) {
                                                 if (data.success) {
                                                     feature.set('status', 'published');
                                                     feature.setStyle(itemStyles['published']);
-                                                    feature.set('published', Date.now() )
+                                                    feature.set('published', Date.now())
                                                     clearBeforeClose();
                                                     Swal.close()
                                                 }
                                             })
-                                            .catch(error => toastFire(error))
+                                            .catch(error => toastFire(error, false))
                                     }
                                 })
 
@@ -164,7 +168,7 @@ export async function swalArea(feature) {
                             document.getElementById('dr_arch').addEventListener('click', (e) => {
                                 e.preventDefault()
                                 let publdate = new Date(feature.get('published'));
-                                if(Date.now() - publdate.getTime() < 24 * 3600 * 1000 ) {
+                                if (Date.now() - publdate.getTime() < 24 * 3600 * 1000) {
                                     Swal.fire({
                                         toast: true,
                                         position: 'top-right',
@@ -344,8 +348,8 @@ export async function swalArea(feature) {
                                 }
                                 return response.json()
                             }).then(data => {
-                                if(data.area) {
-                                    feature.set('area',formatLoadArea(data.area))
+                                if (data.area) {
+                                    feature.set('area', formatLoadArea(data.area))
                                 }
                                 if (data.id) {
                                     feature.set('number', data.id);
