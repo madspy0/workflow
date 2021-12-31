@@ -355,6 +355,16 @@ export async function swalArea(feature) {
                                     feature.set('number', data.id);
                                     feature.set('appl', data.appl);
                                 }
+
+                                // let notificationToggler = document.getElementById('notifications-dropdown-toggle');
+                                // let badge = notificationToggler.querySelectorAll('.icon-badge');
+                                // if(!badge) {
+                                //     badge = document.createElement('span');
+                                //     badge.className = 'icon-badge';
+                                // }
+                                // badge.innerText = parseInt(badge.innerText) + 1;
+                                // console.log(data, notificationToggler, badge)
+
                                 clearBeforeClose()
                                 Swal.close()
                             }).catch(error => {
