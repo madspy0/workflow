@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Serializable;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Vich\UploaderBundle\Entity\File as EmbeddedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -68,6 +70,7 @@ class Profile implements Serializable
     {
         $this->oblast = $oblast;
     }
+
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -197,10 +200,17 @@ class Profile implements Serializable
     {
         $this->ecp = new EmbeddedFile();
     }
+
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="user_ecp", fileNameProperty="ecp.name", size="ecp.size", mimeType="ecp.mimeType", originalName="ecp.originalName", dimensions="ecp.dimensions")
+     * @Vich\UploadableField(
+     *     mapping="user_ecp",
+     *     fileNameProperty="ecp.name",
+     *     size="ecp.size",
+     *     mimeType="ecp.mimeType",
+     *     originalName="ecp.originalName",
+     *     dimensions="ecp.dimensions")
      *
      * @var File|null
      */
@@ -271,6 +281,7 @@ class Profile implements Serializable
             $this->ecpAt = new DateTimeImmutable();
         }
     }
+
     /** @see Serializable::serialize() */
     public function serialize()
     {
@@ -289,4 +300,19 @@ class Profile implements Serializable
             $this->ecp,
             ) = unserialize($serialized);
     }
+
+    /**
+     * @param ExecutionContextInterface $context
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context)
+    {
+        if ($this->ecpFile->getMimeType() != 'application/pkcs7-signature') {
+            $context
+                ->buildViolation('Неправильний тип файлу (p7s)')
+                ->atPath('ecpFile')
+                ->addViolation();
+        }
+    }
+
 }
