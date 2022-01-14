@@ -30,7 +30,7 @@ class DrawnArea
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=255)
      */
     private $localGoverment;
 
@@ -189,7 +189,7 @@ class DrawnArea
     }
 
     /**
-     * @ORM\Column(type="string", length=128)
+     * @ORM\Column(type="string", length=255)
      */
     private $documentsType;
 
