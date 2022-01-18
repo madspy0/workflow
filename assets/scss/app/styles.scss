@@ -58,4 +58,9 @@ textarea {
   display: none;
 }
 
-
+.deny-button, .auth-button {
+  width: 90%;
+}
+#account_table{
+  transition: all 0.6s ease-out;
+}

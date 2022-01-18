@@ -23,6 +23,10 @@ class AccountController extends AbstractController
 {
     /**
      * @Route("/account", name="account_index")
+     * @param UserRepository $repository
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return Response
      */
     public function index(UserRepository $repository, Request $request, EntityManagerInterface $em): Response
     {
@@ -39,6 +43,10 @@ class AccountController extends AbstractController
 
     /**
      * @Route("/account/enable/{user}", name="account_enable")
+     * @param User $user
+     * @param EntityManagerInterface $em
+     * @param MailerInterface $mailer
+     * @return JsonResponse
      */
     public function enable(User $user, EntityManagerInterface $em, MailerInterface $mailer): JsonResponse
     {
@@ -77,6 +85,10 @@ class AccountController extends AbstractController
     /**
      * @Route("/account/authorize/{user}", name="account_authorize")
      *
+     * @param User $user
+     * @param EntityManagerInterface $em
+     * @param MailerInterface $mailer
+     * @return JsonResponse
      * @throws TransportExceptionInterface
      */
     public function authorize(User $user, EntityManagerInterface $em, MailerInterface $mailer): JsonResponse
@@ -92,6 +104,34 @@ class AccountController extends AbstractController
             $email->context($context);
             $mailer->send($email);
             $em->persist($user);
+            $em->flush();
+            return new JsonResponse(['status' => 'ok'], 200);
+        } catch (Exception $exception) {
+            return $this->json(['error' => $exception->getMessage()], $exception->getCode());
+        }
+    }
+
+    /**
+     * @Route("/account/deny/{user}", name="account_deny")
+     *
+     * @param User $user
+     * @param EntityManagerInterface $em
+     * @param MailerInterface $mailer
+     * @return JsonResponse
+     * @throws TransportExceptionInterface
+     */
+    public function deny(User $user, EntityManagerInterface $em, MailerInterface $mailer): JsonResponse
+    {
+        try {
+            $email = (new TemplatedEmail())
+                ->from(new Address('sokolskiy@dzk.gov.ua', 'Drawer mail bot'))
+                ->to($user->getEmail())
+                ->subject('Підтвердження реєстрації')
+                ->htmlTemplate('email/enableAccount.html.twig');
+            $context['user'] = $user;
+            $email->context($context);
+            $mailer->send($email);
+            $em->remove($user);
             $em->flush();
             return new JsonResponse(['status' => 'ok'], 200);
         } catch (Exception $exception) {

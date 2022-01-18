@@ -115,8 +115,10 @@
                                                         {% else %}
                                                             {% if ((currentUser.profile != null) and (currentUser.profile.ecp.size != null) and ('ROLE_WAIT' in currentUser.getRoles(true))) %}
                                                                 <button class="btn-sm btn-warning auth-button"
-                                                                        href="{{ path('account_authorize', {'user':currentUser.id}) }}"
                                                                         value="{{ currentUser.id }}">Авторизувати
+                                                                </button>
+                                                                <button class="btn-sm btn-danger deny-button"
+                                                                        value="{{ currentUser.id }}">Відмовити
                                                                 </button>
                                                             {% else %}
                                                                 {% if ('ROLE_WAIT' in currentUser.getRoles(true)) %}
