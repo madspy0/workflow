@@ -55,7 +55,7 @@ class AccountController extends AbstractController
                 $user->setIsDisabled(false);
                 $status = 'enabled';
                 $email = (new TemplatedEmail())
-                    ->from(new Address('sokolskiy@dzk.gov.ua', '"Drawer mail bot"'))
+                    ->from(new Address('e-noreply@land.gov.ua', '"Drawer mail bot"'))
                     ->to($user->getEmail())
                     ->subject('Підтвердження реєстрації')
                     ->htmlTemplate('email/enableAccount.html.twig');
@@ -96,7 +96,7 @@ class AccountController extends AbstractController
         try {
             $user->setRoles(['ROLE_EDITOR']);
             $email = (new TemplatedEmail())
-                ->from(new Address('sokolskiy@dzk.gov.ua', 'Drawer mail bot'))
+                ->from(new Address('e-noreply@land.gov.ua', 'Drawer mail bot'))
                 ->to($user->getEmail())
                 ->subject('Підтвердження реєстрації')
                 ->htmlTemplate('email/enableAccount.html.twig');
@@ -124,10 +124,10 @@ class AccountController extends AbstractController
     {
         try {
             $email = (new TemplatedEmail())
-                ->from(new Address('sokolskiy@dzk.gov.ua', 'Drawer mail bot'))
+                ->from(new Address('e-noreply@land.gov.ua', 'Drawer mail bot'))
                 ->to($user->getEmail())
-                ->subject('Підтвердження реєстрації')
-                ->htmlTemplate('email/enableAccount.html.twig');
+                ->subject('Відмова у реєстрації')
+                ->htmlTemplate('email/denyAccount.html.twig');
             $context['user'] = $user;
             $email->context($context);
             $mailer->send($email);
